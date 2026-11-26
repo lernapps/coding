@@ -161,5 +161,6 @@
   "authoring-link-de": "Link für deutsche Seiten:",
   "authoring-link-en": "Link für englische Seiten:",
   "problem-json": "Das ist kein gültiges JSON. Fehlt ein Komma oder eine Klammer?",
-  "solved-before": "schon gelöst"
+  "solved-before": "schon gelöst",
+  "authoring-visit": "Ein Link mit Aufgabe gilt für den ganzen Besuch. Wer in der Liste eine andere Aufgabe wählt, verlässt ihn; der Zurück-Knopf des Browsers führt wieder hin. Hängt an den Link also keine Route (#…)."
 }

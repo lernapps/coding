@@ -200,4 +200,19 @@ title: Challenges as data, worlds as code
 category: extensibility
 :::
 ```
+
+## The Challenge of the Address Holds for the Visit
+
+The runtime gives the address's parameters to every start of the core, also after a new route. So a challenge in the
+address (`?c=`) holds for the whole visit: a new route by its hash starts it again, and the browser's back button
+returns to it. A learner who clicks a route in the list of routes leaves it: the UI opens that route as a new visit,
+without `c`.
+
+```arc42
+:::concept
+id: concept-workshop-address-visit
+title: The challenge of the address holds for the whole visit
+category: navigation
+:::
+```
 <!-- app: end -->

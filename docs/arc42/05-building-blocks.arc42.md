@@ -808,7 +808,7 @@ path: src/core/interpreter.ts
 
 ### Challenge
 
-A challenge of format 1: its validator (the rules of the published schema), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously.
+A challenge of format 1: its validator (the rules of the published schema), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
 
 ```arc42
 :::building-block
@@ -818,7 +818,7 @@ parent: bb-interactive-core
 technology: TypeScript
 path: src/core/challenge.ts
 requires: if-interpreter, if-world
-implements: concept-workshop-challenges
+implements: concept-workshop-challenges, concept-workshop-address-visit
 :::
 ```
 

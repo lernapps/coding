@@ -161,5 +161,6 @@
   "authoring-link-de": "Link for German pages:",
   "authoring-link-en": "Link for English pages:",
   "problem-json": "This is not valid JSON. Is a comma or a bracket missing?",
-  "solved-before": "solved before"
+  "solved-before": "solved before",
+  "authoring-visit": "A link with a task holds for the whole visit. Choosing another task in the list leaves it; the browser’s back button returns to it. So do not add a route (#…) to the link."
 }
