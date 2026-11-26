@@ -27,7 +27,9 @@ correction. The process is in AGENTS.md; this plan holds the method.
 
 ## Goal
 
-<!-- 1–2 sentences: what learners can do after this increment. -->
+Lernende lesen ein fertiges Programm und sagen voraus, was Kiko tut: im Labyrinth den Weg Feld für Feld, bei Turtle
+das Bild unter mehreren. Dann läuft das Programm, und die Rückmeldung nennt den ersten Schritt, an dem Vorhersage und
+Lauf auseinandergehen.
 
 ## Key decisions
 
@@ -39,7 +41,39 @@ correction. The process is in AGENTS.md; this plan holds the method.
 
 ## Notes
 
-<!-- New competencies by chapter (ids of the strand), didactic approach, scope, sources and licences, open questions. -->
+**Kompetenz** (Lernlandkarte Informatik, Strang `algorithmen`, geöffnet 2026-11-26):
+
+- `algorithmus-ausfuehren` – „Ich kann einen Algorithmus Schritt für Schritt von Hand ausführen und so sein Ergebnis
+  ermitteln.“ Band 9-10, setzt `wiederholung-mit-bedingung` voraus. Bisher übt sie keine App (`practisedBy` leer).
+  Die Werkstatt ist für 7-8 gedacht; die Aufgaben nutzen nur Blöcke, die die Lernenden aus den Kapiteln vorher kennen.
+  Der Katalogeintrag bekommt damit auch Band 9-10 (Folge für den Eintrag, den lernapps/apps selbst aktualisiert).
+
+**Didaktik:**
+
+- Lesen vor Schreiben: Lernende verfolgen ein Programm im Kopf, das sie nicht selbst gebaut haben (Prinzip
+  „Predict – Run“). Das Programm ist ganz gesperrt; es gibt keine Toolbox.
+- Labyrinth: Das Kind setzt die Felder, durch die Kiko geht, der Reihe nach. Ein Schritt ist ein Feldwechsel
+  („gehe vorwärts“); Drehungen ändern das Feld nicht. Rückmeldung: „Bis Schritt 3 stimmt deine Vorhersage. Bei Schritt
+  4 geht Kiko nach Feld (4|2), du hast Feld (3|3) gesetzt.“ Auch: Kiko stößt an eine Wand (die Vorhersage geht weiter),
+  der Weg ist kürzer oder länger als vorhergesagt.
+- Turtle: drei bis vier Bilder zur Wahl, eines richtig; die falschen schreibt der Autor als Programme mit typischen
+  Fehlern (links statt rechts, eine Wiederholung zu wenig, Stift zu früh oben). Rückmeldung: „Bis Linie 3 stimmt dein
+  Bild. Linie 4 zeichnet Kiko nach rechts, in deinem Bild geht sie nach unten.“
+- Bedienung ohne Maus und ohne Bild: Pfeiltasten bewegen eine Markierung auf der Karte, Eingabe setzt das Feld,
+  Rücktaste nimmt das letzte zurück; der Weg steht auch als Liste („1. Feld (2|3)“). Bilder sind Optionen mit
+  Beschreibung (Zahl der Linien, Form).
+- Ein Versuch ist ein Vergleich; danach ändert das Kind die Vorhersage und vergleicht neu. Mehrere Rätsel (Karten)
+  wie bisher als Reiter; das Programm muss für jedes stimmen.
+
+**Umfang** (guess): drei eingebaute Aufgaben nach `labyrinth-5`: `vorhersage-1` (Labyrinth, Zählschleife und
+Drehung), `vorhersage-2` (Labyrinth, „solange“ mit „wenn“, zwei Rätsel), `vorhersage-3` (Turtle, Wiederholung mit
+Drehung, vier Bilder). Nicht drin: Vorhersage von Zahlen oder Variablen, Vorhersagen in Ansichten (#495).
+
+**Schema:** neue Prüfung `vorhersage` in `checks`, neues optionales Feld `vorhersage` (Turtle: `bilder`, die Programme
+der falschen Bilder). v1 bleibt gültig, alte Links laufen.
+
+**Quellen:** Lernlandkarte Informatik (geöffnet). Keine weiteren Fakten nötig: das Verhalten kommt aus dem
+Interpreter der App.
 
 ## Explore
 
@@ -54,20 +88,24 @@ correction. The process is in AGENTS.md; this plan holds the method.
       Tell the creator what is new, if it matters for this increment.
 - [x] Load the content guide `.agents/skills/app-content/SKILL.md` and read the earlier plans in `.vibe/plans/`: what
       the app teaches, how its content is made, what is open.
-- [ ] Interview, one topic per question, the creator's words under "Answers": which competencies, chapters or rounds,
+- [x] Interview, one topic per question, the creator's words under "Answers": which competencies, chapters or rounds,
       for which school years; hurdles and examples; the amount; any change of look and feel or of terms. No answer:
       ask once more, then write your assumption with "(guess)".
-- [ ] Load skill `lernapps-content-research`. Research what the content guide does not cover. Write under "Notes":
+- [x] Load skill `lernapps-content-research`. Research what the content guide does not cover. Write under "Notes":
       the new competencies by chapter with their ids, the sources you opened.
-- [ ] Write under "Notes" the didactic approach per competency and the scope (in, out, data range).
-- [ ] The increment needs a kind of content the guide does not cover (a new page structure, screen, component or kind
+- [x] Write under "Notes" the didactic approach per competency and the scope (in, out, data range).
+- [x] The increment needs a kind of content the guide does not cover (a new page structure, screen, component or kind
       of exercise): load skills `lernapps-interactive-design` and `lernapps-exercise-patterns`. Else skip this task.
 - [ ] **Checkpoint:** research. Show in plain words: the new competencies by chapter, the didactic approach, the
       scope, every "(guess)", the sources and what is unchecked. Stop and wait. Changes: change them, then ask again.
 
 ### Answers
 
-<!-- The creator's answers, in their words, one bullet each. -->
+- Orchestrator (Freigabe (b)): Programm gesperrt; Kind wählt Zielfeld bzw. Bild, dann läuft das Programm zum
+  Vergleich; Rückmeldung nennt den ersten Schritt, an dem Vorhersage und Lauf auseinandergehen; mit Tastatur, Zielfeld
+  auch ohne Bild beschreibbar; neue Prüfung `vorhersage` im Schema, abwärtskompatibel.
+- Labyrinth: „Weg Feld für Feld“.
+- Turtle, falsche Bilder: „Autor schreibt sie“.
 
 ## Plan
 
