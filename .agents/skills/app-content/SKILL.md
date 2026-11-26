@@ -66,3 +66,8 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   `src/app.yaml` (de und en), zwei Playthroughs, `lernapps check`, Commit.
 - Neue Welt: Kern `src/core/worlds/<id>.ts` (Schnittstelle `World` in `src/core/worlds/types.ts`), Ansicht und Blöcke
   in `src/ui/worlds/<id>/`, `$defs` im Schema, Eintrag in beiden Registries, drei Challenges, arc42-Block, ein PR.
+
+## Rules learned from mistakes
+
+- Testfälle zählen ab 1; Testfall 1 ist `world.config` selbst, Testfall n ≥ 2 ist `tests[n-2]` (`configAt`). Ein Versatz um eins ließ Testfall 1 die Karte von Testfall 2 zeigen.
+- Zahlen in Ansagen formatiert der Translator nach Sprache („1.000“); Playthroughs erwarten die formatierte Zahl.

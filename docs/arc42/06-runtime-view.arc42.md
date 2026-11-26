@@ -155,4 +155,18 @@ involves: bb-e2e, bb-interactive-description, bb-interactive-playthroughs, bb-sh
 ```
 
 <!-- app: begin -->
+## Running a program in the workshop
+
+The editor turns the blocks into IR; the core checks it against the challenge (block limit), then the interpreter runs
+it on the shown test case, one command of the world per tempo of ticks. When that run ends, the challenge runs the
+program on every other test case without pictures and names the first that fails, with the test case and why.
+
+```arc42
+:::runtime-scenario
+id: scenario-workshop-run
+title: Running a program in the workshop
+trigger: The learner presses Run or One step
+involves: bb-editor, bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-world-views, bb-collection, bb-solutions
+:::
+```
 <!-- app: end -->

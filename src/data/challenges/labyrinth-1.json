@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "id": "labyrinth-1",
+  "title": {
+    "de": "Um die Ecke",
+    "en": "Around the corner"
+  },
+  "task": {
+    "de": "Bring den Roboter ins grüne Ziel. Leg die Blöcke in die richtige Reihenfolge.",
+    "en": "Bring the robot to the green goal. Put the blocks in the right order."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["######", "#S..##", "###.##", "###Z##", "######"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "links", "rechts"],
+  "start": null,
+  "limits": {
+    "blocks": 8,
+    "steps": 200
+  },
+  "tests": [],
+  "checks": ["ziel-erreicht"],
+  "hints": [
+    {
+      "de": "Zähl die Felder bis zur Ecke.",
+      "en": "Count the squares up to the corner."
+    },
+    {
+      "de": "Links und rechts gelten aus Sicht des Roboters. Wohin schaut er an der Ecke?",
+      "en": "Left and right are from the robot's point of view. Which way does it face at the corner?"
+    }
+  ],
+  "view": "bloecke"
+}

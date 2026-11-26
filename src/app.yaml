@@ -1,8 +1,33 @@
 # yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
-title: Platzhalter
-description: Ein Knopf, der bis drei zählt. Er hält den Platz frei, bis die geplante App da ist.
-howto: |
-  - Drücke „Weiter“, bis du bei drei bist.
+title: { de: Programmierwerkstatt, en: Coding workshop }
+description:
+  de: Du programmierst mit Blöcken. Ein Roboter führt dein Programm aus, Schritt für Schritt. Für Klasse 7 und 8.
+  en: You program with blocks. A robot runs your program, step by step. For year 7 and 8 (age 12 to 14).
+howto:
+  de: |
+    - Wähl eine Aufgabe.
+    - Zieh Blöcke in die Arbeitsfläche und steck sie zusammen. Mit der Tastatur: Tab bis zu den Blöcken, Enter fügt einen Block ein.
+    - Drück „Start“. Mit „Ein Schritt“ siehst du jeden Befehl einzeln.
+    - Dein Programm muss in jedem Testfall klappen.
+  en: |
+    - Choose a task.
+    - Drag blocks onto the work area and snap them together. With the keyboard: Tab to the blocks, Enter adds a block.
+    - Press “Run”. With “One step” you see each command on its own.
+    - Your program has to work in every test case.
 competencies:
-  - Ich kann bis drei zählen.
-languages: [de]
+  - de: Ich kann Anweisungen in der richtigen Reihenfolge zu einer Sequenz anordnen.
+    en: I can put instructions in the right order to make a sequence.
+  - de: Ich kann mit einer Wiederholung mit fester Anzahl Anweisungen mehrmals ausführen lassen.
+    en: I can use a count-controlled loop to run instructions several times.
+  - de: Ich kann mit einer Wiederholung mit Bedingung Anweisungen so lange ausführen lassen, bis eine Bedingung erfüllt ist.
+    en: I can use a condition-controlled loop to run instructions until a condition is met.
+  - de: Ich kann mit einer Verzweigung (wenn – dann – sonst) festlegen, was abhängig von einer Bedingung passiert.
+    en: I can use a selection (if – then – else) to choose what happens depending on a condition.
+languages: [de, en]
+routes:
+  - id: labyrinth-1
+    title: { de: "Labyrinth 1: Um die Ecke", en: "Maze 1: Around the corner" }
+  - id: labyrinth-2
+    title: { de: "Labyrinth 2: Die Treppe", en: "Maze 2: The stairs" }
+  - id: labyrinth-3
+    title: { de: "Labyrinth 3: Immer dem Gang nach", en: "Maze 3: Follow the corridor" }

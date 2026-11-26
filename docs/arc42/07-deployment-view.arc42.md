@@ -194,4 +194,31 @@ hosts: bb-shell, bb-interactive-core, bb-interactive-ui, bb-interactive-data, bb
 ```
 
 <!-- app: begin -->
+## Workshop in the browser
+
+The workshop's own blocks run on the app page; the block editor is a second bundle, loaded once the page runs.
+
+```arc42
+:::deployment-node
+id: dn-workshop-page
+title: Workshop app page
+type: container
+parent: dn-interactive-app-page
+hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-editor, bb-world-views, bb-collection
+:::
+```
+
+## Workshop build
+
+The build plays the playthroughs and the unit tests run every model solution on every test case.
+
+```arc42
+:::deployment-node
+id: dn-workshop-build
+title: Workshop build
+type: container
+parent: dn-interactive-build
+hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-collection, bb-solutions
+:::
+```
 <!-- app: end -->

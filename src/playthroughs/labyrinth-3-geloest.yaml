@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# solange + wenn: das Programm folgt jedem Gang; es besteht alle 3 Testfälle.
+seed: 1
+route: labyrinth-3
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  {
+                    "s": "while",
+                    "cond": { "e": "not", "a": { "e": "sense", "name": "am-ziel", "args": [] } },
+                    "body":
+                      [
+                        {
+                          "s": "if",
+                          "cond": { "e": "sense", "name": "wand-voraus", "args": [] },
+                          "then":
+                            [
+                              {
+                                "s": "if",
+                                "cond": { "e": "sense", "name": "wand-rechts", "args": [] },
+                                "then": [{ "s": "cmd", "name": "links", "args": [] }],
+                                "else": [{ "s": "cmd", "name": "rechts", "args": [] }],
+                              },
+                            ],
+                          "else": [{ "s": "cmd", "name": "vorwaerts", "args": [] }],
+                        },
+                      ],
+                  },
+                ],
+            },
+        },
+        { kind: action, name: start },
+      ]
+    state: { blocks: 10 }
+  - ticks: 400
+    state: { phase: done, solved: true, verdict: { ok: true } }

@@ -1,0 +1,63 @@
+import { describe, expect, it } from "vite-plus/test";
+import { BUILT_IN, SOLUTIONS } from "../data/index.ts";
+import { challengeProblems, firstFailure } from "./challenge.ts";
+import { runToEnd } from "./interpreter.ts";
+import { labyrinth } from "./worlds/labyrinth.ts";
+
+describe("built-in challenges", () => {
+  for (const [id, challenge] of Object.entries(BUILT_IN)) {
+    it(`${id} is valid`, () => expect(challengeProblems(challenge)).toEqual([]));
+    it(`${id}: the model solution passes every test case`, () => {
+      const solution = SOLUTIONS[id];
+      expect(solution).toBeDefined();
+      if (solution !== undefined) expect(firstFailure(challenge, solution)).toBeNull();
+    });
+  }
+});
+
+describe("challenge validation", () => {
+  const good = BUILT_IN["labyrinth-1"];
+  it("names the field of a problem", () => {
+    expect(challengeProblems({ ...good, id: "Groß" })[0]?.path).toBe("id");
+    expect(challengeProblems({ ...good, world: { type: "mond", version: 1, config: {} } })[0]?.key).toBe(
+      "problem-world-type",
+    );
+    expect(challengeProblems({ ...good, world: { ...good?.world, version: 9 } })[0]?.key).toBe("problem-world-version");
+    expect(
+      challengeProblems({ ...good, back: { url: "informatik/ohne-schraegstrich", label: { de: "x" } } })[0]?.path,
+    ).toBe("back.url");
+    expect(challengeProblems({ ...good, title: { en: "Only English" } })[0]?.key).toBe("problem-text-german");
+  });
+  it("accepts a back path with a query", () => {
+    expect(
+      challengeProblems({ ...good, back: { url: "/informatik/schleifen/?a=3&b=12", label: { de: "Zurück" } } }),
+    ).toEqual([]);
+  });
+});
+
+describe("interpreter", () => {
+  const config = { map: ["#####", "#S.Z#", "#####"], facing: "east" as const };
+  it("stops an endless loop without commands at the step limit", () => {
+    const run = runToEnd(
+      { main: [{ s: "while", cond: { e: "num", value: 1 }, body: [] }] },
+      labyrinth as never,
+      config,
+      50,
+    );
+    expect(run.status).toBe("limit");
+  });
+  it("names the field where the robot bumps into the wall", () => {
+    const run = runToEnd(
+      {
+        main: [
+          { s: "cmd", name: "links", args: [] },
+          { s: "cmd", name: "vorwaerts", args: [] },
+        ],
+      },
+      labyrinth as never,
+      config,
+      50,
+    );
+    expect(run.why).toEqual({ key: "fail-wall", params: { x: 2, y: 2 } });
+  });
+});

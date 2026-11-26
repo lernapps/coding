@@ -399,4 +399,49 @@ addresses: qg-privacy
 ```
 
 <!-- app: begin -->
+## World View Apart from the World
+
+The skeleton in lernapps/apps#869 has the view inside the world module. Here the pure part (`src/core/worlds/`) and
+the view (`src/ui/worlds/`) are apart, because the core has no DOM and the interpreter, the tests and the check
+script run without Vue.
+
+```arc42
+:::decision
+id: dec-world-view-apart
+title: A world's view is apart from its pure module
+status: accepted
+date: 2026-11-26
+addresses: qg-checkable
+:::
+```
+
+## Own Validator Instead of a Schema Library
+
+Schema libraries such as Ajv compile code with `new Function`, which the platform forbids. The workshop checks a
+challenge with its own code, which follows the published schema; a unit test keeps the two alike.
+
+```arc42
+:::decision
+id: dec-own-validator
+title: Challenges are checked by own code, not by a schema library
+status: accepted
+date: 2026-11-26
+addresses: qg-privacy
+:::
+```
+
+## Block Editor Loaded on Demand
+
+Blockly is about 200 kB gzip. The app page loads the core and the UI first (about 40 kB gzip) and the editor as a second
+bundle, with a text while it loads.
+
+```arc42
+:::decision
+id: dec-editor-on-demand
+title: The block editor is loaded on demand
+status: accepted
+date: 2026-11-26
+addresses: qg-understandable
+:::
+```
 <!-- app: end -->

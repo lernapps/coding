@@ -718,6 +718,146 @@ protocol: TypeScript module exports
 ```
 
 <!-- app: begin core -->
+### Program IR
+
+The program as a small syntax tree, the same for every world (sequence, loops, selection, sensors; later variables and procedures). The editor makes it, the interpreter runs it, later views are made from it.
+
+The parts of the workshop's core (`src/core/index.ts` holds the state and turns actions into it):
+
+```arc42
+:::diagram
+id: building-blocks-workshop-core
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart LR
+    subgraph bb-interactive-core["Core"]
+        bb-program["Program IR"]
+        bb-interpreter["Interpreter"]
+        bb-challenge["Challenge"]
+        bb-worlds["Worlds"]
+    end
+    bb-interpreter -->|"if-program"| bb-program
+    bb-interpreter -->|"if-world"| bb-worlds
+    bb-challenge -->|"if-interpreter"| bb-interpreter
+    bb-challenge -->|"if-world"| bb-worlds
+```
+
+```arc42
+:::building-block
+id: bb-program
+title: Program IR
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/ir.ts
+:::
+```
+
+#### Program IR interface
+
+The types of the IR, the check of a program from outside, and the blocks a program uses.
+
+```arc42
+:::interface
+id: if-program
+title: Program IR v1 (Program, Stmt, Expr, programProblems, blocksOf)
+provider: bb-program
+protocol: TypeScript types, JSON
+path: src/core/ir.ts
+:::
+```
+
+### Interpreter
+
+Runs the IR step by step as plain JSON state: up to the next command of the world per step, every control step counted against the step limit, so an endless loop stops too. Nothing is evaluated as JavaScript.
+
+```arc42
+:::building-block
+id: bb-interpreter
+title: Interpreter
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/interpreter.ts
+requires: if-program, if-world
+implements: concept-workshop-ir
+:::
+```
+
+#### Interpreter interface
+
+Begins a run, advances it by one command, runs it to its end without pictures, and names the block that ran last.
+
+```arc42
+:::interface
+id: if-interpreter
+title: begin, advance, runToEnd, currentBlock
+provider: bb-interpreter
+protocol: TypeScript functions
+path: src/core/interpreter.ts
+:::
+```
+
+### Challenge
+
+A challenge of format 1: its validator (the rules of the published schema), its test cases, the checks of the program (block limit, blocks used) and of each run.
+
+```arc42
+:::building-block
+id: bb-challenge
+title: Challenge
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/challenge.ts
+requires: if-interpreter, if-world
+implements: concept-workshop-challenges
+:::
+```
+
+#### Challenge interface
+
+Checks a challenge, gives the config of a test case, and runs a program on every test case to name the first that fails.
+
+```arc42
+:::interface
+id: if-challenge
+title: challengeProblems, configAt, firstFailure, judgeRun
+provider: bb-challenge
+protocol: TypeScript functions
+path: src/core/challenge.ts
+:::
+```
+
+### Worlds
+
+The kinds of task, each a pure module by type and version (labyrinth 1). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
+
+```arc42
+:::building-block
+id: bb-worlds
+title: Worlds
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/worlds
+implements: concept-workshop-challenges
+:::
+```
+
+#### Worlds interface
+
+What every world offers: its config check, commands, sensors, checks and a text of its state for screen readers.
+
+```arc42
+:::interface
+id: if-world
+title: World (start, command, sense, checks, describe), registry by type and version
+provider: bb-worlds
+protocol: TypeScript interface
+path: src/core/worlds/types.ts
+:::
+```
 <!-- app: end core -->
 
 ## UI
@@ -753,6 +893,81 @@ protocol: Vue props and events
 ```
 
 <!-- app: begin ui -->
+### Block editor
+
+Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (categories on narrow screens) and the generator blocks → IR. Only the input; it highlights the block that ran last.
+
+The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback:
+
+```arc42
+:::diagram
+id: building-blocks-workshop-ui
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart LR
+    subgraph bb-interactive-ui["UI"]
+        bb-editor["Block editor"]
+        bb-world-views["World views"]
+    end
+```
+
+```arc42
+:::building-block
+id: bb-editor
+title: Block editor
+parent: bb-interactive-ui
+technology: Vue, Blockly 13
+path: src/ui/editor
+requires: if-program
+implements: concept-workshop-ir
+:::
+```
+
+#### Block editor interface
+
+The root component mounts it per challenge and sends each program it emits to the core.
+
+```arc42
+:::interface
+id: if-editor
+title: Editor component (lang, toolbox, start, highlight; emits program)
+provider: bb-editor
+protocol: Vue props and events
+path: src/ui/editor/Editor.vue
+:::
+```
+
+### World views
+
+One SVG view per world (the labyrinth with column and row numbers) and Kiko, the robot.
+
+```arc42
+:::building-block
+id: bb-world-views
+title: World views
+parent: bb-interactive-ui
+technology: Vue, SVG
+path: src/ui/worlds
+:::
+```
+
+#### World views interface
+
+The root component picks the view by the world's type; the label is the world's text for screen readers.
+
+```arc42
+:::interface
+id: if-world-view
+title: World view component (config, state, crashed, label, still)
+provider: bb-world-views
+protocol: Vue props
+path: src/ui/worlds/index.ts
+:::
+```
 <!-- app: end ui -->
 
 ## Data
@@ -783,6 +998,79 @@ path: src/data
 ```
 
 <!-- app: begin data -->
+### Built-in challenges
+
+One JSON file per route, valid against the challenge schema.
+
+The built-in collection (way B) and its model solutions; `blockly-de.json` holds Blockly's texts in German where its pack keeps English:
+
+```arc42
+:::diagram
+id: building-blocks-workshop-data
+view: building-block
+notation: mermaid
+:::
+```
+
+```mermaid
+flowchart LR
+    subgraph bb-interactive-data["Data"]
+        bb-collection["Built-in challenges"]
+        bb-solutions["Model solutions"]
+    end
+```
+
+```arc42
+:::building-block
+id: bb-collection
+title: Built-in challenges
+parent: bb-interactive-data
+technology: JSON
+path: src/data/challenges
+:::
+```
+
+#### Built-in challenges interface
+
+The core starts the challenge of the route from it.
+
+```arc42
+:::interface
+id: if-collection
+title: BUILT_IN and ROUTES (src/data/index.ts)
+provider: bb-collection
+protocol: JSON module import
+path: src/data/challenges
+:::
+```
+
+### Model solutions
+
+The IR of a solution per built-in challenge, for the playthroughs and the unit tests; never sent to a learner.
+
+```arc42
+:::building-block
+id: bb-solutions
+title: Model solutions
+parent: bb-interactive-data
+technology: JSON
+path: src/data/solutions
+:::
+```
+
+#### Model solutions interface
+
+The unit tests run each on every test case of its challenge.
+
+```arc42
+:::interface
+id: if-solutions
+title: SOLUTIONS (src/data/index.ts)
+provider: bb-solutions
+protocol: JSON module import
+path: src/data/solutions
+:::
+```
 <!-- app: end data -->
 
 ## Messages

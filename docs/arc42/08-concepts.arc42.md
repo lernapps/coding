@@ -174,4 +174,30 @@ category: navigation
 ```
 
 <!-- app: begin -->
+## Program as IR
+
+Blockly is only the input: the editor turns the blocks into the program IR and sends it to the core as an action.
+The core keeps program and run as JSON, so playthroughs send IR directly and expect states.
+
+```arc42
+:::concept
+id: concept-workshop-ir
+title: Blocks only as input, the program as IR
+category: architecture
+:::
+```
+
+## Challenges as data, worlds as code
+
+A challenge is data any app may send (in the address, way A) or the workshop ships (a route, way B); the workshop
+checks it before it runs anything. A world is code, reviewed in this repository; a challenge names its type and
+version, and a version the workshop lacks is not run.
+
+```arc42
+:::concept
+id: concept-workshop-challenges
+title: Challenges as data, worlds as code
+category: extensibility
+:::
+```
 <!-- app: end -->

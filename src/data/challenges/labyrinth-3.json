@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "id": "labyrinth-3",
+  "title": {
+    "de": "Immer dem Gang nach",
+    "en": "Follow the corridor"
+  },
+  "task": {
+    "de": "Bau ein Programm, das den Roboter durch jeden Gang ins Ziel bringt. Es wird mit 3 Gängen getestet.",
+    "en": "Build a program that brings the robot through any corridor to the goal. It is tested with 3 corridors."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["#########", "#S.....##", "######.##", "##Z....##", "#########"],
+      "facing": "east"
+    }
+  },
+  "toolbox": [
+    "vorwaerts",
+    "links",
+    "rechts",
+    "solange",
+    "wenn-sonst",
+    "nicht",
+    "wand-voraus",
+    "wand-rechts",
+    "am-ziel"
+  ],
+  "start": null,
+  "limits": {
+    "blocks": 10,
+    "steps": 1000
+  },
+  "tests": [
+    {
+      "config": {
+        "map": ["#######", "#S.####", "##.####", "##....#", "#####.#", "#Z....#", "#######"]
+      }
+    },
+    {
+      "config": {
+        "map": ["#########", "#Z......#", "#######.#", "#S......#", "#########"]
+      }
+    }
+  ],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke"],
+  "hints": [
+    {
+      "de": "Der Roboter soll so lange etwas tun, bis er am Ziel ist.",
+      "en": "The robot should keep doing something until it is at the goal."
+    },
+    {
+      "de": "Ist vorne frei, geht er vorwärts. Sonst dreht er sich.",
+      "en": "If the way ahead is free, it moves forward. If not, it turns."
+    },
+    {
+      "de": "In welche Richtung dreht er? Frag, ob rechts eine Wand ist.",
+      "en": "Which way does it turn? Ask if there is a wall on the right."
+    }
+  ],
+  "view": "bloecke"
+}

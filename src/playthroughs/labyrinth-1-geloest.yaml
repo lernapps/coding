@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Die Musterlösung: Der Roboter geht um die Ecke ins Ziel; die Werkstatt sagt „geschafft“.
+seed: 1
+route: labyrinth-1
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "rechts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                ],
+            },
+        },
+        { kind: action, name: start },
+      ]
+    state: { phase: running, blocks: 5, attempts: 1 }
+  - ticks: 100
+    state: { phase: done, solved: true, verdict: { ok: true }, run: { world: { x: 3, y: 3 }, commands: 5 } }
+    announce: "Geschafft! Dein Programm klappt in jedem Testfall."
