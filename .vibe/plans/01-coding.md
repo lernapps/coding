@@ -4,11 +4,11 @@
 # Archetype, null until chosen in Explore. Allowed values: explainer, interactive, quiz.
 archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit.
-phase: explore
+phase: code
 # prePushFailures: failed pre-push runs, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: {}
+failedChecks: { plan-file: 1 }
 ---
 
 # Plan: coding, first version
@@ -43,7 +43,11 @@ Lernende (7-8, später 9-10) programmieren in der Programmierwerkstatt mit Blöc
 - Sprachen de und en (Nachtrag 1). Challenge-Texte als `{de, en}`, Deutsch Pflicht. Sprache aus der geöffneten Seite (`/en/app/?c=…`).
 - Blockly-Medien selbst ausliefern (`public/blockly-media/`), `sounds: false`; ARIA-Workaround für das Flyout mit Link auf das Upstream-Problem.
 - Grenze für `?c=`: 2000 Zeichen.
-- `back.url` ist ein Pfad auf lernapps.net (`^/[a-z0-9/-]*/$`); die Werkstatt baut daraus `https://lernapps.net<pfad>`, nie eine fremde Adresse. (guess: absolute Adresse, weil die Werkstatt auch unter github.io läuft)
+- `back.url` ist ein Pfad auf lernapps.net mit optionaler Query, ohne Fragment (`^/[a-z0-9/-]*/(\?[a-z0-9=&-]*)?$`). Herkunft: unter lernapps.net `location.origin`, sonst `https://lernapps.net`. (Orchestrator, Checkpoint 2)
+- Prüfskript: kein npm-Paket; eine Datei ohne Abhängigkeiten mit Version im Namen, `coding/tools/challenge-check.v1.mjs`; ein neues Format kommt als `v2` daneben. (Orchestrator, Checkpoint 2)
+- Welt-Ansicht getrennt vom Welt-Kern (Abweichung vom Entwurf), im arc42-Teil festgehalten. (Orchestrator, Checkpoint 2)
+- Turtle `bild-gleich`: Hausdorff ≤ 2; die Rückmeldung sagt, wo das Bild abweicht. (Orchestrator, Checkpoint 2)
+- Übergangsschicht für `?c=` mit TODO auf lernapps/app-templates#201.
 - Die Musterlösung steht nie im Link: Das Prüfskript bekommt Challenge und Lösung getrennt.
 
 
@@ -78,7 +82,6 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 **Quellen**: Lernlandkarte https://lernapps.net/apps/map/informatik.json (geöffnet 2026-11-26); Blockly 13.4.0 (Apache 2.0, npm); Blockly Games nur als Vorbild (Labyrinth, Turtle), keine Dateien übernommen. Ungeprüft: Tastatur beim Verschachteln und beim Ändern von Feldwerten (Checkpoint 3, Prüfer).
 
-**Offene Fragen an den Orchestrator**: Verteilung des Prüfskripts an andere Apps (siehe Content method).
 
 
 ## Explore
@@ -108,18 +111,19 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - [x] Run `npx --no -- lernapps skills --archetype <name>` with the chosen archetype. It installs the archetype's
       skills and adds the archetype's tasks to this plan.
 - [x] Load skill `lernapps-interactive-design`.
-- [ ] Interview: ask every other topic of "Answers", in order. Leave out only a topic that an answer of the creator
+- [x] Interview: ask every other topic of "Answers", in order. Leave out only a topic that an answer of the creator
       already covers, and note which answer. A topic nobody answered is asked once before you write an assumption
       with "(guess)".
-- [ ] Load skill `lernapps-content-research` and research as it says. Write under "Notes": the strand or subject, the
+- [x] Load skill `lernapps-content-research` and research as it says. Write under "Notes": the strand or subject, the
       competencies by chapter with their ids, the sources you opened.
-- [ ] Write under "Notes", one line per competency: how learners get there (they derive it, they do not only read it
+- [x] Write under "Notes", one line per competency: how learners get there (they derive it, they do not only read it
       off), and which misconception the feedback catches.
-- [ ] Write under "Notes" the scope: what is in, what is out and why, the data range (for example "all main-group
+- [x] Write under "Notes" the scope: what is in, what is out and why, the data range (for example "all main-group
       elements", never a silent "1–20"), the languages.
-- [ ] **Checkpoint:** research. Show in plain words: the strand or why none, the competencies by chapter, the didactic
+- [x] **Checkpoint:** research. Show in plain words: the strand or why none, the competencies by chapter, the didactic
       approach, the scope, every "(guess)", the sources and what is unchecked, the archetype and its reason. Stop and
       wait. Changes: change them, then ask again.
+      Creator: Ja, so bauen. Explore und Plan darfst du mit diesem Ja zusammen abhaken. (Orchestrator, Checkpoint 2)
 
 ### Answers
 
@@ -144,20 +148,21 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 ### Tasks
 
-- [ ] Map the content as "Map the content" of skill `lernapps-interactive-design` says, and write the result under
+- [x] Map the content as "Map the content" of skill `lernapps-interactive-design` says, and write the result under
       "Content method".
-- [ ] Choose a pattern per competency as skill `lernapps-exercise-patterns` says, and add it to "Content method".
-- [ ] Add to "Content method" one line per part, as "Parts" of skill `lernapps-interactive-design` says: core, user
+- [x] Choose a pattern per competency as skill `lernapps-exercise-patterns` says, and add it to "Content method".
+- [x] Add to "Content method" one line per part, as "Parts" of skill `lernapps-interactive-design` says: core, user
       interface, data, playthroughs, routes.
-- [ ] Add the tasks of Code, each one a piece of work that ends in a commit. First the pattern: one complete page or
+- [x] Add the tasks of Code, each one a piece of work that ends in a commit. First the pattern: one complete page or
       screen, `npx --no -- lernapps plan add --at pattern "<task>"`. Then the others, one call each:
       `npx --no -- lernapps plan add --at pages "<task>"`. Each task says what it builds and what it shows.
-- [ ] Draw a sketch of each screen, component or interactive exercise: a static SVG or image, or the steps with what
+- [x] Draw a sketch of each screen, component or interactive exercise: a static SVG or image, or the steps with what
       learners see after each. Keep the files in `.vibe/sketches/`.
-- [ ] Show the creator, short: goal, competencies by chapter, the Code tasks, the sketches, and the content method in
+- [x] Show the creator, short: goal, competencies by chapter, the Code tasks, the sketches, and the content method in
       plain words (what learners see and do, what the app cannot do). At most 2 questions.
-- [ ] **Checkpoint:** confirm the plan and the content method. Stop and wait for an explicit yes. Changes: change
+- [x] **Checkpoint:** confirm the plan and the content method. Stop and wait for an explicit yes. Changes: change
       them, then ask again.
+      Creator: Ja, so bauen. Explore und Plan darfst du mit diesem Ja zusammen abhaken. (Orchestrator, Checkpoint 2)
 
 ### Content method
 
@@ -190,7 +195,7 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - **UI `src/ui/`**: `App.vue` (Kopf mit Titel und Aufgabe, Welt, Steuerknöpfe, Rückmeldung, Hinweise, Zurück und Ergebniszeile); `Editor.vue` (Blockly, per `defineAsyncComponent` nachgeladen, Ladezustand „Die Blöcke werden geladen …“; Generator Blöcke → IR; Kategorien bei < 600 px Breite); `Authoring.vue` (Route `autoren`); `worlds/*`. Ansagen mit `announce` (Ergebnis, Testfall). Reduzierte Bewegung: kein Gleiten der Figur.
 - **Data `src/data/challenges/*.json`** – die eingebauten Challenges (Weg B), je eine Datei nach `challenge.v1`, und `solutions/*.json` (IR der Musterlösung, nur für Playthroughs und Tests).
 - **Schema `public/schemas/challenge.v1.schema.json`** – veröffentlicht unter `…/coding/schemas/challenge.v1.schema.json`; Welt-Configs als `$defs` je Welt und Version. Enthält die Regel „Ein englischer Explainer verlinkt `/en/app/`“.
-- **Prüfskript `public/tools/challenge-check.mjs`** – mit Vite als eine Datei aus Kern und Welten gebaut, ohne Abhängigkeiten: `node challenge-check.mjs <challenge.json> <loesung.json>` prüft Schema, Welt-Version, Länge des Links und ob die Lösung alle Tests besteht; gibt den Link aus. **Frage**: Reicht das als Verteilung (Datei von lernapps.net/coding/tools/ laden), oder will die Plattform ein npm-Paket?
+- **Prüfskript `public/tools/challenge-check.v1.mjs`** – mit Vite als eine Datei aus Kern und Welten gebaut, ohne Abhängigkeiten: `node challenge-check.mjs <challenge.json> <loesung.json>` prüft Schema, Welt-Version, Länge des Links und ob die Lösung alle Tests besteht; gibt den Link aus. Startseite und Autorenseite sagen, wie man es aufruft.
 - **Playthroughs**: je eingebauter Challenge die Musterlösung (gelöst, Ansage) und ein typischer Fehler (Rückmeldung mit Testfall); Weg A mit gültiger und ungültiger Challenge; Schrittlimit bei Endlosschleife; unbekannte Welt / zu hohe Version; Einzelschritt und Stopp.
 - **Routen** (`app.yaml`): `labyrinth-1` „Geradeaus“ (Sequenz), `labyrinth-2` „Der lange Gang“ (Zählschleife, 2 Testfälle), `labyrinth-3` „Immer an der Wand lang“ (solange + wenn, 3 Testfälle); `turtle-1` „Ein Quadrat“ (Sequenz), `turtle-2` „Quadrat mit Schleife“ (höchstens 4 Blöcke), `turtle-3` „Spirograph“ (verschachtelte Schleifen); `autoren` „Eigene Aufgabe bauen“. Mit `?c=` gilt die Challenge aus der Adresse, nicht die Route.
 - **Seiten**: Startseite (statisch: was, für wen, so geht's, Links zu den Challenges, Abschnitt „Für Autorinnen und Autoren“ mit Schema und Prüfskript); App-Seite (Challenge); App-Seite Route `autoren` (JSON einfügen, Fehler je Feld, „Ausprobieren“, „Link kopieren“, Beispiel-Challenge zum Laden); Fehlerzustand (Challenge nicht lesbar, unbekannte Welt) mit Link zur Sammlung.
@@ -214,7 +219,7 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 ### Tasks
 
-- [ ] Load skill `lernapps-cli`. Create the app as its section "Create" says:
+- [x] Load skill `lernapps-cli`. Create the app as its section "Create" says:
       `npx --no -- lernapps create --archetype interactive`.
 - [ ] Fill the content guide `.agents/skills/app-content/SKILL.md` from "Notes" and "Content method": every heading,
       no "FILL IN" left. Commit it before any content.
