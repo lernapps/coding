@@ -897,7 +897,7 @@ protocol: Vue props and events
 
 Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last.
 
-The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback:
+The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed):
 
 ```arc42
 :::diagram
@@ -920,7 +920,7 @@ flowchart LR
 id: bb-editor
 title: Block editor
 parent: bb-interactive-ui
-technology: Vue, Blockly 13
+technology: Vue, Blockly 13.4
 path: src/ui/editor
 requires: if-program
 implements: concept-workshop-ir

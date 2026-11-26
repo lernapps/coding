@@ -145,5 +145,20 @@
   "fail-picture-extra": "Bei ({x}|{y}) hast du eine Linie gezeichnet, die im grauen Bild nicht vorkommt.",
   "fail-too-many-lines": "Kiko hat mehr als {max} Linien gezeichnet. Hört dein Programm auf?",
   "problem-turtle-start": "Der Start hat x und y von 0 bis {size} und einen Winkel von 0 bis 359.",
-  "help-map-turtle": "Kiko zeichnet auf einer Fläche von 200 × 200 Schritten. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten."
+  "help-map-turtle": "Kiko zeichnet auf einer Fläche von 200 × 200 Schritten. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten.",
+  "authoring": "Eigene Aufgabe bauen",
+  "authoring-intro": "Für Lehrkräfte und Apps: Füg eine Aufgabe als JSON ein. Die Werkstatt prüft sie sofort. Dann probierst du sie aus und kopierst den Link.",
+  "authoring-schema": "Das Format steht im Schema:",
+  "authoring-language": "Die Werkstatt zeigt die Sprache der Seite: Ein deutscher Explainer verlinkt den deutschen Link (/coding/app/), ein englischer den englischen (/coding/en/app/). Texte der Aufgabe gibst du als { \"de\": …, \"en\": … } an; Deutsch ist Pflicht.",
+  "authoring-script": "Zur Build-Zeit prüft eine App Aufgabe und Musterlösung mit dem Prüfskript:",
+  "authoring-examples": "Beispiel laden:",
+  "authoring-draft": "Aufgabe (JSON)",
+  "authoring-problems": "{count} Probleme gefunden:",
+  "authoring-valid": "Die Aufgabe ist gültig.",
+  "authoring-try": "Ausprobieren",
+  "authoring-back": "Zurück zum Bearbeiten",
+  "authoring-length": "Länge nach c=: {length} von höchstens {max} Zeichen",
+  "authoring-link-de": "Link für deutsche Seiten:",
+  "authoring-link-en": "Link für englische Seiten:",
+  "problem-json": "Das ist kein gültiges JSON. Fehlt ein Komma oder eine Klammer?"
 }

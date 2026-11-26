@@ -31,8 +31,10 @@ export interface State {
   /** Where the challenge came from: a route of the built-in collection, or the address (?c=). */
   source: "route" | "address";
   challenge: Challenge | null;
-  /** Why the challenge from the address cannot run. */
+  /** Why the challenge from the address (or the draft) cannot run. */
   problems: Problem[];
+  /** The authoring page (route "autoren"): the draft as text; null elsewhere. Kept while the draft is tried out. */
+  draft: string | null;
   program: Program;
   blocks: number;
   /** The test case shown, from 1. */
@@ -59,6 +61,7 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
     source,
     challenge,
     problems,
+    draft: null,
     program,
     blocks: blocksOf(program).length,
     test: 1,
@@ -73,8 +76,22 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
   };
 }
 
+/** The route of the authoring page. */
+export const AUTHORING = "autoren";
+const EXAMPLE = JSON.stringify(BUILT_IN["labyrinth-2"] ?? null, null, 2);
+
 export function start(seed: number, route: string): State {
+  if (route === AUTHORING) return { ...fresh(seed, "route", null), draft: EXAMPLE };
   return fresh(seed, "route", BUILT_IN[route] ?? BUILT_IN[ROUTES[0] ?? ""] ?? null);
+}
+
+/** The problems of a draft: not JSON, or not a valid challenge. */
+function draftProblems(text: string): Problem[] {
+  try {
+    return challengeProblems(JSON.parse(text) as unknown);
+  } catch {
+    return [{ path: "", key: "problem-json" }];
+  }
 }
 
 const worldFor = (c: Challenge) => worldOf(c.world.type, c.world.version);
@@ -147,6 +164,21 @@ export function step(state: State, input: Input): State {
         ? fresh(state.seed, "address", null, problems)
         : fresh(state.seed, "address", input.value as unknown as Challenge);
     }
+    case "entwurf":
+      // The authoring page: the draft as the author types it, checked at once.
+      return state.draft === null || typeof input.value !== "string" || state.challenge !== null
+        ? state
+        : { ...state, draft: input.value, problems: draftProblems(input.value) };
+    case "ausprobieren": {
+      if (state.draft === null || state.challenge !== null) return state;
+      const problems = draftProblems(state.draft);
+      if (problems.length > 0) return { ...state, problems };
+      return { ...fresh(state.seed, "route", JSON.parse(state.draft) as Challenge), draft: state.draft };
+    }
+    case "bearbeiten":
+      return state.draft === null || state.challenge === null
+        ? state
+        : { ...fresh(state.seed, "route", null), draft: state.draft, problems: draftProblems(state.draft) };
     case "route": {
       // TODO(lernapps/app-templates#201): leaving a challenge of the address for a route of the collection; the runtime
       // does not restart when the route of the address is the one it started with.

@@ -145,5 +145,20 @@
   "fail-picture-extra": "At ({x}, {y}) you drew a line that is not in the grey picture.",
   "fail-too-many-lines": "Kiko has drawn more than {max} lines. Does your program stop?",
   "problem-turtle-start": "The start has x and y from 0 to {size} and an angle from 0 to 359.",
-  "help-map-turtle": "Kiko draws on an area of 200 × 200 steps. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down."
+  "help-map-turtle": "Kiko draws on an area of 200 × 200 steps. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down.",
+  "authoring": "Build your own task",
+  "authoring-intro": "For teachers and apps: paste a task as JSON. The workshop checks it at once. Then try it out and copy the link.",
+  "authoring-schema": "The format is in the schema:",
+  "authoring-language": "The workshop shows the language of the page: a German explainer links the German link (/coding/app/), an English one the English link (/coding/en/app/). Give the texts of the task as { \"de\": …, \"en\": … }; German is required.",
+  "authoring-script": "At build time an app checks its task and model solution with the check script:",
+  "authoring-examples": "Load an example:",
+  "authoring-draft": "Task (JSON)",
+  "authoring-problems": "{count} problems found:",
+  "authoring-valid": "The task is valid.",
+  "authoring-try": "Try it out",
+  "authoring-back": "Back to editing",
+  "authoring-length": "Length after c=: {length} of at most {max} characters",
+  "authoring-link-de": "Link for German pages:",
+  "authoring-link-en": "Link for English pages:",
+  "problem-json": "This is not valid JSON. Is a comma or a bracket missing?"
 }

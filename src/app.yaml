@@ -37,3 +37,8 @@ routes:
     title: { de: "Turtle 2: Quadrat mit Schleife", en: "Turtle 2: Square with a loop" }
   - id: turtle-3
     title: { de: "Turtle 3: Der Spirograph", en: "Turtle 3: The spirograph" }
+  - id: autoren
+    title: { de: "Eigene Aufgabe bauen", en: "Build your own task" }
+    description:
+      de: Für Lehrkräfte und Apps, die der Werkstatt eine Aufgabe als Link schicken.
+      en: For teachers and apps that send the workshop a task as a link.

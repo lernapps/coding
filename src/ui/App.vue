@@ -16,6 +16,7 @@ import { readChallenge } from "./address.ts";
 import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
+import Authoring from "./Authoring.vue";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
@@ -128,7 +129,8 @@ const onProgram = (program: Program): void => act("programm", program as unknown
 <template>
   <section class="werkstatt" :aria-label="t('app')">
     <p class="rotate-hint">{{ t("rotate-hint") }}</p>
-    <div v-if="c === null" class="problems" role="alert">
+    <Authoring v-if="c === null && state.draft !== null" :state="state" :lang="lang" @input="emit('input', $event)" />
+    <div v-else-if="c === null" class="problems" role="alert">
       <h2>{{ t("problems-title") }}</h2>
       <ul>
         <li v-for="(p, i) in state.problems" :key="i">
@@ -138,6 +140,9 @@ const onProgram = (program: Program): void => act("programm", program as unknown
       <p>{{ t("problems-more") }}</p>
     </div>
     <template v-else>
+      <p v-if="state.draft !== null">
+        <button type="button" @click="act('bearbeiten')">← {{ t("authoring-back") }}</button>
+      </p>
       <header class="task">
         <a v-if="backHref !== null && c.back !== undefined" class="back-top" :href="backHref"
           >← {{ text(c.back.label) }}</a
