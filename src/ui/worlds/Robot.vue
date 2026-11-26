@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Kiko, the robot of the workshop (a recurring picture of the computer science apps): drawn upright, centred on
 // (0, 0), about 40 units tall; the pointer on its ring shows where it faces (`angle` in degrees, 0 is to the right,
-// clockwise). Self-drawn SVG, CC BY 4.0 like the content.
+// clockwise). Self-drawn SVG, © 2026 Oliver Jägle, CC BY 4.0 like the content.
 defineProps<{ angle: number; crashed?: boolean }>();
 </script>
 

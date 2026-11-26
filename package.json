@@ -1,6 +1,7 @@
 {
   "name": "coding",
   "private": true,
+  "author": "Oliver Jägle",
   "type": "module",
   "scripts": {
     "dev": "vp dev",
