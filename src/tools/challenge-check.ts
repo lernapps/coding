@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 import { translator } from "@lernapps/tooling/i18n";
 import { challengeProblems, firstFailure, MAX_LINK, type Challenge } from "../core/challenge.ts";
-import { programProblems, type Program } from "../core/ir.ts";
+import { blocksOf, programProblems, type Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
 import de from "../messages/de.json";
 import en from "../messages/en.json";
@@ -57,6 +57,11 @@ function main(argv: readonly string[]): number {
     }
     const wrong = programProblems(solution);
     for (const p of wrong) fail(`${solutionFile}: ${t("problem-at", { path: p.path, what: say(p) })}`);
+    const outside =
+      wrong.length > 0
+        ? []
+        : blocksOf(solution as Program).filter((b) => !(challenge as Challenge).toolbox.includes(b));
+    for (const b of new Set(outside)) fail(`${solutionFile}: ${t("problem-solution-block", { name: b })}`);
     if (wrong.length === 0) {
       const failure = firstFailure(challenge as Challenge, solution as Program);
       if (failure !== null)

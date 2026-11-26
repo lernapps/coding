@@ -82,7 +82,6 @@ export const labyrinth: World<LabyrinthConfig, LabyrinthState> = {
     if (name === "am-ziel") return at(c, s.x, s.y) === "Z";
     return wall(s, c, name === "wand-links" ? -1 : name === "wand-rechts" ? 1 : 0);
   },
-  finished: (s, c) => at(c, s.x, s.y) === "Z",
   describe: (s, c) => ({
     key: "describe-labyrinth",
     params: { ...field(s), facing: s.facing, goal: at(c, s.x, s.y) === "Z" ? "yes" : "no" },

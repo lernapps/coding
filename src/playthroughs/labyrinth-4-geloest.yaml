@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# „wenn Wand voraus? dann drehe dich nach rechts“, dann zweimal vorwärts: klappt mit und ohne Wand.
+seed: 1
+route: labyrinth-4
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  {
+                    "s": "if",
+                    "cond": { "e": "sense", "name": "wand-voraus", "args": [] },
+                    "then": [{ "s": "cmd", "name": "rechts", "args": [] }],
+                  },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                ],
+            },
+        },
+        { kind: action, name: tempo, value: 5 },
+        { kind: action, name: start },
+      ]
+    ticks: 20
+    state: { phase: done, solved: true }

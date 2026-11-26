@@ -1,12 +1,15 @@
 // The interpreter: runs a program of the IR step by step against a world. Its state is plain JSON, so the runtime can
 // keep it and a playthrough can expect it. One call of `advance` runs control steps up to the next command of the
-// world and that command; every control step counts towards the step limit, so a loop without a command stops too.
+// world and that command. The limit of a challenge counts commands of the world (what the learner sees); a hard limit
+// of all steps, control steps included, stops a loop that runs without any command.
 import type { Expr, Program, Stmt } from "./ir.ts";
 import type { Json, Msg } from "./json.ts";
 import { isFailure, type World } from "./worlds/types.ts";
 
-/** The hard limit of steps of any run. */
-export const MAX_STEPS = 10_000;
+/** The most commands of any run. */
+export const MAX_COMMANDS = 10_000;
+/** The hard limit of all steps of a run, control steps included. */
+export const MAX_STEPS = 50_000;
 
 type Loop = { k: "repeat"; left: number } | { k: "while"; cond: Expr } | { k: "proc"; vars: Record<string, number> };
 interface Frame {
@@ -103,10 +106,11 @@ const truthy = (v: number | boolean): boolean => (typeof v === "boolean" ? v : v
 export function advance(start: Run, program: Program, world: World, config: Json, limit: number): Run {
   if (start.status !== "running") return start;
   const run: Run = { ...start, frames: start.frames.map((f) => ({ ...f })), vars: { ...start.vars } };
-  const max = Math.min(limit, MAX_STEPS);
+  const max = Math.min(limit, MAX_COMMANDS);
   try {
     while (run.frames.length > 0) {
-      if (run.steps >= max) return { ...run, status: "limit", why: { key: "fail-limit", params: { steps: max } } };
+      if (run.commands >= max) return { ...run, status: "limit", why: { key: "fail-limit", params: { steps: max } } };
+      if (run.steps >= MAX_STEPS) return { ...run, status: "limit", why: { key: "fail-endless" } };
       const top = run.frames[run.frames.length - 1];
       if (top === undefined) break;
       if (top.at >= top.body.length) {
@@ -128,7 +132,7 @@ export function advance(start: Run, program: Program, world: World, config: Json
           const n = Number(evaluate(s.times, run, world, config));
           if (n >= 1 && s.body.length > 0)
             run.frames.push({ body: s.body, at: 0, loop: { k: "repeat", left: Math.floor(n) } });
-          else if (n >= 1) run.steps += Math.floor(n);
+          else if (n >= 1) run.steps += Math.min(Math.floor(n), MAX_STEPS);
           continue;
         }
         case "while":
@@ -140,9 +144,14 @@ export function advance(start: Run, program: Program, world: World, config: Json
           if (branch.length > 0) run.frames.push({ body: branch, at: 0 });
           continue;
         }
-        case "set":
-          run.vars[s.name] = Number(evaluate(s.value, run, world, config));
+        case "set": {
+          // A parameter or variable of the nearest procedure that has the name, else a variable of the program.
+          const value = Number(evaluate(s.value, run, world, config));
+          const frame = [...run.frames].reverse().find((f) => f.loop?.k === "proc" && s.name in f.loop.vars);
+          if (frame?.loop?.k === "proc") frame.loop = { k: "proc", vars: { ...frame.loop.vars, [s.name]: value } };
+          else run.vars[s.name] = value;
           continue;
+        }
         case "call": {
           const proc = program.procs?.find((p) => p.name === s.name);
           if (proc === undefined) throw new RunError({ key: "fail-unknown-block", params: { name: s.name } });

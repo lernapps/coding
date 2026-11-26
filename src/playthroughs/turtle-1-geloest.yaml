@@ -29,4 +29,4 @@ steps:
     state: { blocks: 8, phase: running }
   - ticks: 40
     state: { phase: done, solved: true, run: { commands: 8, world: { x: 60, y: 140, winkel: 0 } } }
-    announce: "Geschafft! Der Roboter ist im Ziel."
+    announce: "Geschafft! Dein Bild stimmt."

@@ -778,14 +778,14 @@ path: src/core/ir.ts
 
 ### Interpreter
 
-Runs the IR step by step as plain JSON state: up to the next command of the world per step, every control step counted against the step limit, so an endless loop stops too. Nothing is evaluated as JavaScript.
+Runs the IR step by step as plain JSON state: up to the next command of the world per step. The limit of a challenge counts commands, what the learner sees; a hard limit of all steps stops a loop without any command. Nothing is evaluated as JavaScript.
 
 ```arc42
 :::building-block
 id: bb-interpreter
 title: Interpreter
 parent: bb-interactive-core
-technology: TypeScript
+technology: TypeScript, plain JSON state
 path: src/core/interpreter.ts
 requires: if-program, if-world
 implements: concept-workshop-ir
@@ -808,14 +808,14 @@ path: src/core/interpreter.ts
 
 ### Challenge
 
-A challenge of format 1: its validator (the rules of the published schema), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
+A challenge of format 1: its validator (the rules of the published schema; programs from outside must fit the world, with numbers in the editor's ranges, `fits.ts`), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
 
 ```arc42
 :::building-block
 id: bb-challenge
 title: Challenge
 parent: bb-interactive-core
-technology: TypeScript
+technology: TypeScript (validator, raw-DEFLATE reader)
 path: src/core/challenge.ts
 requires: if-interpreter, if-world
 implements: concept-workshop-challenges, concept-workshop-address-visit
@@ -838,14 +838,14 @@ path: src/core/challenge.ts
 
 ### Worlds
 
-The kinds of task, each a pure module by type and version (labyrinth 1, turtle 1; the turtle compares pictures with a tolerance of 2 units). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
+The kinds of task, each a pure module by type and version (labyrinth 1, turtle 1; the turtle compares pictures on a grid with a tolerance of 2 units, its target pictures at most 200 lines). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
 
 ```arc42
 :::building-block
 id: bb-worlds
 title: Worlds
 parent: bb-interactive-core
-technology: TypeScript
+technology: TypeScript, pure modules
 path: src/core/worlds
 implements: concept-workshop-challenges
 :::

@@ -20,6 +20,8 @@ export interface World<C = Json, S = Json> {
   /** The commands and sensors with the number of their arguments; the toolbox ids of this world. */
   commands: Readonly<Record<string, number>>;
   sensors: Readonly<Record<string, number>>;
+  /** The allowed range of each argument of a command ([min, max] per argument), for programs from outside. */
+  ranges?: Readonly<Record<string, readonly (readonly [number, number])[]>>;
   /** The checks this world offers to challenges ("ziel-erreicht"). */
   checks: Readonly<Record<string, (state: S, config: C) => Verdict>>;
   start(config: C): S;

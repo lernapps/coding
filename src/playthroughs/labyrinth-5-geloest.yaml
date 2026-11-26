@@ -1,8 +1,7 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
-# Ein Programm, das sich an jeder Wand nach rechts dreht: Es klappt im gezeigten Gang, aber nicht in Testfall 2.
-# Dort läuft der Roboter hin und her, bis das Schrittlimit greift; die Werkstatt zeigt Testfall 2 mit dem Endstand.
+# solange + wenn: das Programm folgt jedem Gang; es besteht alle 3 Testfälle.
 seed: 1
-route: labyrinth-3
+route: labyrinth-5
 steps:
   - inputs:
       [
@@ -21,7 +20,15 @@ steps:
                         {
                           "s": "if",
                           "cond": { "e": "sense", "name": "wand-voraus", "args": [] },
-                          "then": [{ "s": "cmd", "name": "rechts", "args": [] }],
+                          "then":
+                            [
+                              {
+                                "s": "if",
+                                "cond": { "e": "sense", "name": "wand-rechts", "args": [] },
+                                "then": [{ "s": "cmd", "name": "links", "args": [] }],
+                                "else": [{ "s": "cmd", "name": "rechts", "args": [] }],
+                              },
+                            ],
                           "else": [{ "s": "cmd", "name": "vorwaerts", "args": [] }],
                         },
                       ],
@@ -31,14 +38,6 @@ steps:
         },
         { kind: action, name: start },
       ]
-    ticks: 400
-    state:
-      {
-        phase: done,
-        test: 2,
-        run: { status: limit },
-        verdict: { ok: false, test: 2, why: { key: fail-limit, params: { steps: 400 } } },
-      }
-    announce: "Testfall 2: Das Programm hört nicht auf: Nach 400 Schritten ist der Roboter noch nicht im Ziel. Läuft er im Kreis?"
-  - inputs: [{ kind: action, name: testfall, value: 1 }]
-    state: { test: 1, run: null, phase: edit, verdict: null }
+    state: { blocks: 10 }
+  - ticks: 400
+    state: { phase: done, solved: true, verdict: { ok: true } }

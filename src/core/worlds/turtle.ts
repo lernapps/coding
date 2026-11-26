@@ -3,14 +3,20 @@
 // the check "bild-gleich" compares the lines drawn with the lines of that program (colours aside): every point of one
 // must lie within 2 units of the other. The origin is at the top left; x goes right, y goes down.
 import { runToEnd } from "../interpreter.ts";
-import { programProblems, type Program, type Stmt } from "../ir.ts";
+import { fitProblems } from "../fits.ts";
+import { programProblems, type Program } from "../ir.ts";
 import { isInt, isObject, type Json, type Problem } from "../json.ts";
 import type { Failure, Verdict, World } from "./types.ts";
 
 export const SIZE = 200;
 export const COLOURS = 4;
 const TOLERANCE = 2;
-const MAX_LINES = 2000;
+const MAX_LINES = 1000;
+/** The most lines of a target picture. */
+export const MAX_TARGET_LINES = 200;
+/** The grid of the comparison: one cell per unit, a margin of 50 around the sheet. */
+const MARGIN = 50;
+const GRID = SIZE + 2 * MARGIN;
 
 export interface TurtleConfig {
   /** The picture to draw, as a program of this world. */
@@ -36,26 +42,38 @@ function startOf(c: TurtleConfig): TurtleState {
   return { x: s.x, y: s.y, winkel: s.winkel, pen: true, colour: 1, lines: [] };
 }
 
-/** Points along the lines, every unit (for the comparison of pictures). */
-function samples(lines: readonly Line[]): [number, number][] {
-  const out: [number, number][] = [];
+/** The cells a picture covers: every line sampled twice per unit (at most 2000 samples a line), off the grid clamped. */
+function cover(lines: readonly Line[]): Uint8Array {
+  const grid = new Uint8Array(GRID * GRID);
+  const cell = (v: number): number => Math.min(GRID - 1, Math.max(0, Math.floor(v + MARGIN)));
   for (const [x1, y1, x2, y2] of lines) {
-    const n = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1)));
-    for (let i = 0; i <= n; i++) out.push([x1 + ((x2 - x1) * i) / n, y1 + ((y2 - y1) * i) / n]);
+    const n = Math.min(2000, Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) * 2)));
+    for (let i = 0; i <= n; i++) grid[cell(y1 + ((y2 - y1) * i) / n) * GRID + cell(x1 + ((x2 - x1) * i) / n)] = 1;
   }
+  return grid;
+}
+
+/** The cells within TOLERANCE of a covered cell. */
+function widen(grid: Uint8Array): Uint8Array {
+  const out = new Uint8Array(grid.length);
+  for (let y = 0; y < GRID; y++)
+    for (let x = 0; x < GRID; x++) {
+      if (grid[y * GRID + x] !== 1) continue;
+      for (let dy = -TOLERANCE; dy <= TOLERANCE; dy++)
+        for (let dx = -TOLERANCE; dx <= TOLERANCE; dx++) {
+          const yy = y + dy;
+          const xx = x + dx;
+          if (yy >= 0 && yy < GRID && xx >= 0 && xx < GRID) out[yy * GRID + xx] = 1;
+        }
+    }
   return out;
 }
 
-function distanceToLines(p: [number, number], lines: readonly Line[]): number {
-  let best = Infinity;
-  for (const [x1, y1, x2, y2] of lines) {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const len = dx * dx + dy * dy;
-    const t = len === 0 ? 0 : Math.max(0, Math.min(1, ((p[0] - x1) * dx + (p[1] - y1) * dy) / len));
-    best = Math.min(best, Math.hypot(p[0] - (x1 + t * dx), p[1] - (y1 + t * dy)));
-  }
-  return best;
+/** The first cell of `a` that `near` does not cover, as a point of the sheet; null when there is none. */
+function firstOutside(a: Uint8Array, near: Uint8Array): { x: number; y: number } | null {
+  for (let i = 0; i < a.length; i++)
+    if (a[i] === 1 && near[i] !== 1) return { x: (i % GRID) - MARGIN, y: Math.floor(i / GRID) - MARGIN };
+  return null;
 }
 
 /** The lines of the target picture. */
@@ -63,6 +81,13 @@ export function targetLines(c: TurtleConfig): Line[] {
   const run = runToEnd(c.ziel, turtle as unknown as World, c as unknown as Json, 10_000);
   return (run.world as unknown as TurtleState).lines;
 }
+
+const RANGES: Record<string, readonly (readonly [number, number])[]> = {
+  gehe: [[1, SIZE]],
+  "drehe-links-um": [[1, 360]],
+  "drehe-rechts-um": [[1, 360]],
+  farbe: [[1, COLOURS]],
+};
 
 const COMMANDS: Record<string, number> = {
   gehe: 1,
@@ -73,15 +98,6 @@ const COMMANDS: Record<string, number> = {
   farbe: 1,
 };
 
-function commandsOf(stmts: readonly Stmt[]): string[] {
-  return stmts.flatMap((s) => {
-    if (s.s === "cmd") return [s.name];
-    if (s.s === "repeat" || s.s === "while") return commandsOf(s.body);
-    if (s.s === "if") return [...commandsOf(s.then), ...commandsOf(s.else ?? [])];
-    return [];
-  });
-}
-
 export const turtle: World<TurtleConfig, TurtleState> = {
   id: "turtle",
   version: 1,
@@ -91,36 +107,34 @@ export const turtle: World<TurtleConfig, TurtleState> = {
     for (const key of Object.keys(config))
       if (key !== "ziel" && key !== "start") problems.push({ path: `${path}.${key}`, key: "problem-unknown-field" });
     const ziel = config["ziel"];
-    const zielProblems = programProblems(ziel, `${path}.ziel`);
-    if (zielProblems.length > 0) problems.push(...zielProblems);
-    else if (commandsOf((ziel as Program).main).some((n) => !(n in COMMANDS)))
-      problems.push({ path: `${path}.ziel`, key: "problem-program" });
+    const syntax = programProblems(ziel, `${path}.ziel`);
+    const fit = syntax.length > 0 ? syntax : fitProblems(ziel as Program, turtle as unknown as World, `${path}.ziel`);
+    problems.push(...fit);
     const start = config["start"];
     if (
       start !== undefined &&
       !(isObject(start) && isInt(start["x"], 0, SIZE) && isInt(start["y"], 0, SIZE) && isInt(start["winkel"], 0, 359))
     )
       problems.push({ path: `${path}.start`, key: "problem-turtle-start", params: { size: SIZE } });
+    if (fit.length === 0 && problems.length === 0) {
+      const run = runToEnd(ziel as Program, turtle as unknown as World, config as unknown as Json, 10_000);
+      const lines = (run.world as unknown as TurtleState).lines.length;
+      if (run.status !== "done" || lines > MAX_TARGET_LINES)
+        problems.push({ path: `${path}.ziel`, key: "problem-target-lines", params: { max: MAX_TARGET_LINES } });
+    }
     return problems;
   },
   commands: COMMANDS,
+  ranges: RANGES,
   sensors: {},
   checks: {
     "bild-gleich": (s, c): Verdict => {
-      const target = targetLines(c).filter((l) => l[0] !== l[2] || l[1] !== l[3]);
-      const drawn = s.lines.filter((l) => l[0] !== l[2] || l[1] !== l[3]);
-      for (const p of samples(target))
-        if (distanceToLines(p, drawn) > TOLERANCE)
-          return {
-            ok: false,
-            why: { key: "fail-picture-missing", params: { x: Math.round(p[0]), y: Math.round(p[1]) } },
-          };
-      for (const p of samples(drawn))
-        if (distanceToLines(p, target) > TOLERANCE)
-          return {
-            ok: false,
-            why: { key: "fail-picture-extra", params: { x: Math.round(p[0]), y: Math.round(p[1]) } },
-          };
+      const target = cover(targetLines(c).filter((l) => l[0] !== l[2] || l[1] !== l[3]));
+      const drawn = cover(s.lines.filter((l) => l[0] !== l[2] || l[1] !== l[3]));
+      const missing = firstOutside(target, widen(drawn));
+      if (missing !== null) return { ok: false, why: { key: "fail-picture-missing", params: missing } };
+      const extra = firstOutside(drawn, widen(target));
+      if (extra !== null) return { ok: false, why: { key: "fail-picture-extra", params: extra } };
       return { ok: true };
     },
   },

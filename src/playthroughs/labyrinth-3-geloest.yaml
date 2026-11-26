@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
-# solange + wenn: das Programm folgt jedem Gang; es besteht alle 3 Testfälle.
+# „solange nicht am Ziel? gehe vorwärts“: klappt in allen 3 Gängen (3, 5 und 8 Felder).
 seed: 1
 route: labyrinth-3
 steps:
@@ -15,29 +15,15 @@ steps:
                   {
                     "s": "while",
                     "cond": { "e": "not", "a": { "e": "sense", "name": "am-ziel", "args": [] } },
-                    "body":
-                      [
-                        {
-                          "s": "if",
-                          "cond": { "e": "sense", "name": "wand-voraus", "args": [] },
-                          "then":
-                            [
-                              {
-                                "s": "if",
-                                "cond": { "e": "sense", "name": "wand-rechts", "args": [] },
-                                "then": [{ "s": "cmd", "name": "links", "args": [] }],
-                                "else": [{ "s": "cmd", "name": "rechts", "args": [] }],
-                              },
-                            ],
-                          "else": [{ "s": "cmd", "name": "vorwaerts", "args": [] }],
-                        },
-                      ],
+                    "body": [{ "s": "cmd", "name": "vorwaerts", "args": [] }],
                   },
                 ],
             },
         },
+        { kind: action, name: tempo, value: 5 },
         { kind: action, name: start },
       ]
-    state: { blocks: 10 }
-  - ticks: 400
+    state: { blocks: 4 }
+  - ticks: 20
     state: { phase: done, solved: true, verdict: { ok: true } }
+    announce: "Geschafft! Dein Programm klappt in allen 3 Testfällen."

@@ -30,4 +30,4 @@ steps:
       ]
     state: { blocks: 5, phase: running }
   - ticks: 300
-    state: { phase: done, solved: true, run: { commands: 15, world: { x: 5, y: 5 } } }
+    state: { phase: done, solved: true, run: { commands: 16, world: { x: 5, y: 5 } } }

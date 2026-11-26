@@ -27,16 +27,20 @@ languages: [de, en]
 routes:
   - id: labyrinth-1
     title: { de: "Labyrinth 1: Um die Ecke", en: "Maze 1: Around the corner" }
-  - id: labyrinth-2
-    title: { de: "Labyrinth 2: Die Treppe", en: "Maze 2: The stairs" }
-  - id: labyrinth-3
-    title: { de: "Labyrinth 3: Immer dem Gang nach", en: "Maze 3: Follow the corridor" }
   - id: turtle-1
     title: { de: "Turtle 1: Ein Quadrat", en: "Turtle 1: A square" }
+  - id: labyrinth-2
+    title: { de: "Labyrinth 2: Die Treppe", en: "Maze 2: The stairs" }
   - id: turtle-2
     title: { de: "Turtle 2: Quadrat mit Schleife", en: "Turtle 2: Square with a loop" }
   - id: turtle-3
     title: { de: "Turtle 3: Der Spirograph", en: "Turtle 3: The spirograph" }
+  - id: labyrinth-3
+    title: { de: "Labyrinth 3: Der lange Gang", en: "Maze 3: The long corridor" }
+  - id: labyrinth-4
+    title: { de: "Labyrinth 4: Geradeaus oder abbiegen?", en: "Maze 4: Straight on or turn?" }
+  - id: labyrinth-5
+    title: { de: "Labyrinth 5: Immer dem Gang nach", en: "Maze 5: Follow the corridor" }
   - id: autoren
     title: { de: "Eigene Aufgabe bauen", en: "Build your own task" }
     description:

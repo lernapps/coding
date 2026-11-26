@@ -9,7 +9,8 @@ import { WORLDS } from "../../core/worlds/index.ts";
 import blocklyDe from "../../data/blockly-de.json";
 import { texts, type Key, type Lang } from "../texts.ts";
 
-const COLOURS = { move: 210, control: 120, sense: 290, start: 30 };
+/** Dark enough for white text (contrast at least 4.5:1). */
+const COLOURS = { move: "#2f5d8a", control: "#2e6b30", sense: "#6f3a96", start: "#7a4f24" };
 
 /** The number fields of commands with arguments (name → one entry per argument); "colour" is a list of colours. */
 const ARGS: Readonly<Record<string, readonly ({ min: number; max: number; value: number } | "colour")[]>> = {
@@ -126,7 +127,7 @@ export function toolboxOf(
   const item = (type: string): Blockly.utils.toolbox.BlockInfo => ({ kind: "block", type });
   if (!categories) return { kind: "flyoutToolbox", contents: blocks.map(item) };
   const control = ["wiederhole", "solange", "wenn", "wenn-sonst"];
-  const groups: [Key, number, string[]][] = [
+  const groups: [Key, string, string[]][] = [
     [
       "category-move",
       COLOURS.move,
@@ -142,7 +143,7 @@ export function toolboxOf(
       .map(([name, colour, list]) => ({
         kind: "category",
         name: t(name),
-        colour: String(colour),
+        colour,
         contents: list.map(item),
       })),
   };

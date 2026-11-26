@@ -2,7 +2,7 @@
 // The root component: the challenge (title, task, limits), the world with its controls and the feedback per test case,
 // the block editor (loaded on demand), hints and the way back. It shows the core's state and sends actions; it keeps
 // no state of the task itself.
-import { computed, defineAsyncComponent, h, onMounted, ref, watch } from "vue";
+import { computed, defineAsyncComponent, h, nextTick, onMounted, ref, watch } from "vue";
 import { announce, prefersReducedMotion } from "@lernapps/tooling/a11y";
 import type { Input, Json } from "@lernapps/app-templates/interactive";
 import { configAt, testCount } from "../core/challenge.ts";
@@ -84,21 +84,52 @@ const description = computed(() => {
       : msg.key === "describe-turtle"
         ? ` ${t("describe-turtle-target")}`
         : "";
-  return say(msg) + goal;
+  return say(msg) + goal + around();
 });
+/** In the labyrinth: where the way is free around Kiko and where the goal is, for a learner who cannot see the map. */
+function around(): string {
+  const w = world.value;
+  const cfg = config.value;
+  if (w === undefined || cfg === null || worldState.value === null || c.value?.world.type !== "labyrinth") return "";
+  const free = (["ahead", "left", "right"] as const)
+    .filter(
+      (d) =>
+        w.sense(
+          worldState.value as never,
+          cfg,
+          d === "ahead" ? "wand-voraus" : `wand-${d === "left" ? "links" : "rechts"}`,
+          [],
+        ) === false,
+    )
+    .map((d) => t(`word-dir-${d}`));
+  const map = (cfg as { map: string[] }).map;
+  const y = map.findIndex((row) => row.includes("Z"));
+  const x = map[y]?.indexOf("Z") ?? -1;
+  return ` ${t("describe-labyrinth-around", { free: free.length > 0 ? free.join(", ") : t("word-dir-none"), gx: x + 1, gy: y + 1 })}`;
+}
 const highlight = computed(() =>
   props.state.run !== null && props.state.phase !== "edit" ? currentBlock(props.state.run) : null,
 );
 const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
-  if (v.ok) return tests.value > 1 ? t("solved-all", { count: tests.value }) : t("solved");
+  if (v.ok)
+    return tests.value > 1
+      ? t("solved-all", { count: tests.value })
+      : t(`solved-${c.value?.world.type ?? "labyrinth"}` as Key);
   const why = say(v.why ?? ({ key: "fail-limit" } as Msg));
   return v.test === 0 || tests.value === 1 ? why : t("failed-test", { n: v.test, why });
 });
 /** Explanations of the blocks of this task that are more than a command. */
 const explained = computed(() =>
   (c.value?.toolbox ?? []).filter((b) => `explain-${b}` in de).map((b) => t(`explain-${b}` as Key)),
+);
+/** The first task of its world in the collection: the help is open there. */
+const firstOfWorld = computed(
+  () =>
+    props.state.source === "route" &&
+    c.value !== null &&
+    ROUTES.find((id) => BUILT_IN[id]?.world.type === c.value?.world.type) === c.value.id,
 );
 /** The next task of the collection, after a solved one. */
 const next = computed(() => {
@@ -114,9 +145,21 @@ const statusText = computed(() => {
   if (s.phase === "paused") return t("phase-paused", { commands: s.run?.commands ?? 0 });
   return s.phase === "edit" ? t("phase-edit") : "";
 });
-watch(verdictText, (value) => {
-  if (value !== "") announce(value);
-});
+// Every new verdict is announced, also the same text again (a second press of Start with the same mistake).
+watch(
+  () => props.state.verdict,
+  (verdict) => {
+    if (verdict !== null) announce(verdictText.value);
+  },
+);
+// One step: where Kiko is now. A run that pauses: that it paused.
+watch(
+  () => [props.state.phase, props.state.run?.commands] as const,
+  ([phase], [before]) => {
+    if (phase === "paused") announce(`${statusText.value} ${description.value}`);
+    else if (phase === "running" && before !== "running") announce(t("phase-running"));
+  },
+);
 
 const backHref = computed(() => {
   const back = c.value?.back;
@@ -133,8 +176,21 @@ const result = computed(() =>
         attempts: props.state.attempts,
       }),
 );
+const hintList = ref<HTMLOListElement | null>(null);
+/** Shows the next hint, announces it, and keeps the focus in the hints when its button goes. */
+async function nextHint(): Promise<void> {
+  const next = c.value?.hints[props.state.hints];
+  act("hinweis");
+  if (next !== undefined) announce(text(next));
+  await nextTick();
+  if (c.value !== null && props.state.hints >= c.value.hints.length) hintList.value?.focus();
+}
+const copyMissing = ref(false);
 async function copy(): Promise<void> {
-  if (copyText === undefined) return;
+  if (copyText === undefined) {
+    copyMissing.value = true;
+    return;
+  }
   await copyText(result.value);
   copied.value = true;
   announce(t("copied"));
@@ -193,7 +249,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           <span v-if="tests > 1"> · {{ t("test-shown", { n: state.test, count: tests }) }}</span>
         </p>
         <p v-if="tests > 1">{{ t("tests-explain", { count: tests }) }}</p>
-        <details class="help" :open="state.source === 'route' && c.id === ROUTES[0]">
+        <details class="help" :open="firstOfWorld">
           <summary>{{ t("help") }}</summary>
           <ul>
             <li>{{ t("help-blocks") }}</li>
@@ -227,21 +283,23 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               :key="n"
               type="button"
               :aria-pressed="state.test === n"
-              :disabled="state.phase === 'running'"
+              :aria-disabled="state.phase === 'running'"
               @click="act('testfall', n)"
             >
               {{ t("test-n", { n }) }}
             </button>
           </div>
           <div class="controls">
-            <button type="button" class="primary" :disabled="state.phase === 'running'" @click="act('start')">
+            <button type="button" class="primary" :aria-disabled="state.phase === 'running'" @click="act('start')">
               {{ state.phase === "paused" ? t("continue") : t("run") }}
             </button>
             <button type="button" @click="act('schritt')">{{ t("step") }}</button>
-            <button type="button" :disabled="state.phase !== 'running'" @click="act('stopp')">{{ t("stop") }}</button>
+            <button type="button" :aria-disabled="state.phase !== 'running'" @click="act('stopp')">
+              {{ t("stop") }}
+            </button>
             <button
               type="button"
-              :disabled="state.run === null && state.verdict === null"
+              :aria-disabled="state.run === null && state.verdict === null"
               @click="act('zuruecksetzen')"
             >
               {{ t("reset") }}
@@ -281,10 +339,10 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             </button>
           </div>
           <div v-if="c.hints.length > 0" class="hints">
-            <ol v-if="state.hints > 0" :aria-label="t('hints')">
+            <ol v-if="state.hints > 0" ref="hintList" tabindex="-1" :aria-label="t('hints')">
               <li v-for="(hint, i) in c.hints.slice(0, state.hints)" :key="i">{{ text(hint) }}</li>
             </ol>
-            <button v-if="state.hints < c.hints.length" type="button" @click="act('hinweis')">
+            <button v-if="state.hints < c.hints.length" type="button" @click="nextHint">
               {{ t("hint-show", { n: state.hints + 1, count: c.hints.length }) }}
             </button>
           </div>
@@ -306,6 +364,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
         <p v-if="state.attempts > 0 && state.verdict !== null" class="result">
           <span>{{ t("back-result") }}: </span><output>{{ result }}</output>
           <button type="button" @click="copy">{{ copied ? t("copied") : t("copy") }}</button>
+          <span v-if="copyMissing">{{ t("copy-missing") }}</span>
         </p>
       </footer>
     </template>
@@ -378,7 +437,7 @@ button[aria-pressed="true"] {
   background: #1f2a44;
   color: #fff;
 }
-button:disabled {
+button[aria-disabled="true"] {
   opacity: 0.55;
   cursor: default;
 }

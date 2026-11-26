@@ -70,7 +70,44 @@ describe("turtle", () => {
     const short = runToEnd({ main: [{ s: "cmd", name: "gehe", args: [num(40)] }] }, turtle as never, config, 50);
     expect(turtle.checks["bild-gleich"]?.(short.world as never, config)).toEqual({
       ok: false,
-      why: { key: "fail-picture-missing", params: { x: 100, y: 57 } },
+      why: { key: "fail-picture-missing", params: { x: 100, y: 50 } },
     });
+  });
+});
+
+describe("hostile challenges", () => {
+  const t = BUILT_IN["turtle-1"];
+  const l = BUILT_IN["labyrinth-1"];
+  const num = (value: number) => ({ e: "num", value });
+  const turtleWith = (ziel: unknown) => ({ ...t, world: { type: "turtle", version: 1, config: { ziel } } });
+  it("refuses a huge distance in the target picture", () => {
+    expect(challengeProblems(turtleWith({ main: [{ s: "cmd", name: "gehe", args: [num(1e300)] }] }))[0]?.key).toBe(
+      "problem-number",
+    );
+  });
+  it("refuses a calculation in the target picture", () => {
+    const big = { e: "arith", op: "*", a: num(1e200), b: num(1e200) };
+    expect(challengeProblems(turtleWith({ main: [{ s: "cmd", name: "gehe", args: [big] }] }))).not.toEqual([]);
+  });
+  it("refuses a target picture with too many lines", () => {
+    const many = {
+      main: [
+        {
+          s: "repeat",
+          times: num(99),
+          body: [{ s: "repeat", times: num(3), body: [{ s: "cmd", name: "gehe", args: [num(5)] }] }],
+        },
+      ],
+    };
+    expect(challengeProblems(turtleWith(many))[0]?.key).toBe("problem-target-lines");
+  });
+  it("refuses a start program with a block of another world", () => {
+    expect(challengeProblems({ ...l, start: { main: [{ s: "cmd", name: "gehe", args: [num(5)] }] } })[0]?.key).toBe(
+      "problem-block",
+    );
+  });
+  it("refuses a start program with a huge repeat", () => {
+    const start = { main: [{ s: "repeat", times: num(1e9), body: [] }] };
+    expect(challengeProblems({ ...l, start })[0]?.key).toBe("problem-number");
   });
 });

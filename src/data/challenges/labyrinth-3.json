@@ -2,77 +2,52 @@
   "format": 1,
   "id": "labyrinth-3",
   "title": {
-    "de": "Immer dem Gang nach",
-    "en": "Follow the corridor"
+    "de": "Der lange Gang",
+    "en": "The long corridor"
   },
   "task": {
-    "de": "Bau ein Programm, das den Roboter durch jeden Gang ins Ziel bringt. Wir probieren es in 3 Gängen aus. Der Block „solange nicht am Ziel?“ ist schon da.",
-    "en": "Build a program that brings the robot through any corridor to the goal. We try it in 3 corridors. The block “while not at the goal?” is already there."
+    "de": "Kiko soll vorwärts gehen, bis er am Ziel ist. Der Gang ist mal kurz, mal lang: Wir probieren dein Programm in 3 Gängen aus.",
+    "en": "Kiko should move forward until it is at the goal. The corridor is sometimes short, sometimes long: we try your program in 3 corridors."
   },
   "world": {
     "type": "labyrinth",
     "version": 1,
     "config": {
-      "map": ["#########", "#S.....##", "######.##", "##Z....##", "#########"],
+      "map": ["######", "#S..Z#", "######"],
       "facing": "east"
     }
   },
-  "toolbox": [
-    "vorwaerts",
-    "links",
-    "rechts",
-    "solange",
-    "wenn-sonst",
-    "nicht",
-    "wand-voraus",
-    "wand-rechts",
-    "am-ziel"
-  ],
-  "start": {
-    "main": [
-      {
-        "s": "while",
-        "cond": {
-          "e": "not",
-          "a": {
-            "e": "sense",
-            "name": "am-ziel",
-            "args": []
-          }
-        },
-        "body": []
-      }
-    ]
-  },
+  "toolbox": ["vorwaerts", "solange", "nicht", "am-ziel"],
+  "start": null,
   "limits": {
-    "blocks": 10,
-    "steps": 400
+    "blocks": 4,
+    "steps": 50
   },
   "tests": [
     {
       "config": {
-        "map": ["#######", "#S.####", "##.####", "##....#", "#####.#", "#Z....#", "#######"]
+        "map": ["########", "#S....Z#", "########"]
       }
     },
     {
       "config": {
-        "map": ["#########", "#Z......#", "#######.#", "#S......#", "#########"]
+        "map": ["###########", "#S.......Z#", "###########"]
       }
     }
   ],
-  "checks": ["ziel-erreicht", "hoechstens-bloecke"],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:solange"],
   "hints": [
     {
-      "de": "Was soll Kiko in jedem Schritt tun? Ist vorne frei, geht er vorwärts. Sonst muss er sich drehen.",
-      "en": "What should Kiko do each time? If the way ahead is free, it moves forward. If not, it has to turn."
+      "de": "Eine Zählschleife reicht nicht: Du weißt nicht, wie lang der Gang ist.",
+      "en": "A count loop is not enough: you do not know how long the corridor is."
     },
     {
-      "de": "Mit „wenn … dann … sonst“ und „Wand voraus?“ entscheidet Kiko, ob er geht oder sich dreht.",
-      "en": "With “if … then … else” and “wall ahead?”, Kiko decides whether to move or to turn."
+      "de": "„solange … tue“ wiederholt, solange die Frage mit „ja“ beantwortet wird. Welche Frage passt?",
+      "en": "“while … do” repeats as long as the answer to the question is “yes”. Which question fits?"
     },
     {
-      "de": "In welche Richtung dreht er? Frag, ob rechts eine Wand ist.",
-      "en": "Which way does it turn? Ask if there is a wall on the right."
+      "de": "Frag „nicht am Ziel?“.",
+      "en": "Ask “not at the goal?”."
     }
   ],
   "view": "bloecke"

@@ -86,7 +86,7 @@ async function copy(link: string): Promise<void> {
         @input="emit('input', { kind: 'action', name: 'entwurf', value: ($event.target as HTMLTextAreaElement).value })"
       />
     </label>
-    <div v-if="!valid" class="problems" role="status">
+    <div v-if="!valid" class="problems">
       <p>{{ t("authoring-problems", { count: state.problems.length }) }}</p>
       <ul>
         <li v-for="(p, i) in state.problems" :key="i">
@@ -94,7 +94,7 @@ async function copy(link: string): Promise<void> {
         </li>
       </ul>
     </div>
-    <p v-else class="ok" role="status">{{ t("authoring-valid") }}</p>
+    <p v-else class="ok">{{ t("authoring-valid") }}</p>
     <p>
       <button
         type="button"
@@ -110,8 +110,10 @@ async function copy(link: string): Promise<void> {
       <p v-if="length > MAX_LINK" class="problems">{{ t("problem-too-long", { max: MAX_LINK }) }}</p>
       <p v-for="l in ['de', 'en'] as const" :key="l" class="link">
         <span>{{ t(`authoring-link-${l}`) }}</span>
-        <output>{{ links[l] }}</output>
-        <button type="button" @click="copy(links[l])">{{ t("copy") }}</button>
+        <code class="url">{{ links[l] }}</code>
+        <button type="button" :aria-label="t('copy-for', { what: t(`authoring-link-${l}`) })" @click="copy(links[l])">
+          {{ t("copy") }}
+        </button>
       </p>
     </div>
   </section>
@@ -149,7 +151,7 @@ textarea {
   gap: 0.5rem;
   align-items: center;
 }
-.link output {
+.link .url {
   display: block;
   overflow-wrap: anywhere;
   font:

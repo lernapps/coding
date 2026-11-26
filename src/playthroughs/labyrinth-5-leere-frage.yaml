@@ -2,7 +2,7 @@
 # Ein „solange“ ohne Frage läuft nicht: Die Werkstatt sagt, in welchem Block die Frage fehlt. Die Startvorgabe
 # „solange nicht am Ziel?“ ohne Blöcke darin hört nicht auf und stoppt am Schrittlimit.
 seed: 1
-route: labyrinth-3
+route: labyrinth-5
 steps:
   - inputs:
       - {

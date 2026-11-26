@@ -49,7 +49,7 @@ onMounted(() => {
     sounds: false,
     media: new URL("../blockly-media/", import.meta.url).href,
     trashcan: true,
-    zoom: { controls: true, startScale: narrow ? 0.6 : 0.85 },
+    zoom: { controls: true, startScale: narrow ? 0.75 : 0.9 },
     move: { scrollbars: true, drag: true, wheel: false },
   });
   // Loading fires no change events: the core already has the start program, and a late event would overwrite a
@@ -97,10 +97,10 @@ onBeforeUnmount(() => {
 </style>
 
 <style>
-/* The block that ran last: a clear yellow frame instead of Blockly's pale emboss, which looks like a switched-off block. */
+/* The block that ran last: a clear dark frame (contrast on the work area and the blocks) instead of Blockly's pale emboss, which looks like a switched-off block. */
 .blocklyHighlighted > .blocklyPath {
   filter: none;
-  stroke: #ffc300;
-  stroke-width: 4px;
+  stroke: #111827;
+  stroke-width: 5px;
 }
 </style>

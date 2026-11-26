@@ -77,8 +77,8 @@
   "checks": ["bild-gleich", "hoechstens-bloecke"],
   "hints": [
     {
-      "de": "Bau zuerst ein Quadrat mit Seiten von 50 Schritten.",
-      "en": "First build a square with sides of 50 steps."
+      "de": "Bau zuerst ein Quadrat mit Seiten von 50 Pixeln.",
+      "en": "First build a square with sides of 50 pixels."
     },
     {
       "de": "Leg das Quadrat und eine Drehung um 30 Grad in eine zweite Schleife.",

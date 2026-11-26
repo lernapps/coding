@@ -6,8 +6,8 @@
     "en": "A square"
   },
   "task": {
-    "de": "Lass Kiko das graue Quadrat nachzeichnen. Jede Seite ist 80 Schritte lang.",
-    "en": "Make Kiko draw the grey square. Each side is 80 steps long."
+    "de": "Lass Kiko das graue Quadrat nachzeichnen. Jede Seite ist 80 Pixel lang.",
+    "en": "Make Kiko draw the grey square. Each side is 80 pixels long."
   },
   "world": {
     "type": "turtle",

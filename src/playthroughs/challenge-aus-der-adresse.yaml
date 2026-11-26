@@ -17,5 +17,5 @@ steps:
         },
         { kind: action, name: start },
       ]
-    ticks: 40
+    ticks: 60
     state: { solved: true }

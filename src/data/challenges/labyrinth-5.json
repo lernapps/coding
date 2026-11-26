@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "id": "labyrinth-5",
+  "title": {
+    "de": "Immer dem Gang nach",
+    "en": "Follow the corridor"
+  },
+  "task": {
+    "de": "Bau ein Programm, das Kiko durch jeden Gang ins Ziel bringt. Benutz „wenn … dann … sonst“. Wir probieren es in 3 Gängen aus. Der Block „solange nicht am Ziel?“ ist schon da.",
+    "en": "Build a program that brings Kiko through any corridor to the goal. Use “if … then … else”. We try it in 3 corridors. The block “while not at the goal?” is already there."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["#########", "#S.....##", "######.##", "##Z....##", "#########"],
+      "facing": "east"
+    }
+  },
+  "toolbox": [
+    "vorwaerts",
+    "links",
+    "rechts",
+    "solange",
+    "wenn-sonst",
+    "nicht",
+    "wand-voraus",
+    "wand-rechts",
+    "am-ziel"
+  ],
+  "start": {
+    "main": [
+      {
+        "s": "while",
+        "cond": {
+          "e": "not",
+          "a": {
+            "e": "sense",
+            "name": "am-ziel",
+            "args": []
+          }
+        },
+        "body": []
+      }
+    ]
+  },
+  "limits": {
+    "blocks": 10,
+    "steps": 400
+  },
+  "tests": [
+    {
+      "config": {
+        "map": ["#######", "#S.####", "##.####", "##....#", "#####.#", "#Z....#", "#######"]
+      }
+    },
+    {
+      "config": {
+        "map": ["#########", "#Z......#", "#######.#", "#S......#", "#########"]
+      }
+    }
+  ],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:wenn-sonst"],
+  "hints": [
+    {
+      "de": "Was soll Kiko in jedem Schritt tun? Ist vorne frei, geht er vorwärts. Sonst muss er sich drehen.",
+      "en": "What should Kiko do each time? If the way ahead is free, it moves forward. If not, it has to turn."
+    },
+    {
+      "de": "Mit „wenn … dann … sonst“ und „Wand voraus?“ entscheidet Kiko, ob er geht oder sich dreht.",
+      "en": "With “if … then … else” and “wall ahead?”, Kiko decides whether to move or to turn."
+    },
+    {
+      "de": "In welche Richtung dreht er? Frag, ob rechts eine Wand ist.",
+      "en": "Which way does it turn? Ask if there is a wall on the right."
+    }
+  ],
+  "view": "bloecke"
+}

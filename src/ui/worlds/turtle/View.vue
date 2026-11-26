@@ -69,7 +69,7 @@ const target = computed(() => targetLines(props.config));
   text-anchor: end;
 }
 .target {
-  stroke: #c4c4c4;
+  stroke: #8a8a8a;
   stroke-width: 5;
   stroke-linecap: round;
 }

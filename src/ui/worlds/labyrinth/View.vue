@@ -77,7 +77,8 @@ const trail = computed(() => new Set(props.state.trail));
 }
 .goal {
   fill: #a6dba0;
-  stroke: #2f7d32;
+  stroke: #1e5a20;
+  stroke-width: 3;
 }
 .pole {
   stroke: #1f2a44;
@@ -87,8 +88,7 @@ const trail = computed(() => new Set(props.state.trail));
   fill: #2f7d32;
 }
 .trail {
-  fill: #e8590c;
-  opacity: 0.45;
+  fill: #b8460a;
 }
 .robot {
   transition: transform 0.15s linear;

@@ -1,6 +1,7 @@
 // A challenge (format 1, public/schemas/challenge.v1.schema.json): a world, a task, the toolbox, limits, test cases and
 // checks. This validator follows the schema and is the one the workshop runs (no schema library: those compile code
 // with `new Function`); src/core/challenge.test.ts keeps both alike.
+import { fitProblems } from "./fits.ts";
 import { blocksOf, emptySlot, programProblems, type Program } from "./ir.ts";
 import { runToEnd, type Run } from "./interpreter.ts";
 import { isInt, isObject, type Json, type Msg, type Problem } from "./json.ts";
@@ -102,7 +103,11 @@ export function challengeProblems(value: unknown): Problem[] {
       if (world !== undefined && (typeof b !== "string" || !known.includes(b)))
         p.push({ path: `toolbox[${i}]`, key: "problem-block", params: { name: String(b) } });
     });
-  if (value["start"] !== null && value["start"] !== undefined) p.push(...programProblems(value["start"], "start"));
+  if (value["start"] !== null && value["start"] !== undefined) {
+    const syntax = programProblems(value["start"], "start");
+    p.push(...syntax);
+    if (syntax.length === 0 && world !== undefined) p.push(...fitProblems(value["start"] as Program, world, "start"));
+  }
   const limits = value["limits"];
   if (!isObject(limits)) p.push({ path: "limits", key: "problem-limits" });
   else {

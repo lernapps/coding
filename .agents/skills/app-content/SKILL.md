@@ -15,10 +15,16 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Competencies
 
-- Kapitel Labyrinth (Routen `labyrinth-1` … `labyrinth-3`, Daten `src/data/challenges/labyrinth-*.json`):
+- Reihenfolge der Routen (`src/app.yaml`, `src/data/index.ts`): labyrinth-1, turtle-1 (Sequenz) → labyrinth-2, turtle-2,
+  turtle-3 (Zählschleife) → labyrinth-3 (bedingte Wiederholung allein) → labyrinth-4 (einfache Verzweigung) →
+  labyrinth-5 (beides zusammen).
+- Kapitel Labyrinth (Routen `labyrinth-1` … `labyrinth-5`, Daten `src/data/challenges/labyrinth-*.json`):
   - `sequenz` – Ich kann Anweisungen in der richtigen Reihenfolge zu einer Sequenz anordnen. → `labyrinth-1`
   - `wiederholung-feste-anzahl` – Ich kann mit einer Wiederholung mit fester Anzahl Anweisungen mehrmals ausführen lassen. → `labyrinth-2`
-  - `wiederholung-mit-bedingung`, `verzweigung` – Ich kann mit einer Wiederholung mit Bedingung … / mit einer Verzweigung … → `labyrinth-3`
+  - `wiederholung-mit-bedingung` – Ich kann mit einer Wiederholung mit Bedingung … → `labyrinth-3` (Gänge mit 3, 5, 8
+    Feldern, Pflichtblock `solange`)
+  - `verzweigung` – Ich kann mit einer Verzweigung … → `labyrinth-4` (mit und ohne Wand, Pflichtblock `wenn`)
+  - beides → `labyrinth-5` (3 Gänge, Startvorgabe „solange nicht am Ziel?“, Pflichtblock `wenn-sonst`)
 - Kapitel Turtle (Routen `turtle-1` … `turtle-3`, Daten `src/data/challenges/turtle-*.json`): `sequenz` → `turtle-1`
   (Quadrat, höchstens 8 Blöcke), `wiederholung-feste-anzahl` → `turtle-2` (Quadrat, höchstens 3 Blöcke), `turtle-3`
   (Spirograph, verschachtelte Schleifen, höchstens 7 Blöcke).
@@ -37,18 +43,21 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   config}`, `toolbox`, `start`, `limits {blocks, steps}`, `tests[]`, `checks[]`, `hints[]`, `view`, `back`.
 - Jede eingebaute Challenge hat eine Musterlösung `src/data/solutions/<id>.json` (IR) und mindestens zwei Playthroughs
   `src/playthroughs/<id>-*.yaml`: gelöst, und ein typischer Fehler mit Rückmeldung.
+- Das Ziel beendet das Programm nicht: Blöcke nach dem Ziel laufen weiter (eine zu große Zahl in „wiederhole“ stößt an
+  die Wand). Pflichtblöcke mit `benutzt-block:<block>`, damit das Konzept der Aufgabe nicht umgangen wird.
+- Das Schrittlimit (`limits.steps`) zählt Befehle der Welt; Rückmeldung „Nach … Befehlen“.
 - Eine Challenge mit bedingter Schleife („solange“) hat mindestens drei Testfälle, damit fest codierte Schritte nicht
   bestehen. Zählschleifen erzwingt `limits.blocks` (ein Testfall genügt).
 - Welt Turtle: `world.config.ziel` ist das Zielbild als Programm; Prüfung `bild-gleich` (Abstand höchstens 2, Farbe
-  zählt nicht); die Rückmeldung nennt die Stelle (x|y), an der das Bild abweicht. Fläche 200 × 200, Start ohne
-  Angabe in der Mitte, Blick nach oben.
+  zählt nicht); die Rückmeldung nennt die Stelle (x|y), an der das Bild abweicht. Fläche 200 × 200 Pixel, Start ohne
+  Angabe in der Mitte, Blick nach oben. Zielbild nur mit Zahlen im Bereich der Blöcke, höchstens 200 Linien.
 
 ## Terminology
 
 - Lernende mit „du“ / „you“, einfache Sprache (ISO 24495), Plain English.
 - Für Lernende „Aufgabe“ (en „task“), nicht „Challenge“; „Testfall“ (en „test case“); „Block“; „Roboter“.
-- Blocktexte Turtle: `gehe … Schritte`, `drehe dich um … Grad nach links/rechts`, `Stift hoch`, `Stift runter`,
-  `nimm die Farbe …`; en: `move … steps`, `turn left/right by … degrees`, `pen up`, `pen down`, `use the colour …`.
+- Blocktexte Turtle: `gehe … Pixel`, `drehe dich um … Grad nach links/rechts`, `Stift hoch`, `Stift runter`,
+  `nimm die Farbe …`; en: `move … pixels`, `turn left/right by … degrees`, `pen up`, `pen down`, `use the colour …`.
 - Koordinaten: de „Feld (4|2)“ bzw. „(50|100)“, en „square (4, 2)“ bzw. „(50, 100)“.
 - Blocktexte: `gehe vorwärts`, `drehe dich nach links`, `drehe dich nach rechts`, `wiederhole … mal`, `solange … tue`, `wenn … dann … sonst`, `Wand voraus?`; en: `move forward`, `turn left`, `turn right`, `repeat … times`, `while … do`, `if … then … else`, `wall ahead?`.
 - Felder heißen nach Spalte und Zeile: „Feld (3|2)“, Zählung ab 1 von links oben.
