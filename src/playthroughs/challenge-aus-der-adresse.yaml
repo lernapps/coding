@@ -1,90 +1,21 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
-# Weg A: Die Oberfläche liest die Challenge aus ?c= und schickt sie als Aktion (Übergang bis
-# lernapps/app-templates#201). Eine gültige läuft; eine mit zu hoher Welt-Version wird nicht ausgeführt.
+# Weg A: Die Challenge kommt in der Adresse (?c=…) und die Runtime gibt sie an start(). Eine gültige läuft.
 seed: 1
+params:
+  {
+    c: "RZBNasMwEIWvIiZbJ6FkZyiF0pIDtKuELmR5bA2WpTCS84tv02N0l4t15DSpMbY0-t7ozbtAE7jXCcqnAqiGEhLGNG-1b6GARMkhlBeo5QtvyGp9O0Av-0-LygRmqgPDKLSO3QNeo1Xko9oQusVdsQ4qySu6Nmgpi-gQ2NVZlU67rHO6OjH5ZEWzR44U_OTNBN9Qm8Fe76Dcwiw_As0-FpvpP-2_Cmi0ITFZAuqYYMzGQnBVOGbVPvBBI6eYyZg0y-R-cK4ARz1JWS6oXDCdrFZZKmnIciu0sTiVt3CWmebIjGRsyo2sGP6j9oQHuVt6CI3iq9JmSmVgJ_Ul-Vvg1C2jsQ6pQb980c8rQWV2dI8ENwNff0ynzgOrd-7c9ZuH__Bfpe09TDzunPbSU7Iax_EX",
+  }
 steps:
-  - inputs:
-      [
-        {
-          kind: action,
-          name: challenge,
-          value:
-            {
-              "format": 1,
-              "id": "test-gang",
-              "title": { "de": "Der Gang", "en": "The corridor" },
-              "task": { "de": "Geh ins Ziel.", "en": "Go to the goal." },
-              "world":
-                {
-                  "type": "labyrinth",
-                  "version": 1,
-                  "config": { "map": ["#####", "#S.Z#", "#####"], "facing": "east" },
-                },
-              "toolbox": ["vorwaerts"],
-              "start": null,
-              "limits": { "blocks": 3 },
-              "tests": [],
-              "checks": ["ziel-erreicht"],
-              "hints": [],
-              "view": "bloecke",
-              "back":
-                {
-                  "url": "/informatik/schleifen/?a=3",
-                  "label": { "de": "Zurück zur Erklärung", "en": "Back to the explanation" },
-                },
-            },
-        },
-      ]
+  - ticks: 1
     state: { source: address, problems: [], challenge: { id: test-gang }, test: 1 }
   - inputs:
       [
         {
           kind: action,
           name: programm,
-          value:
-            {
-              "main":
-                [{ "s": "cmd", "name": "vorwaerts", "args": [] }, { "s": "cmd", "name": "vorwaerts", "args": [] }],
-            },
+          value: { main: [{ s: cmd, name: vorwaerts, args: [] }, { s: cmd, name: vorwaerts, args: [] }] },
         },
         { kind: action, name: start },
       ]
     ticks: 40
     state: { solved: true }
-  - inputs:
-      [
-        {
-          kind: action,
-          name: challenge,
-          value:
-            {
-              "format": 1,
-              "id": "test-gang",
-              "title": { "de": "Der Gang", "en": "The corridor" },
-              "task": { "de": "Geh ins Ziel.", "en": "Go to the goal." },
-              "world": { "type": "labyrinth", "version": 7, "config": { "map": ["#S#"], "facing": "east" } },
-              "toolbox": ["vorwaerts"],
-              "start": null,
-              "limits": { "blocks": 3 },
-              "tests": [],
-              "checks": ["ziel-erreicht"],
-              "hints": [],
-              "view": "bloecke",
-              "back":
-                {
-                  "url": "/informatik/schleifen/?a=3",
-                  "label": { "de": "Zurück zur Erklärung", "en": "Back to the explanation" },
-                },
-            },
-        },
-      ]
-    state:
-      {
-        source: address,
-        challenge: null,
-        problems: [{ path: world.version, key: problem-world-version, params: { newest: 1 } }],
-      }
-  - inputs: [{ kind: action, name: challenge, value: null }]
-    state: { challenge: null, problems: [{ path: "", key: problem-unreadable }] }
-  - inputs: [{ kind: action, name: route, value: labyrinth-1 }]
-    state: { source: route, challenge: { id: labyrinth-1 }, problems: [] }

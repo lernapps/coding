@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: failed pre-push runs, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { app-content-guide: 1, checks-pass: 5, plan-file: 1 }
+failedChecks: { app-content-guide: 1, checks-pass: 8, plan-file: 1 }
 ---
 
 # Plan: coding, first version
@@ -47,7 +47,7 @@ Lernende (7-8, später 9-10) programmieren in der Programmierwerkstatt mit Blöc
 - Prüfskript: kein npm-Paket; eine Datei ohne Abhängigkeiten mit Version im Namen, `coding/tools/challenge-check.v1.mjs`; ein neues Format kommt als `v2` daneben. (Orchestrator, Checkpoint 2)
 - Welt-Ansicht getrennt vom Welt-Kern (Abweichung vom Entwurf), im arc42-Teil festgehalten. (Orchestrator, Checkpoint 2)
 - Turtle `bild-gleich`: Hausdorff ≤ 2; die Rückmeldung sagt, wo das Bild abweicht. (Orchestrator, Checkpoint 2)
-- Übergangsschicht für `?c=` mit TODO auf lernapps/app-templates#201.
+- Weg A über `start(seed, route, params)` (app-templates 0.21.0, #202): Der Kern entpackt `c` selbst (eigener DEFLATE-Leser, weil `start` synchron ist). `c` gilt für den ganzen Besuch (Vertrag der Runtime, ihr e2e-Test prüft es); ein Klick auf eine Route der Liste startet einen neuen Besuch ohne `c`. Abweichung von „die Route gewinnt“: Ein Link mit `?c=` und Hash zeigt die Challenge, weil die Runtime jede Seite mit Hash öffnet. (guess, an den Orchestrator gemeldet)
 - Die Musterlösung steht nie im Link: Das Prüfskript bekommt Challenge und Lösung getrennt.
 
 
@@ -86,6 +86,8 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 **Prüfung als Lernende 7-8 (Muster), behoben**: Einführung „So funktioniert die Werkstatt“ und Erklärung der Blöcke je Aufgabe; „Testfall“ erklärt, bei nur einem Testfall nicht mehr genannt; Rückmeldung zur Wand nennt das Feld, auf dem Kiko steht, und dass vor ihm eine Wand ist; Richtungspfeil gelb und vor der Antenne; Koordinaten en als (4, 2); lose Blöcke werden blass; leere Frage in „solange“ wird gemeldet statt endlos zu laufen; Versuche zählen erst mit einem Ergebnis; ein Fehlschlag in einem anderen Testfall zeigt diesen Testfall mit dem Endstand; Schrittlimit Labyrinth 3 auf 400; Labyrinth 3 mit Startvorgabe „solange nicht am Ziel?“; Kategorien bei mehr als 6 Blöcken; Tempo mit „langsam/schnell“; Link zur nächsten Aufgabe; Rückweg auch oben; Ergebniszeile mit Titel und Zweck; `back.url` je Sprache möglich; Blockly-Texte für Screenreader ergänzt; „stair“ statt „step“ (en).
 **Nicht behoben, an den Orchestrator**: Sprachumschalter und Routen-Links der Runtime verlieren `?c=` bzw. markieren die erste Route als aktuell (bis #201/#202); Titel bricht auf 360 px als „Programmierwerkstat t“ (h1 der Runtime ohne Silbentrennung); geöffnete Kategorie verdeckt auf 360 px den Block „Programm“ (Blockly); Programm geht beim Wechsel von Aufgabe oder Sprache verloren (Speicher folgt in der Aufgabe „Fortschritt im Speicher“).
+
+**arc42 angenommen (ARC42_CONSISTENT, Basis 43adb52)**: Nach `lernapps update` auf app-templates 0.21.0 meldet `arc42 diff --staged` geänderte Prosa bzw. Blöcke in `if-pages`, `term-core` und `term-playthrough`. Sie liegen im allgemeinen Teil außerhalb der App-Abschnitte und kommen unverändert aus der Vorlage (Parameter der Adresse); die App ändert dort nichts.
 
 ## Explore
 

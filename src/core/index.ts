@@ -1,7 +1,8 @@
 // The core of the workshop (contract of @lernapps/app-templates/interactive): the challenge, the learner's program as
 // IR, and the run of it on the test case shown. Pure TypeScript, the state plain JSON. Blockly is only the input: the
 // UI sends the program as the action "programm".
-import type { Input } from "@lernapps/app-templates/interactive";
+import type { Input, Params } from "@lernapps/app-templates/interactive";
+import { unpack } from "./inflate.ts";
 import {
   challengeProblems,
   configAt,
@@ -14,7 +15,7 @@ import {
 } from "./challenge.ts";
 import { advance, begin, type Run } from "./interpreter.ts";
 import { blocksOf, EMPTY, programProblems, type Program } from "./ir.ts";
-import { isObject, type Msg, type Problem } from "./json.ts";
+import type { Msg, Problem } from "./json.ts";
 import { worldOf } from "./worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
 
@@ -80,9 +81,33 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
 export const AUTHORING = "autoren";
 const EXAMPLE = JSON.stringify(BUILT_IN["labyrinth-2"] ?? null, null, 2);
 
-export function start(seed: number, route: string): State {
+/** The challenge of the address (`?c=`, way A): checked, else the reasons why it cannot run. */
+function fromAddress(seed: number, c: string): State {
+  if (c.length > MAX_LINK)
+    return fresh(seed, "address", null, [{ path: "", key: "problem-too-long", params: { max: MAX_LINK } }]);
+  let value: unknown;
+  try {
+    value = unpack(c);
+  } catch {
+    return fresh(seed, "address", null, [{ path: "", key: "problem-unreadable" }]);
+  }
+  const problems = challengeProblems(value);
+  return problems.length > 0 ? fresh(seed, "address", null, problems) : fresh(seed, "address", value as Challenge);
+}
+
+/** A route of the collection, the authoring page, or (an unknown id) the first route. */
+function fromRoute(seed: number, route: string): State {
   if (route === AUTHORING) return { ...fresh(seed, "route", null), draft: EXAMPLE };
   return fresh(seed, "route", BUILT_IN[route] ?? BUILT_IN[ROUTES[0] ?? ""] ?? null);
+}
+
+/**
+ * Starts with the challenge of the address when it has one (`c`), else with the route. The parameters hold for the
+ * whole visit: a new route starts the same challenge of the address again (the UI leaves it by a new visit).
+ */
+export function start(seed: number, route: string, params: Params = {}): State {
+  const c = params["c"];
+  return c === undefined ? fromRoute(seed, route) : fromAddress(seed, c);
 }
 
 /** The problems of a draft: not JSON, or not a valid challenge. */
@@ -152,18 +177,6 @@ export function step(state: State, input: Input): State {
   if (input.kind !== "action") return state;
   const c = state.challenge;
   switch (input.name) {
-    case "challenge": {
-      // TODO(lernapps/app-templates#201): the challenge of the address (?c=) comes as an action of the root component
-      // until the runtime gives the address's parameters to start(seed, route, params).
-      if (isObject(input.value) && input.value["error"] === "too-long")
-        return fresh(state.seed, "address", null, [{ path: "", key: "problem-too-long", params: { max: MAX_LINK } }]);
-      if (input.value === null || input.value === undefined)
-        return fresh(state.seed, "address", null, [{ path: "", key: "problem-unreadable" }]);
-      const problems = challengeProblems(input.value);
-      return problems.length > 0
-        ? fresh(state.seed, "address", null, problems)
-        : fresh(state.seed, "address", input.value as unknown as Challenge);
-    }
     case "entwurf":
       // The authoring page: the draft as the author types it, checked at once.
       return state.draft === null || typeof input.value !== "string" || state.challenge !== null
@@ -179,14 +192,6 @@ export function step(state: State, input: Input): State {
       return state.draft === null || state.challenge === null
         ? state
         : { ...fresh(state.seed, "route", null), draft: state.draft, problems: draftProblems(state.draft) };
-    case "route": {
-      // TODO(lernapps/app-templates#201): leaving a challenge of the address for a route of the collection; the runtime
-      // does not restart when the route of the address is the one it started with.
-      const id = String(input.value);
-      return state.source === "address" && BUILT_IN[id] !== undefined
-        ? fresh(state.seed, "route", BUILT_IN[id])
-        : state;
-    }
     case "programm": {
       if (c === null || programProblems(input.value).length > 0) return state;
       const program = input.value as unknown as Program;

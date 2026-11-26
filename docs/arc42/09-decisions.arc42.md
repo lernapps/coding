@@ -1,6 +1,6 @@
 # Architecture Decisions
 
-<!-- From @lernapps/app-templates 0.20.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
+<!-- From @lernapps/app-templates 0.21.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
 
 <!--
 Arc42 chapter 9. Document the significant architecture decisions as Architecture Decision
@@ -360,6 +360,30 @@ addresses: qg-checkable
 :::
 ```
 
+## Parameters of the Address as Data for the Core
+
+Another app links to an interactive app with data the app starts from, such as a challenge for the coding workshop
+(lernapps/coding: `app/?c=<base64url(deflate-raw(JSON))>`, about 2000 characters). The shell reads every search
+parameter of the address but `seed` once and passes them as the third argument, `start(seed, route, params)`, also
+when a new route starts the core again. A name given twice counts with its first value, as the seed does. The runtime
+only passes them through: it does not check, shorten, log or store them; the core checks them and starts as without
+them when they do not fit. They are data, not routes: the routes stay the hash of `src/app.yaml`. A playthrough names
+them in `params`; the build passes them to `start`, the browser opens the address with them. A core with
+`start(seed, route)` ignores the third argument, so apps and playthroughs without parameters stay as they are.
+Rejected: the root component reads the address and sends an action, because the core then first starts without the
+data and loses it on every new route; a fixed list of parameter names in the runtime, because each app has its own;
+a back channel between apps (not part of this).
+
+```arc42
+:::decision
+id: dec-address-params
+title: The core gets the parameters of the address as data
+status: accepted
+date: 2026-11-26
+addresses: qg-checkable
+:::
+```
+
 ## Playthroughs as Data
 
 A playthrough is a seed, a route and steps of inputs with the state or announcement expected after them, written as
@@ -427,6 +451,22 @@ title: Challenges are checked by own code, not by a schema library
 status: accepted
 date: 2026-11-26
 addresses: qg-privacy
+:::
+```
+
+## Own Reader for the Challenge in the Address
+
+The runtime gives the address's parameters to `start`, which is synchronous; the browser unpacks DEFLATE only
+asynchronously (DecompressionStream). So the core unpacks `c` with a small reader of its own (base64url, raw DEFLATE,
+UTF-8), tested against Node's zlib at every level. Rejected: a link without compression, which would be about twice as long.
+
+```arc42
+:::decision
+id: dec-own-inflate
+title: The core unpacks the challenge of the address itself
+status: accepted
+date: 2026-11-26
+addresses: qg-checkable
 :::
 ```
 

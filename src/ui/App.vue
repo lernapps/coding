@@ -5,14 +5,13 @@
 import { computed, defineAsyncComponent, h, onMounted, ref, watch } from "vue";
 import { announce, prefersReducedMotion } from "@lernapps/tooling/a11y";
 import type { Input, Json } from "@lernapps/app-templates/interactive";
-import { configAt, MAX_LINK, testCount } from "../core/challenge.ts";
+import { configAt, testCount } from "../core/challenge.ts";
 import type { State } from "../core/index.ts";
 import { currentBlock } from "../core/interpreter.ts";
 import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
 import { worldOf } from "../core/worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
-import { readChallenge } from "./address.ts";
 import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
@@ -35,18 +34,19 @@ const still = ref(false);
 let copyText: ((value: string) => Promise<void>) | undefined;
 const copied = ref(false);
 
-onMounted(async () => {
+onMounted(() => {
   if (location.hostname === "lernapps.net" || location.hostname.endsWith(".lernapps.net"))
     origin.value = location.origin;
   still.value = prefersReducedMotion();
   if (navigator.clipboard !== undefined) copyText = (value) => navigator.clipboard.writeText(value);
-  // TODO(lernapps/app-templates#201): read by the runtime and given to start() once it passes the address's parameters.
-  const found = await readChallenge(location.search, MAX_LINK);
-  if (found !== undefined) act("challenge", found as Json);
-  addEventListener("hashchange", () => {
-    if (props.state.source !== "address") return;
-    history.replaceState(null, "", location.pathname + location.hash);
-    act("route", decodeURIComponent(location.hash.slice(1)));
+  // The parameters of the address (?c=) hold for the whole visit (runtime contract). A learner who clicks a route of the
+  // list leaves the challenge of the address: a new visit of that route, without `c`.
+  document.addEventListener("click", (event) => {
+    if (props.state.source !== "address" || !(event.target instanceof Element)) return;
+    const link = event.target.closest<HTMLAnchorElement>(".interactive-routes a");
+    if (link === null) return;
+    event.preventDefault();
+    location.assign(location.pathname + link.hash);
   });
 });
 
