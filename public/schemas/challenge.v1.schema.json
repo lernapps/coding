@@ -88,6 +88,7 @@
           "wand-links",
           "wand-rechts",
           "am-ziel",
+          "weg-frei",
           "gehe",
           "drehe-links-um",
           "drehe-rechts-um",
@@ -101,10 +102,10 @@
           "nicht"
         ]
       },
-      "description": "Die Blöcke, die Lernende bekommen. Labyrinth: vorwaerts, links, rechts, wand-voraus, wand-links, wand-rechts, am-ziel. Turtle: gehe, drehe-links-um, drehe-rechts-um, stift-hoch, stift-runter, farbe. Jede Welt: wiederhole, solange, wenn, wenn-sonst, nicht."
+      "description": "Die Blöcke, die Lernende bekommen. Labyrinth: vorwaerts, links, rechts, wand-voraus, wand-links, wand-rechts, am-ziel, weg-frei (für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht, ohne „nicht“). Turtle: gehe, drehe-links-um, drehe-rechts-um, stift-hoch, stift-runter, farbe. Jede Welt: wiederhole, solange, wenn, wenn-sonst, nicht."
     },
     "start": {
-      "description": "Ein Programm, das schon in der Arbeitsfläche liegt, oder null.",
+      "description": "Ein Programm, das schon in der Arbeitsfläche liegt, oder null. Ein Befehl mit \"locked\": true ist fest: Lernende können ihn nicht verschieben oder löschen, nur seine Lücken füllen (für Lückenaufgaben).",
       "oneOf": [
         {
           "type": "null"
@@ -400,6 +401,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "locked": {
+              "type": "boolean"
             }
           }
         },
@@ -419,6 +423,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "locked": {
+              "type": "boolean"
             }
           }
         },
@@ -438,6 +445,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "locked": {
+              "type": "boolean"
             }
           }
         },
@@ -460,6 +470,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "locked": {
+              "type": "boolean"
             }
           }
         },
@@ -479,6 +492,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "locked": {
+              "type": "boolean"
             }
           }
         }

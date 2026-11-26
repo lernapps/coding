@@ -66,6 +66,7 @@ async function copy(link: string): Promise<void> {
       </li>
       <li>{{ t("authoring-language") }}</li>
       <li>{{ t("authoring-visit") }}</li>
+      <li>{{ t("authoring-beginners") }}</li>
       <li>
         {{ t("authoring-script") }} <code>node challenge-check.v1.mjs aufgabe.json loesung.json</code> (<a
           :href="script"

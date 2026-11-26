@@ -163,6 +163,7 @@ function chain(first: Blockly.Block | null): Stmt[] {
   for (let b = first; b !== null; b = b.getNextBlock()) {
     if (!b.isEnabled()) continue;
     const id = b.id;
+    const before = out.length;
     const body = (name: string): Stmt[] => chain(b?.getInputTargetBlock(name) ?? null);
     switch (b.type) {
       case "wiederhole":
@@ -186,6 +187,9 @@ function chain(first: Blockly.Block | null): Stmt[] {
         out.push({ s: "cmd", name: b.type, args, id });
       }
     }
+    // Kept locked, so that a program saved on the device loads with its frame locked again.
+    const added = out[before];
+    if (added !== undefined && !b.isMovable()) added.locked = true;
   }
   return out;
 }
@@ -196,6 +200,15 @@ export function programOf(workspace: Blockly.Workspace): Program {
   return { main: chain(start?.getInputTargetBlock("DO") ?? null) };
 }
 
+/** The questions in a locked block (its value inputs, nested too) are locked with it; its gaps for statements stay open. */
+function lockQuestions(block: Serial): void {
+  for (const [name, input] of Object.entries(block.inputs ?? {}))
+    if (name === "COND" || name === "A") {
+      Object.assign(input.block, { movable: false, deletable: false });
+      lockQuestions(input.block);
+    }
+}
+
 export { Blockly };
 
 type Serial = {
@@ -203,6 +216,8 @@ type Serial = {
   fields?: Record<string, number>;
   inputs?: Record<string, { block: Serial }>;
   next?: { block: Serial };
+  movable?: boolean;
+  deletable?: boolean;
 };
 
 function serialExpr(e: Expr): Serial | null {
@@ -254,6 +269,12 @@ function serialChain(stmts: readonly Stmt[]): Serial | null {
     }
     if (Object.keys(inputs).length > 0) block.inputs = inputs;
     if (next !== null) block.next = { block: next };
+    if (s.locked === true) {
+      // A locked block of the start program and the questions in it stay where they are.
+      block.movable = false;
+      block.deletable = false;
+      lockQuestions(block);
+    }
     next = block;
   }
   return next;

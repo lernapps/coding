@@ -75,3 +75,17 @@ describe("schema and validator", () => {
       expect(challengeProblems(challenge)).not.toEqual([]);
     });
 });
+
+describe("locked blocks and the sensor weg-frei", () => {
+  const start = { main: [{ s: "while", cond: { e: "sense", name: "weg-frei", args: [] }, body: [], locked: true }] };
+  it("both accept a locked start block and weg-frei", () => {
+    const c = { ...base, toolbox: ["vorwaerts", "solange", "weg-frei"], start };
+    expect(validate(c), JSON.stringify(validate.errors)).toBe(true);
+    expect(challengeProblems(c)).toEqual([]);
+  });
+  it("both reject locked that is not true or false", () => {
+    const c = { ...base, start: { main: [{ s: "cmd", name: "vorwaerts", args: [], locked: "ja" }] } };
+    expect(validate(c)).toBe(false);
+    expect(challengeProblems(c)).not.toEqual([]);
+  });
+});
