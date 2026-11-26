@@ -4,7 +4,7 @@
 # Archetype, null until chosen in Explore. Allowed values: explainer, interactive, quiz.
 archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit.
-phase: code
+phase: commit
 # prePushFailures: failed pre-push runs, written by the hook.
 prePushFailures: 2
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
@@ -88,6 +88,14 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 **Nicht behoben, an den Orchestrator**: Sprachumschalter und Routen-Links der Runtime verlieren `?c=` bzw. markieren die erste Route als aktuell (bis #201/#202); Titel bricht auf 360 px als „Programmierwerkstat t“ (h1 der Runtime ohne Silbentrennung); geöffnete Kategorie verdeckt auf 360 px den Block „Programm“ (Blockly); Programm geht beim Wechsel von Aufgabe oder Sprache verloren (Speicher folgt in der Aufgabe „Fortschritt im Speicher“).
 
 **arc42 angenommen (ARC42_CONSISTENT, Basis 43adb52)**: Nach `lernapps update` auf app-templates 0.21.0 meldet `arc42 diff --staged` geänderte Prosa bzw. Blöcke in `if-pages`, `term-core` und `term-playthrough`. Sie liegen im allgemeinen Teil außerhalb der App-Abschnitte und kommen unverändert aus der Vorlage (Parameter der Adresse); die App ändert dort nichts.
+
+**Prüfung der ganzen App (Lernende 7-8, de und en) und fachliche Prüfung (Informatik, Barrierefreiheit), behoben**:
+- Blocker: Ein Turtle-Link mit riesigen Zahlen fror den Tab ein → Rastervergleich, Zahlen im Zielbild im Bereich der Blöcke, höchstens 200 Linien; Startprogramme aus Links müssen zur Welt passen.
+- Das Ziel beendet das Programm nicht mehr (zu große Zahl in „wiederhole“ fiel nicht auf); Limit zählt Befehle; `set` in Unterprogrammen.
+- Reihenfolge: Sequenz (Labyrinth 1, Zeichnen 1) → Zählschleife (Labyrinth 2, Zeichnen 2, 3) → neu Labyrinth 3 (nur solange) → neu Labyrinth 4 (nur wenn) → Labyrinth 5 (beides, Pflichtblock wenn-sonst, Hinweise zum Verschachteln).
+- Kiko überall mit Namen; „Turtle“ heißt für Lernende „Zeichnen“; „Schleife“ erklärt; „Schritt“ nur noch der Knopf; Pixel statt Schritte; Seitenlänge und Drehrichtung in den Zeichenaufgaben; „in beiden Testfällen“; „alle Aufgaben geschafft“; Kompetenzen der Startseite mit Blocknamen.
+- Fokus bleibt auf Knöpfen; Hinweise und Schritte werden angesagt; Labyrinth-Beschreibung mit freien Richtungen und Ziel; dunklere Blockfarben, dunkler Rahmen für den laufenden Block, kontrastreicheres Zielbild und Spur; Hinweis „Wisch die Reihe zur Seite“ auf schmalen Bildschirmen; Autorenseite ohne laute Live-Regionen, Kopierknöpfe mit Namen.
+**Offen**: echter Screenreader und echte Handys, Touch, Firefox/Safari, erzwungene Farben, 200 % Zoom (ungeprüft); Beschreibung des Zielbilds in Worten (Feld `alt` im Schema, später); Blockly-Ansagen beim Verschieben teils ohne Blocknamen und Reihenfolge beim Einfügen per Tastatur (Blockly); h1 bricht auf 360 px (Runtime); IR v2 für 9-10 (Schleife mit Test am Ende, Zählschleife mit Variable, Fallunterscheidung, Rückgabewerte, Ausgabe).
 
 ## Explore
 
@@ -245,7 +253,7 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - [x] Run `npx --no -- lernapps check` until it passes.
 - [x] Look at every screen and state, at 360 px and on a desktop, as "Look at the app" of skill `lernapps-cli` says.
       Compare each with its sketch.
-- [ ] Do the whole-app check of skill `lernapps-learner-check`. Fix what it finds and write under "Notes" what you
+- [x] Do the whole-app check of skill `lernapps-learner-check`. Fix what it finds and write under "Notes" what you
       fixed.
 
 ## Commit

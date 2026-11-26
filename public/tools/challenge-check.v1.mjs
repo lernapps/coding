@@ -1,4 +1,4 @@
-// source: 4c5877290012a39c
+// source: e3b6490e58cc43db
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1238,7 +1238,7 @@ var de_default = {
   "tempo-slow": "langsam",
   "tempo-fast": "schnell",
   "phase-edit": "Bau dein Programm. Dann drück „Start“.",
-  "phase-running": "Der Roboter führt dein Programm aus.",
+  "phase-running": "Kiko führt dein Programm aus.",
   "phase-paused": "Angehalten. Ausgeführte Blöcke: {commands}",
   "solved-attempts": "Du hast {attempts} Versuche gebraucht.",
   "solved-first": "Gleich im ersten Versuch!",
@@ -1246,7 +1246,7 @@ var de_default = {
   "show-test": "Testfall {n} ansehen",
   "hint-show": "Hinweis zeigen ({n} von {count})",
   hints: "Hinweise",
-  "back-result": "Für deine Lehrkraft oder den KI-Tutor",
+  "back-result": "Für deine Lehrkraft (oder einen KI-Tutor, wenn ihr einen benutzt)",
   "result-solved": "Aufgabe „{title}“ ({id}): gelöst im {attempts}. Versuch",
   "result-open": "Aufgabe „{title}“ ({id}): noch nicht gelöst, Versuche: {attempts}",
   copy: "Kopieren",
@@ -1254,17 +1254,18 @@ var de_default = {
   "problems-title": "Diese Aufgabe kann die Werkstatt nicht öffnen.",
   "problems-more": "Frag die Person, die dir den Link gegeben hat. Oder wähl eine Aufgabe aus der Liste oben.",
   "problem-at": "{path}: {what}",
-  "fail-wall": "Vor dem Roboter ist eine Wand. Er steht in Feld ({x}|{y}) und kann nicht vorwärts gehen.",
-  "fail-not-at-goal": "Das Programm ist zu Ende, aber der Roboter steht in Feld ({x}|{y}), nicht im Ziel.",
-  "fail-limit": "Das Programm hört nicht auf: Nach {steps} Befehlen ist es noch nicht fertig. Läuft es im Kreis?",
+  "fail-wall": "Vor Kiko ist eine Wand. Er steht in Feld ({x}|{y}) und kann nicht vorwärts gehen.",
+  "fail-not-at-goal": "Das Programm ist zu Ende, aber Kiko steht in Feld ({x}|{y}), nicht im Ziel.",
+  "fail-limit":
+    "Das Programm hört nicht auf: Nach {steps} Befehlen ist es noch nicht fertig. Läuft Kiko hin und her oder im Kreis?",
   "fail-empty": "Dein Programm hat noch keine Blöcke. Häng Blöcke unter „Programm“.",
   "fail-too-many-blocks": "Du hast {used} Blöcke benutzt. Erlaubt sind höchstens {max}.",
   "fail-missing-block": "Benutz den Block „{block}“.",
   "fail-unknown-block": "Den Block „{name}“ kennt diese Welt nicht.",
   "fail-unknown-variable": "Die Variable „{name}“ hat noch keinen Wert.",
   "fail-divide-by-zero": "Durch 0 kann man nicht teilen.",
-  "describe-labyrinth": "Labyrinth. Der Roboter steht in Feld ({x}|{y}) und schaut nach {facing}.",
-  "describe-labyrinth-goal": "Der Roboter ist im Ziel.",
+  "describe-labyrinth": "Labyrinth. Kiko steht in Feld ({x}|{y}) und schaut nach {facing}.",
+  "describe-labyrinth-goal": "Kiko ist im Ziel.",
   "word-north": "Norden (oben)",
   "word-east": "Osten (rechts)",
   "word-south": "Süden (unten)",
@@ -1322,16 +1323,16 @@ var de_default = {
     "Dein Programm muss in {count} verschiedenen Fällen klappen. Jeder Fall heißt Testfall. Mit den Knöpfen unter dem Bild schaust du sie dir an.",
   help: "So funktioniert die Werkstatt",
   "help-blocks":
-    "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass.",
+    "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass (ein Screenreader sagt „ausgeschaltet“).",
   "help-robot":
-    "Kiko ist der Roboter. Das Dreieck an seinem Kreis zeigt, wohin er schaut. „links“ und „rechts“ gelten aus seiner Sicht, also vom Dreieck aus.",
+    "Kiko ist ein Roboter. Das Dreieck an seinem Kreis zeigt, wohin er schaut. „links“ und „rechts“ gelten aus seiner Sicht, also vom Dreieck aus.",
   "help-run":
     "„Start“ führt dein Programm aus. „Ein Schritt“ führt nur einen Block aus. In der Arbeitsfläche ist der Block markiert, der gerade dran war.",
   "help-keys":
-    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz, eine Ansage sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
+    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Mit den Pfeiltasten gehst du durch die Liste (in einer Reihe mit Pfeil nach rechts). Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz; ein Screenreader sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
   "new-blocks": "Blöcke in dieser Aufgabe",
   "explain-wiederhole":
-    "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Die Zahl änderst du mit einem Klick darauf oder mit der Tastatur.",
+    "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Ein Block, der andere Blöcke wiederholt, heißt Schleife. Die Zahl änderst du mit einem Klick darauf oder mit der Tastatur.",
   "explain-solange":
     "„solange … tue“: Die Blöcke darin laufen immer wieder, solange die Antwort auf die Frage „ja“ ist.",
   "explain-wenn": "„wenn … dann“: Die Blöcke darin laufen nur, wenn die Antwort auf die Frage „ja“ ist.",
@@ -1363,10 +1364,12 @@ var de_default = {
   "colour-2": "Orange",
   "colour-3": "Grün",
   "colour-4": "Lila",
-  "explain-gehe": "„gehe … Pixel“: Kiko geht so viele Pixel nach vorn und zeichnet dabei eine Linie.",
+  "explain-gehe":
+    "„gehe … Pixel“: Kiko geht so viele Pixel nach vorn und zeichnet dabei eine Linie. Die Zahl änderst du mit einem Klick darauf.",
   "explain-drehe-rechts-um":
-    "„drehe dich um … Grad“: Kiko dreht sich auf der Stelle. 90 Grad sind eine Vierteldrehung, 360 Grad einmal ganz herum.",
-  "explain-farbe": "„nimm die Farbe …“: Ab jetzt zeichnet Kiko in dieser Farbe. Die Farbe zählt beim Vergleich nicht.",
+    "„drehe dich um … Grad nach links/rechts“: Kiko dreht sich auf der Stelle. 90 Grad sind eine Vierteldrehung, 360 Grad einmal ganz herum.",
+  "explain-farbe":
+    "„nimm die Farbe …“: Ab jetzt zeichnet Kiko in dieser Farbe. Ob dein Bild zum grauen passt, hängt nicht von der Farbe ab.",
   "explain-stift-hoch": "„Stift hoch“: Kiko geht, ohne zu zeichnen. „Stift runter“: Er zeichnet wieder.",
   "describe-turtle":
     "Zeichenfläche. Kiko steht bei ({x}|{y}) und schaut in Richtung {winkel} Grad (0 Grad ist oben). Er hat {lines} Linien gezeichnet.",
@@ -1376,7 +1379,7 @@ var de_default = {
   "fail-too-many-lines": "Kiko hat mehr als {max} Linien gezeichnet. Hört dein Programm auf?",
   "problem-turtle-start": "Der Start hat x und y von 0 bis {size} und einen Winkel von 0 bis 359.",
   "help-map-turtle":
-    "Kiko zeichnet auf einer Fläche von 200 × 200 Pixeln. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten.",
+    "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn schaut Kiko nach oben.",
   authoring: "Eigene Aufgabe bauen",
   "authoring-intro":
     "Für Lehrkräfte und Apps: Füg eine Aufgabe als JSON ein. Die Werkstatt prüft sie sofort. Dann probierst du sie aus und kopierst den Link.",
@@ -1400,7 +1403,7 @@ var de_default = {
   "problem-number": "Hier ist eine Zahl von {min} bis {max} erlaubt.",
   "problem-target-lines": "Das Zielbild hat zu viele Linien (höchstens {max}) oder hört nicht auf.",
   "fail-endless": "Dein Programm läuft im Kreis, ohne dass Kiko etwas tut. Sieh dir die Schleifen an.",
-  "solved-labyrinth": "Geschafft! Der Roboter ist im Ziel.",
+  "solved-labyrinth": "Geschafft! Kiko ist im Ziel.",
   "solved-turtle": "Geschafft! Dein Bild stimmt.",
   "word-gehe": "gehe … Pixel",
   "word-drehe-links-um": "drehe dich um … Grad nach links",
@@ -1420,6 +1423,9 @@ var de_default = {
   "copy-for": "{what} kopieren",
   "copy-missing": "Kopieren geht hier nicht. Markier den Text und kopier ihn selbst.",
   "problem-solution-block": "Die Musterlösung benutzt den Block „{name}“, der nicht in der Werkzeugkiste ist.",
+  "solved-both": "Geschafft! Dein Programm klappt in beiden Testfällen.",
+  "all-done": "Das war die letzte Aufgabe. Du hast alle Aufgaben der Werkstatt geschafft!",
+  "scroll-hint": "Wisch die Reihe der Blöcke zur Seite, dann siehst du alle.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1427,11 +1433,11 @@ var en_default = {
   "loading-editor": "Loading the blocks …",
   "rotate-hint": "Turn your device sideways to get more space.",
   task: "Task",
-  "blocks-count": "Blocks: {used} of at most {max}",
+  "blocks-count": "Blocks: {used} (at most {max})",
   "blocks-count-free": "Blocks: {used}",
   "tests-label": "Test cases",
   "test-n": "Test case {n}",
-  "test-shown": "Shown: test case {n} of {count}",
+  "test-shown": "You see test case {n} of {count}",
   run: "Run",
   continue: "Continue",
   step: "One step",
@@ -1441,7 +1447,7 @@ var en_default = {
   "tempo-slow": "slow",
   "tempo-fast": "fast",
   "phase-edit": "Build your program. Then press “Run”.",
-  "phase-running": "The robot is running your program.",
+  "phase-running": "Kiko is running your program.",
   "phase-paused": "Paused. Blocks run so far: {commands}",
   "solved-attempts": "You needed {attempts} attempts.",
   "solved-first": "On your first attempt!",
@@ -1449,7 +1455,7 @@ var en_default = {
   "show-test": "Look at test case {n}",
   "hint-show": "Show a hint ({n} of {count})",
   hints: "Hints",
-  "back-result": "For your teacher or the AI tutor",
+  "back-result": "For your teacher (or an AI tutor, if you use one)",
   "result-solved": "Task “{title}” ({id}): solved on attempt {attempts}",
   "result-open": "Task “{title}” ({id}): not solved yet, attempts: {attempts}",
   copy: "Copy",
@@ -1457,17 +1463,18 @@ var en_default = {
   "problems-title": "The workshop cannot open this task.",
   "problems-more": "Ask the person who gave you the link. Or choose a task from the list above.",
   "problem-at": "{path}: {what}",
-  "fail-wall": "There is a wall in front of the robot. It stands at square ({x}, {y}) and cannot move forward.",
-  "fail-not-at-goal": "The program has ended, but the robot is at square ({x}, {y}), not at the goal.",
-  "fail-limit": "The program does not stop: after {steps} commands it is still not done. Is it going round in circles?",
+  "fail-wall": "There is a wall in front of Kiko. It stands at square ({x}, {y}) and cannot move forward.",
+  "fail-not-at-goal": "The program has ended, but Kiko is at square ({x}, {y}), not at the goal.",
+  "fail-limit":
+    "The program does not stop: after {steps} commands it is still not done. Is Kiko going back and forth or round in circles?",
   "fail-empty": "Your program has no blocks yet. Attach blocks below “Program”.",
   "fail-too-many-blocks": "You used {used} blocks. At most {max} are allowed.",
   "fail-missing-block": "Use the block “{block}”.",
   "fail-unknown-block": "This world does not know the block “{name}”.",
   "fail-unknown-variable": "The variable “{name}” has no value yet.",
   "fail-divide-by-zero": "You cannot divide by 0.",
-  "describe-labyrinth": "Maze. The robot is at square ({x}, {y}) and faces {facing}.",
-  "describe-labyrinth-goal": "The robot is at the goal.",
+  "describe-labyrinth": "Maze. Kiko is at square ({x}, {y}) and faces {facing}.",
+  "describe-labyrinth-goal": "Kiko is at the goal.",
   "word-north": "north (up)",
   "word-east": "east (right)",
   "word-south": "south (down)",
@@ -1525,16 +1532,16 @@ var en_default = {
     "Your program has to work in {count} different cases. Each case is called a test case. Use the buttons below the picture to look at them.",
   help: "How the workshop works",
   "help-blocks":
-    "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale.",
+    "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale (a screen reader says “disabled”).",
   "help-robot":
-    "Kiko is the robot. The triangle on its circle shows where it is looking. “left” and “right” are from Kiko's point of view, so from the triangle.",
+    "Kiko is a robot. The triangle on its circle shows where it is looking. “left” and “right” are from Kiko's point of view, so from the triangle.",
   "help-run":
     "“Run” runs your program. “One step” runs just one block. The block that just ran is marked in the work area.",
   "help-keys":
-    "With the keyboard: press Tab until you are in the list of blocks. Enter picks a block. Use the arrow keys to choose its place; you will hear where it goes. Enter puts it down. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
+    "With the keyboard: press Tab until you are in the list of blocks. Use the arrow keys to go through the list (in a row, the right arrow). Enter picks a block. Use the arrow keys to choose its place; a screen reader tells you where it goes. Enter puts it down. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
   "new-blocks": "Blocks in this task",
   "explain-wiederhole":
-    "“repeat … times”: the blocks inside run as many times as the number says. Change the number by clicking it or with the keyboard.",
+    "“repeat … times”: the blocks inside run as many times as the number says. A block that repeats other blocks is called a loop. Change the number by clicking it or with the keyboard.",
   "explain-solange":
     "“while … do”: the blocks inside run again and again as long as the answer to the question is “yes”.",
   "explain-wenn": "“if … then”: the blocks inside only run if the answer to the question is “yes”.",
@@ -1566,11 +1573,12 @@ var en_default = {
   "colour-2": "orange",
   "colour-3": "green",
   "colour-4": "purple",
-  "explain-gehe": "“move … pixels”: Kiko moves forward that many pixels and draws a line.",
+  "explain-gehe":
+    "“move … pixels”: Kiko moves forward that many pixels and draws a line. Click the number to change it.",
   "explain-drehe-rechts-um":
-    "“turn by … degrees”: Kiko turns on the spot. 90 degrees is a quarter turn, 360 degrees is once all the way round.",
+    "“turn left/right by … degrees”: Kiko turns on the spot. 90 degrees is a quarter turn, 360 degrees is once all the way round.",
   "explain-farbe":
-    "“use the colour …”: from now on Kiko draws in this colour. The colour does not count when the pictures are compared.",
+    "“use the colour …”: from now on Kiko draws in this colour. Whether your picture matches the grey one does not depend on the colour.",
   "explain-stift-hoch": "“pen up”: Kiko moves without drawing. “pen down”: it draws again.",
   "describe-turtle":
     "Drawing area. Kiko is at ({x}, {y}) and faces {winkel} degrees (0 degrees is up). It has drawn {lines} lines.",
@@ -1580,7 +1588,7 @@ var en_default = {
   "fail-too-many-lines": "Kiko has drawn more than {max} lines. Does your program stop?",
   "problem-turtle-start": "The start has x and y from 0 to {size} and an angle from 0 to 359.",
   "help-map-turtle":
-    "Kiko draws on an area of 200 × 200 pixels. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down.",
+    "When drawing, Kiko does not walk over squares: it draws on an area of 200 × 200 pixels. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko looks up.",
   authoring: "Build your own task",
   "authoring-intro":
     "For teachers and apps: paste a task as JSON. The workshop checks it at once. Then try it out and copy the link.",
@@ -1604,7 +1612,7 @@ var en_default = {
   "problem-number": "A number from {min} to {max} is allowed here.",
   "problem-target-lines": "The target picture has too many lines (at most {max}) or does not end.",
   "fail-endless": "Your program goes round in circles without Kiko doing anything. Look at your loops.",
-  "solved-labyrinth": "Done! The robot is at the goal.",
+  "solved-labyrinth": "Done! Kiko is at the goal.",
   "solved-turtle": "Done! Your picture is right.",
   "word-gehe": "move … pixels",
   "word-drehe-links-um": "turn left by … degrees",
@@ -1624,6 +1632,9 @@ var en_default = {
   "copy-for": "Copy {what}",
   "copy-missing": "Copying does not work here. Select the text and copy it yourself.",
   "problem-solution-block": "The model solution uses the block “{name}”, which is not in the toolbox.",
+  "solved-both": "Done! Your program works in both test cases.",
+  "all-done": "That was the last task. You have done all the tasks of the workshop!",
+  "scroll-hint": "Swipe the row of blocks sideways to see them all.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";

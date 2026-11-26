@@ -39,6 +39,6 @@ steps:
         run: { status: limit },
         verdict: { ok: false, test: 2, why: { key: fail-limit, params: { steps: 400 } } },
       }
-    announce: "Testfall 2: Das Programm hört nicht auf: Nach 400 Befehlen ist es noch nicht fertig. Läuft es im Kreis?"
+    announce: "Testfall 2: Das Programm hört nicht auf: Nach 400 Befehlen ist es noch nicht fertig. Läuft Kiko hin und her oder im Kreis?"
   - inputs: [{ kind: action, name: testfall, value: 1 }]
     state: { test: 1, run: null, phase: edit, verdict: null }

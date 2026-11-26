@@ -38,8 +38,8 @@
   "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:solange"],
   "hints": [
     {
-      "de": "Eine Zählschleife reicht nicht: Du weißt nicht, wie lang der Gang ist.",
-      "en": "A count loop is not enough: you do not know how long the corridor is."
+      "de": "„wiederhole … mal“ reicht hier nicht: Du weißt nicht, wie lang der Gang ist.",
+      "en": "“repeat … times” is not enough here: you do not know how long the corridor is."
     },
     {
       "de": "„solange … tue“ wiederholt, solange die Frage mit „ja“ beantwortet wird. Welche Frage passt?",

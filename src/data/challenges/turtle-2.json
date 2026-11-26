@@ -2,12 +2,12 @@
   "format": 1,
   "id": "turtle-2",
   "title": {
-    "de": "Quadrat mit Schleife",
-    "en": "Square with a loop"
+    "de": "Quadrat mit Wiederholung",
+    "en": "Square with repeat"
   },
   "task": {
-    "de": "Zeichne dasselbe Quadrat noch einmal. Diesmal hast du nur 3 Blöcke.",
-    "en": "Draw the same square again. This time you only have 3 blocks."
+    "de": "Zeichne das Quadrat noch einmal: Jede Seite ist 80 Pixel lang. Diesmal hast du nur 3 Blöcke. Tipp: „wiederhole … mal“.",
+    "en": "Draw the square again: each side is 80 pixels long. This time you only have 3 blocks. Tip: “repeat … times”."
   },
   "world": {
     "type": "turtle",

@@ -63,16 +63,16 @@
   "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:wenn-sonst"],
   "hints": [
     {
-      "de": "Was soll Kiko in jedem Schritt tun? Ist vorne frei, geht er vorwärts. Sonst muss er sich drehen.",
-      "en": "What should Kiko do each time? If the way ahead is free, it moves forward. If not, it has to turn."
+      "de": "Bei jedem Durchgang der Schleife: Ist vorne frei, geht Kiko vorwärts. Sonst dreht er sich.",
+      "en": "Each time round the loop: if the way ahead is free, Kiko moves forward. If not, it turns."
     },
     {
-      "de": "Mit „wenn … dann … sonst“ und „Wand voraus?“ entscheidet Kiko, ob er geht oder sich dreht.",
-      "en": "With “if … then … else” and “wall ahead?”, Kiko decides whether to move or to turn."
+      "de": "Setz „wenn … dann … sonst“ mit „Wand voraus?“ in die Schleife: bei „sonst“ „gehe vorwärts“.",
+      "en": "Put “if … then … else” with “wall ahead?” into the loop: at “else”, “move forward”."
     },
     {
-      "de": "In welche Richtung dreht er? Frag, ob rechts eine Wand ist.",
-      "en": "Which way does it turn? Ask if there is a wall on the right."
+      "de": "Bei „dann“ kommt ein zweites „wenn … dann … sonst“ hinein: Wand rechts? dann drehe dich nach links, sonst drehe dich nach rechts.",
+      "en": "At “then” goes a second “if … then … else”: wall on the right? then turn left, else turn right."
     }
   ],
   "view": "bloecke"

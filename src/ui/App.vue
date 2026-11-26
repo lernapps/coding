@@ -114,15 +114,21 @@ const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
   if (v.ok)
-    return tests.value > 1
-      ? t("solved-all", { count: tests.value })
-      : t(`solved-${c.value?.world.type ?? "labyrinth"}` as Key);
+    return tests.value === 2
+      ? t("solved-both")
+      : tests.value > 2
+        ? t("solved-all", { count: tests.value })
+        : t(`solved-${c.value?.world.type ?? "labyrinth"}` as Key);
   const why = say(v.why ?? ({ key: "fail-limit" } as Msg));
   return v.test === 0 || tests.value === 1 ? why : t("failed-test", { n: v.test, why });
 });
 /** Explanations of the blocks of this task that are more than a command. */
 const explained = computed(() =>
   (c.value?.toolbox ?? []).filter((b) => `explain-${b}` in de).map((b) => t(`explain-${b}` as Key)),
+);
+/** The last task of the collection, solved. */
+const lastOfCollection = computed(
+  () => props.state.source === "route" && props.state.solved && c.value !== null && ROUTES.at(-1) === c.value.id,
 );
 /** The first task of its world in the collection: the help is open there. */
 const firstOfWorld = computed(
@@ -330,6 +336,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             <p v-if="next !== null">
               <a :href="next.href">{{ t("next", { title: next.title }) }} →</a>
             </p>
+            <p v-else-if="lastOfCollection">{{ t("all-done") }}</p>
             <button
               v-if="!state.verdict.ok && state.verdict.test > 0 && state.verdict.test !== state.test"
               type="button"
@@ -347,6 +354,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             </button>
           </div>
         </div>
+        <p class="scroll-hint">{{ t("scroll-hint") }}</p>
         <div class="workbench">
           <Editor
             :key="`${state.source}:${c.id}:${saved?.key ?? ''}`"
@@ -395,6 +403,17 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
   .columns {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
     align-items: start;
+  }
+}
+.scroll-hint {
+  display: none;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted, #555);
+}
+@media (max-width: 36rem) {
+  .scroll-hint {
+    display: block;
   }
 }
 .rotate-hint {

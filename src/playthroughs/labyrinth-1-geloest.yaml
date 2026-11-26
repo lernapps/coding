@@ -26,4 +26,4 @@ steps:
   - ticks: 100
     state:
       { phase: done, solved: true, attempts: 1, verdict: { ok: true }, run: { world: { x: 3, y: 3 }, commands: 5 } }
-    announce: "Geschafft! Der Roboter ist im Ziel."
+    announce: "Geschafft! Kiko ist im Ziel."

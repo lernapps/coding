@@ -6,8 +6,8 @@
     "en": "Around the corner"
   },
   "task": {
-    "de": "Bring den Roboter ins Ziel, das grüne Feld mit der Fahne. Leg die Blöcke in die richtige Reihenfolge.",
-    "en": "Bring the robot to the goal, the green square with the flag. Put the blocks in the right order."
+    "de": "Das ist Kiko, ein Roboter. Bring ihn ins Ziel, das grüne Feld mit der Fahne. Leg die Blöcke in die richtige Reihenfolge.",
+    "en": "This is Kiko, a robot. Bring it to the goal, the green square with the flag. Put the blocks in the right order."
   },
   "world": {
     "type": "labyrinth",
@@ -31,8 +31,8 @@
       "en": "Count the squares up to the corner."
     },
     {
-      "de": "Links und rechts gelten aus Sicht des Roboters. Wohin schaut er an der Ecke?",
-      "en": "Left and right are from the robot's point of view. Which way does it face at the corner?"
+      "de": "Links und rechts gelten aus Sicht von Kiko. Wohin schaut er an der Ecke?",
+      "en": "Left and right are from Kiko's point of view. Which way does it face at the corner?"
     }
   ],
   "view": "bloecke"

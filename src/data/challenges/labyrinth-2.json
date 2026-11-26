@@ -6,8 +6,8 @@
     "en": "The stairs"
   },
   "task": {
-    "de": "Bring den Roboter die Treppe hinunter ins Ziel. Du hast höchstens 5 Blöcke.",
-    "en": "Bring the robot down the stairs to the goal. You have at most 5 blocks."
+    "de": "Bring Kiko die Treppe hinunter ins Ziel. Du hast höchstens 5 Blöcke.",
+    "en": "Bring Kiko down the stairs to the goal. You have at most 5 blocks."
   },
   "world": {
     "type": "labyrinth",
@@ -28,11 +28,11 @@
   "hints": [
     {
       "de": "Jede Stufe ist gleich. Welche Blöcke braucht eine Stufe?",
-      "en": "Every stair is the same. Which blocks does one stair need?"
+      "en": "Each step of the stairs is the same. Which blocks does one step need?"
     },
     {
       "de": "Leg die Blöcke für eine Stufe in „wiederhole … mal“.",
-      "en": "Put the blocks for one stair inside “repeat … times”."
+      "en": "Put the blocks for one step inside “repeat … times”."
     }
   ],
   "view": "bloecke"
