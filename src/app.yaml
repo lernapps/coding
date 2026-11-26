@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
+title: Programmierwerkstatt (Spike)
+description: Du programmierst einen Roboter mit Blöcken.
+howto: |
+  - Zieh Blöcke in die Fläche. Drücke „Start“.
+competencies:
+  - Ich kann eine Folge von Befehlen bauen.
+languages: [de]
+routes:
+  - id: gang
+    title: Der lange Gang
+  - id: ecke
+    title: Um die Ecke

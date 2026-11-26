@@ -1,0 +1,14 @@
+{
+  "app": "Programmierwerkstatt",
+  "maze": "Labyrinth, Roboter in Spalte {x}, Zeile {y}",
+  "run": "Start",
+  "step": "Ein Schritt",
+  "stop": "Stopp",
+  "invalid": "Diese Aufgabe kann ich nicht lesen.",
+  "status-edit": "Bereit",
+  "status-running": "Läuft",
+  "status-won": "Geschafft: Der Roboter ist am Ziel.",
+  "status-crashed": "Der Roboter stößt an die Wand.",
+  "status-stopped": "Angehalten.",
+  "status-limit": "Zu viele Schritte."
+}

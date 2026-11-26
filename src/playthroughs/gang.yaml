@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein Programm als IR (so wie Blockly es schickt), dann Start und Ticks: der Roboter erreicht das Ziel.
+seed: 1
+route: gang
+steps:
+  - inputs:
+      - { kind: action, name: programm, value: [{ op: repeat, n: 4, body: [{ op: cmd, name: vorwaerts }] }] }
+      - { kind: action, name: start }
+    state: { status: running, robot: { x: 1, y: 1 } }
+  - ticks: 40
+    state: { status: won, steps: 4, robot: { x: 5, y: 1 } }
+    announce: "Geschafft: Der Roboter ist am Ziel."

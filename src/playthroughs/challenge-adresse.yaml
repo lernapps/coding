@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Weg A im Kern: die Challenge kommt als Aktion (die Oberfläche liest sie aus ?c=); solange-Schleife, Wand.
+seed: 1
+steps:
+  - inputs:
+      - { kind: action, name: challenge, value: { id: x, map: ["#####", "#S..#", "#####"], facing: east, limit: 50 } }
+      - {
+          kind: action,
+          name: programm,
+          value: [{ op: while, cond: frei, body: [{ op: cmd, name: vorwaerts }] }, { op: cmd, name: vorwaerts }],
+        }
+      - { kind: action, name: start }
+      - { kind: action, name: schritt }
+      - { kind: action, name: schritt }
+      - { kind: action, name: schritt }
+    state: { status: crashed, steps: 3, robot: { x: 3, y: 1 } }
