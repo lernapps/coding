@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: failed pre-push runs, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { app-content-guide: 1, checks-pass: 2, plan-file: 1 }
+failedChecks: { app-content-guide: 1, checks-pass: 3, plan-file: 1 }
 ---
 
 # Plan: coding, first version
@@ -234,7 +234,7 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
       change: change the pattern first.
       Creator: Ja, Turtle und die übrigen Teile folgen diesem Muster. (Orchestrator, Checkpoint 3)
 - [x] Welt Turtle mit turtle-1..3 (Prüfung bild-gleich), Lösungen und Playthroughs. Zeigt: Spirograph zeichnen
-- [ ] Schema challenge.v1 veröffentlichen (public/schemas) und Test, der Schema und Validator gleich hält. Zeigt: Schema unter coding/schemas/
+- [x] Schema challenge.v1 veröffentlichen (public/schemas) und Test, der Schema und Validator gleich hält. Zeigt: Schema unter coding/schemas/
 - [ ] Autorenseite (Route autoren): JSON einfügen, prüfen, ausprobieren, Link kopieren. Zeigt: eine eigene Challenge als Link
 - [ ] Prüfskript public/tools/challenge-check.mjs (Schema, Welt-Version, Länge, Lösung besteht alle Tests). Zeigt: Ausgabe für eine gute und eine kaputte Challenge
 - [ ] Fortschritt im Speicher (gelöst, letztes Programm), Querformat nebeneinander und Hinweis zum Drehen, Startseite mit Abschnitt für Autoren, NOTICE mit Lizenzen. Zeigt: Neuladen behält das Programm
