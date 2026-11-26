@@ -1,4 +1,4 @@
-// source: e3b6490e58cc43db
+// source: f961eccc4e7b13e3
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1226,9 +1226,9 @@ var de_default = {
   task: "Aufgabe",
   "blocks-count": "Blöcke: {used} von höchstens {max}",
   "blocks-count-free": "Blöcke: {used}",
-  "tests-label": "Testfälle",
-  "test-n": "Testfall {n}",
-  "test-shown": "Gezeigt: Testfall {n} von {count}",
+  "tests-label": "Rätsel dieser Aufgabe",
+  "test-n": "Rätsel {n}",
+  "test-shown": "{count} Rätsel",
   run: "Start",
   continue: "Weiter",
   step: "Ein Schritt",
@@ -1242,8 +1242,7 @@ var de_default = {
   "phase-paused": "Angehalten. Ausgeführte Blöcke: {commands}",
   "solved-attempts": "Du hast {attempts} Versuche gebraucht.",
   "solved-first": "Gleich im ersten Versuch!",
-  "failed-test": "Testfall {n}: {why}",
-  "show-test": "Testfall {n} ansehen",
+  "failed-test": "Rätsel {n}: {why}",
   "hint-show": "Hinweis zeigen ({n} von {count})",
   hints: "Hinweise",
   "back-result": "Für deine Lehrkraft (oder einen KI-Tutor, wenn ihr einen benutzt)",
@@ -1318,9 +1317,9 @@ var de_default = {
   "category-control": "Steuerung",
   "category-sense": "Fragen",
   "fail-empty-slot": "Im Block „{block}“ fehlt noch eine Frage. Setz eine Frage in die Lücke.",
-  "solved-all": "Geschafft! Dein Programm klappt in allen {count} Testfällen.",
+  "solved-all": "Geschafft! Dein Programm löst alle {count} Rätsel.",
   "tests-explain":
-    "Dein Programm muss in {count} verschiedenen Fällen klappen. Jeder Fall heißt Testfall. Mit den Knöpfen unter dem Bild schaust du sie dir an.",
+    "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes. Dein Programm muss alle lösen. „Start“ probiert es in allen nacheinander aus. Mit den Reitern über dem Bild schaust du dir jedes Rätsel an.",
   help: "So funktioniert die Werkstatt",
   "help-blocks":
     "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass (ein Screenreader sagt „ausgeschaltet“).",
@@ -1423,9 +1422,12 @@ var de_default = {
   "copy-for": "{what} kopieren",
   "copy-missing": "Kopieren geht hier nicht. Markier den Text und kopier ihn selbst.",
   "problem-solution-block": "Die Musterlösung benutzt den Block „{name}“, der nicht in der Werkzeugkiste ist.",
-  "solved-both": "Geschafft! Dein Programm klappt in beiden Testfällen.",
+  "solved-both": "Geschafft! Dein Programm löst beide Rätsel.",
   "all-done": "Das war die letzte Aufgabe. Du hast alle Aufgaben der Werkstatt geschafft!",
   "scroll-hint": "Wisch die Reihe der Blöcke zur Seite, dann siehst du alle.",
+  "test-ok": "gelöst",
+  "test-fail": "nicht gelöst",
+  "running-test": "Kiko löst Rätsel {n} von {count}.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1435,9 +1437,9 @@ var en_default = {
   task: "Task",
   "blocks-count": "Blocks: {used} (at most {max})",
   "blocks-count-free": "Blocks: {used}",
-  "tests-label": "Test cases",
-  "test-n": "Test case {n}",
-  "test-shown": "You see test case {n} of {count}",
+  "tests-label": "Puzzles of this task",
+  "test-n": "Puzzle {n}",
+  "test-shown": "{count} puzzles",
   run: "Run",
   continue: "Continue",
   step: "One step",
@@ -1451,8 +1453,7 @@ var en_default = {
   "phase-paused": "Paused. Blocks run so far: {commands}",
   "solved-attempts": "You needed {attempts} attempts.",
   "solved-first": "On your first attempt!",
-  "failed-test": "Test case {n}: {why}",
-  "show-test": "Look at test case {n}",
+  "failed-test": "Puzzle {n}: {why}",
   "hint-show": "Show a hint ({n} of {count})",
   hints: "Hints",
   "back-result": "For your teacher (or an AI tutor, if you use one)",
@@ -1527,9 +1528,9 @@ var en_default = {
   "category-control": "Control",
   "category-sense": "Questions",
   "fail-empty-slot": "The block “{block}” still needs a question. Put a question into the gap.",
-  "solved-all": "Done! Your program works in all {count} test cases.",
+  "solved-all": "Done! Your program solves all {count} puzzles.",
   "tests-explain":
-    "Your program has to work in {count} different cases. Each case is called a test case. Use the buttons below the picture to look at them.",
+    "This task has {count} puzzles: variants of the maze or picture. Your program has to solve them all. “Run” tries it in each one in turn. Use the tabs above the picture to look at each puzzle.",
   help: "How the workshop works",
   "help-blocks":
     "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale (a screen reader says “disabled”).",
@@ -1632,9 +1633,12 @@ var en_default = {
   "copy-for": "Copy {what}",
   "copy-missing": "Copying does not work here. Select the text and copy it yourself.",
   "problem-solution-block": "The model solution uses the block “{name}”, which is not in the toolbox.",
-  "solved-both": "Done! Your program works in both test cases.",
+  "solved-both": "Done! Your program solves both puzzles.",
   "all-done": "That was the last task. You have done all the tasks of the workshop!",
   "scroll-hint": "Swipe the row of blocks sideways to see them all.",
+  "test-ok": "solved",
+  "test-fail": "not solved",
+  "running-test": "Kiko is solving puzzle {n} of {count}.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";

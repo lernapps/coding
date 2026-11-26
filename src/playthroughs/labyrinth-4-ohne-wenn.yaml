@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
-# Ohne „wenn“, nur geradeaus: klappt im ersten Testfall; im zweiten steht eine Wand vor Kiko. Die Werkstatt verlangt
+# Ohne „wenn“, nur geradeaus: klappt im ersten Rätsel; im zweiten steht eine Wand vor Kiko. Die Werkstatt verlangt
 # zuerst den Block „wenn“.
 seed: 1
 route: labyrinth-4

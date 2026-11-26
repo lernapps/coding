@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
-# Ein Programm, das sich an jeder Wand nach rechts dreht: Es klappt im gezeigten Gang, aber nicht in Testfall 2.
-# Dort läuft der Roboter hin und her, bis das Schrittlimit greift; die Werkstatt zeigt Testfall 2 mit dem Endstand.
+# Ein Programm, das sich an jeder Wand nach rechts dreht: Es klappt im gezeigten Gang, aber nicht in Rätsel 2.
+# „Start“ spielt Rätsel 1 (gelöst) und dann Rätsel 2: Dort läuft Kiko hin und her, bis das Limit greift. Rätsel 3
+# läuft nicht mehr; ein Start zählt als ein Versuch.
 seed: 1
 route: labyrinth-5
 steps:
@@ -29,9 +30,10 @@ steps:
                 ],
             },
         },
+        { kind: action, name: tempo, value: 5 },
         { kind: action, name: start },
       ]
-    ticks: 400
+    ticks: 1400
     state:
       {
         phase: done,
@@ -39,6 +41,6 @@ steps:
         run: { status: limit },
         verdict: { ok: false, test: 2, why: { key: fail-limit, params: { steps: 400 } } },
       }
-    announce: "Testfall 2: Das Programm hört nicht auf: Nach 400 Befehlen ist es noch nicht fertig. Läuft Kiko hin und her oder im Kreis?"
+    announce: "Rätsel 2: Das Programm hört nicht auf: Nach 400 Befehlen ist es noch nicht fertig. Läuft Kiko hin und her oder im Kreis?"
   - inputs: [{ kind: action, name: testfall, value: 1 }]
-    state: { test: 1, run: null, phase: edit, verdict: null }
+    state: { test: 1, run: null, phase: edit, results: [ok, fail, null] }

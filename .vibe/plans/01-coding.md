@@ -97,6 +97,8 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - Fokus bleibt auf Knöpfen; Hinweise und Schritte werden angesagt; Labyrinth-Beschreibung mit freien Richtungen und Ziel; dunklere Blockfarben, dunkler Rahmen für den laufenden Block, kontrastreicheres Zielbild und Spur; Hinweis „Wisch die Reihe zur Seite“ auf schmalen Bildschirmen; Autorenseite ohne laute Live-Regionen, Kopierknöpfe mit Namen.
 **Offen**: echter Screenreader und echte Handys, Touch, Firefox/Safari, erzwungene Farben, 200 % Zoom (ungeprüft); Beschreibung des Zielbilds in Worten (Feld `alt` im Schema, später); Blockly-Ansagen beim Verschieben teils ohne Blocknamen und Reihenfolge beim Einfügen per Tastatur (Blockly); h1 bricht auf 360 px (Runtime); IR v2 für 9-10 (Schleife mit Test am Ende, Zählschleife mit Variable, Fallunterscheidung, Rückgabewerte, Ausgabe).
 
+**Rückmeldung des Menschen nach Checkpoint 4, umgesetzt**: Testfälle als Reiter „Rätsel 1 … n“ (Tab-Liste mit Pfeiltasten, ✓/✗ je Rätsel); „Start“ spielt alle Rätsel nacheinander animiert und hält beim ersten Fehler; ein Start zählt als ein Versuch (vorher zählte jeder Testfall-Wechsel).
+
 ## Explore
 
 <!--

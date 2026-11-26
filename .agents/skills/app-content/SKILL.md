@@ -35,7 +35,8 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 - Routen (`src/app.yaml`): sechs eingebaute Aufgaben und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
   kopieren). Mit `?c=` in der Adresse zeigt die Werkstatt die Challenge aus dem Link (Weg A); sie gilt für den ganzen
   Besuch, ein Klick auf eine Route der Liste startet einen neuen Besuch ohne `c`.
-- Jede Aufgabenseite: Titel, Aufgabe, Blockzahl, Testfälle (erklärt, wenn mehr als einer), „So funktioniert die
+- „Start“ spielt alle Rätsel nacheinander (animiert) und hält beim ersten, das scheitert; ein Start ist ein Versuch.
+- Jede Aufgabenseite: Titel, Aufgabe, Blockzahl, Rätsel als Reiter (erklärt, wenn mehr als eins), „So funktioniert die
   Werkstatt“ (offen bei der ersten Route), „Blöcke in dieser Aufgabe“ (Schlüssel `explain-<block>` in den
   Message-Dateien), Welt, Steuerung, Rückmeldung, Hinweise, Editor, Rückweg und Ergebniszeile.
 - Auf dem Gerät (`src/ui/progress.ts`): gelöste Aufgaben und das letzte Programm je Aufgabe (höchstens 50).
@@ -55,7 +56,7 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 ## Terminology
 
 - Lernende mit „du“ / „you“, einfache Sprache (ISO 24495), Plain English.
-- Für Lernende „Aufgabe“ (en „task“), nicht „Challenge“; „Testfall“ (en „test case“); „Block“; „Roboter“.
+- Für Lernende „Aufgabe“ (en „task“), nicht „Challenge“; die Testfälle einer Aufgabe heißen „Rätsel“ (en „puzzle“), als Reiter über dem Bild; „Block“; Kiko, ein Roboter.
 - Blocktexte Turtle: `gehe … Pixel`, `drehe dich um … Grad nach links/rechts`, `Stift hoch`, `Stift runter`,
   `nimm die Farbe …`; en: `move … pixels`, `turn left/right by … degrees`, `pen up`, `pen down`, `use the colour …`.
 - Koordinaten: de „Feld (4|2)“ bzw. „(50|100)“, en „square (4, 2)“ bzw. „(50, 100)“.

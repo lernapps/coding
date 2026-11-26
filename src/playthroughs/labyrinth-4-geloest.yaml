@@ -25,5 +25,5 @@ steps:
         { kind: action, name: tempo, value: 5 },
         { kind: action, name: start },
       ]
-    ticks: 20
+    ticks: 30
     state: { phase: done, solved: true }

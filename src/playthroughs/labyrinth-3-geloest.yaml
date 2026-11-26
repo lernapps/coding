@@ -24,6 +24,6 @@ steps:
         { kind: action, name: start },
       ]
     state: { blocks: 4 }
-  - ticks: 20
+  - ticks: 70
     state: { phase: done, solved: true, verdict: { ok: true } }
-    announce: "Geschafft! Dein Programm klappt in allen 3 Testfällen."
+    announce: "Geschafft! Dein Programm löst alle 3 Rätsel."

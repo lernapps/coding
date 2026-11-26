@@ -33,8 +33,8 @@
   "checks": ["ziel-erreicht", "benutzt-block:wenn"],
   "hints": [
     {
-      "de": "Schau dir beide Testfälle an. Was ist im zweiten anders?",
-      "en": "Look at both test cases. What is different in the second one?"
+      "de": "Schau dir beide Rätsel an. Was ist im zweiten anders?",
+      "en": "Look at both puzzles. What is different in the second one?"
     },
     {
       "de": "Nur wenn eine Wand voraus ist, muss Kiko sich nach rechts drehen.",

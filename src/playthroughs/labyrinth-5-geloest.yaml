@@ -36,8 +36,9 @@ steps:
                 ],
             },
         },
+        { kind: action, name: tempo, value: 5 },
         { kind: action, name: start },
       ]
     state: { blocks: 10 }
-  - ticks: 400
+  - ticks: 200
     state: { phase: done, solved: true, verdict: { ok: true } }

@@ -7,7 +7,6 @@ import {
   challengeProblems,
   configAt,
   MAX_LINK,
-  firstFailure,
   judgeRun,
   programVerdict,
   testCount,
@@ -43,6 +42,9 @@ export interface State {
   run: Run | null;
   phase: Phase;
   verdict: Verdict | null;
+  /** Per test case (puzzle) of the last start: passed, failed, or not run yet. */
+  results: ("ok" | "fail" | null)[];
+  /** Starts with a verdict: a start runs every test case in turn and counts once. */
   attempts: number;
   solved: boolean;
   hints: number;
@@ -69,6 +71,7 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
     run: null,
     phase: "edit",
     verdict: null,
+    results: [],
     attempts: 0,
     solved: false,
     hints: 0,
@@ -128,28 +131,36 @@ function begun(state: State, c: Challenge): State {
   return { ...state, run: begin(state.program, world, configAt(c, state.test)), clock: 0 };
 }
 
-/** After a step of the run: the verdict once it ended. */
+/**
+ * After a step of the run: once it ended, its test case is judged. Passed: the next test case begins at once (one start
+ * runs them all in turn); the last one passed: solved. Failed: the verdict names it, and its picture stays shown.
+ */
 function settle(state: State, c: Challenge): State {
   const run = state.run;
   const world = worldFor(c);
   if (run === null || world === undefined || run.status === "running") return state;
-  const attempts = state.attempts + 1;
-  const shown = judgeRun(c, world, state.test, run);
-  const why = (msg: Msg | undefined): { why?: Msg } => (msg === undefined ? {} : { why: msg });
-  if (!shown.ok)
-    return { ...state, attempts, phase: "done", verdict: { ok: false, test: state.test, ...why(shown.why) } };
-  const failure = firstFailure(c, state.program);
-  if (failure !== null)
-    // Shows the test case that failed, with the robot where that run ended.
+  const result = judgeRun(c, world, state.test, run);
+  const results = Array.from({ length: testCount(c) }, (_, i) => state.results[i] ?? null);
+  results[state.test - 1] = result.ok ? "ok" : "fail";
+  if (!result.ok) {
+    const why = result.why === undefined ? {} : { why: result.why };
     return {
       ...state,
-      attempts,
+      results,
+      attempts: state.attempts + 1,
       phase: "done",
-      test: failure.test > 0 ? failure.test : state.test,
-      run: failure.run ?? state.run,
-      verdict: { ok: false, test: failure.test, why: failure.why },
+      verdict: { ok: false, test: state.test, ...why },
     };
-  return { ...state, attempts, phase: "done", verdict: { ok: true, test: state.test }, solved: true };
+  }
+  if (state.test < testCount(c)) return begun({ ...state, results, test: state.test + 1 }, c);
+  return {
+    ...state,
+    results,
+    attempts: state.attempts + 1,
+    phase: "done",
+    verdict: { ok: true, test: state.test },
+    solved: true,
+  };
 }
 
 function stepRun(state: State, c: Challenge): State {
@@ -170,7 +181,8 @@ function launch(state: State, c: Challenge, phase: Phase): State {
       phase: "done",
       verdict: { ok: false, test: 0, why: pre },
     };
-  return { ...begun({ ...state, verdict: null }, c), phase };
+  // Every start begins with the first test case.
+  return { ...begun({ ...state, verdict: null, test: 1, results: [] }, c), phase };
 }
 
 export function step(state: State, input: Input): State {
@@ -195,12 +207,20 @@ export function step(state: State, input: Input): State {
     case "programm": {
       if (c === null || programProblems(input.value).length > 0) return state;
       const program = input.value as unknown as Program;
-      return { ...state, program, blocks: blocksOf(program).length, run: null, phase: "edit", verdict: null };
+      return {
+        ...state,
+        program,
+        blocks: blocksOf(program).length,
+        run: null,
+        phase: "edit",
+        verdict: null,
+        results: [],
+      };
     }
     case "testfall": {
       const n = Number(input.value);
       if (c === null || !Number.isInteger(n) || n < 1 || n > testCount(c) || state.phase === "running") return state;
-      return { ...state, test: n, run: null, phase: "edit", verdict: null };
+      return { ...state, test: n, run: null, phase: "edit" };
     }
     case "tempo": {
       const t = Number(input.value);
@@ -231,7 +251,7 @@ export function step(state: State, input: Input): State {
     case "zuruecksetzen":
       return state.phase === "edit" && state.run === null
         ? state
-        : { ...state, run: null, phase: "edit", verdict: null };
+        : { ...state, run: null, phase: "edit", verdict: null, results: [] };
     default:
       return state;
   }

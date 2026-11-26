@@ -147,7 +147,8 @@ const next = computed(() => {
 const statusText = computed(() => {
   const s = props.state;
   if (s.verdict !== null) return "";
-  if (s.phase === "running") return t("phase-running");
+  if (s.phase === "running")
+    return tests.value > 1 ? t("running-test", { n: s.test, count: tests.value }) : t("phase-running");
   if (s.phase === "paused") return t("phase-paused", { commands: s.run?.commands ?? 0 });
   return s.phase === "edit" ? t("phase-edit") : "";
 });
@@ -183,6 +184,28 @@ const result = computed(() =>
       }),
 );
 const hintList = ref<HTMLOListElement | null>(null);
+const tabButtons = ref<HTMLButtonElement[]>([]);
+/** The tabs of the puzzles: arrow keys, Home and End move between them (WAI-ARIA tabs pattern). */
+async function onTabKey(event: KeyboardEvent): Promise<void> {
+  if (props.state.phase === "running") return;
+  const n = props.state.test;
+  const last = tests.value;
+  const next =
+    event.key === "ArrowRight"
+      ? (n % last) + 1
+      : event.key === "ArrowLeft"
+        ? ((n + last - 2) % last) + 1
+        : event.key === "Home"
+          ? 1
+          : event.key === "End"
+            ? last
+            : 0;
+  if (next === 0) return;
+  event.preventDefault();
+  act("testfall", next);
+  await nextTick();
+  tabButtons.value[next - 1]?.focus();
+}
 /** Shows the next hint, announces it, and keeps the focus in the hints when its button goes. */
 async function nextHint(): Promise<void> {
   const next = c.value?.hints[props.state.hints];
@@ -252,7 +275,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               ? t("blocks-count-free", { used: state.blocks })
               : t("blocks-count", { used: state.blocks, max: c.limits.blocks })
           }}</span>
-          <span v-if="tests > 1"> · {{ t("test-shown", { n: state.test, count: tests }) }}</span>
+          <span v-if="tests > 1"> · {{ t("test-shown", { count: tests }) }}</span>
         </p>
         <p v-if="tests > 1">{{ t("tests-explain", { count: tests }) }}</p>
         <details class="help" :open="firstOfWorld">
@@ -274,26 +297,44 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
       </header>
       <div class="columns">
         <div class="stage">
-          <component
-            :is="view"
-            v-if="view !== undefined && worldState !== null && config !== null"
-            :config="config"
-            :state="worldState"
-            :crashed="state.run?.status === 'crashed'"
-            :label="description"
-            :still="still"
-          />
-          <div v-if="tests > 1" class="tests" role="group" :aria-label="t('tests-label')">
+          <div v-if="tests > 1" class="tabs" role="tablist" :aria-label="t('tests-label')" @keydown="onTabKey">
             <button
               v-for="n in tests"
+              :id="`raetsel-tab-${n}`"
               :key="n"
+              ref="tabButtons"
               type="button"
-              :aria-pressed="state.test === n"
+              role="tab"
+              :aria-selected="state.test === n"
+              aria-controls="raetsel-panel"
+              :tabindex="state.test === n ? 0 : -1"
               :aria-disabled="state.phase === 'running'"
+              :class="state.results[n - 1] ?? ''"
               @click="act('testfall', n)"
             >
               {{ t("test-n", { n }) }}
+              <span v-if="state.results[n - 1] === 'ok'"
+                ><span aria-hidden="true">✓</span><span class="sr-only">{{ t("test-ok") }}</span></span
+              >
+              <span v-else-if="state.results[n - 1] === 'fail'"
+                ><span aria-hidden="true">✗</span><span class="sr-only">{{ t("test-fail") }}</span></span
+              >
             </button>
+          </div>
+          <div
+            id="raetsel-panel"
+            :role="tests > 1 ? 'tabpanel' : undefined"
+            :aria-labelledby="tests > 1 ? `raetsel-tab-${state.test}` : undefined"
+          >
+            <component
+              :is="view"
+              v-if="view !== undefined && worldState !== null && config !== null"
+              :config="config"
+              :state="worldState"
+              :crashed="state.run?.status === 'crashed'"
+              :label="description"
+              :still="still"
+            />
           </div>
           <div class="controls">
             <button type="button" class="primary" :aria-disabled="state.phase === 'running'" @click="act('start')">
@@ -337,13 +378,6 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               <a :href="next.href">{{ t("next", { title: next.title }) }} →</a>
             </p>
             <p v-else-if="lastOfCollection">{{ t("all-done") }}</p>
-            <button
-              v-if="!state.verdict.ok && state.verdict.test > 0 && state.verdict.test !== state.test"
-              type="button"
-              @click="act('testfall', state.verdict.test)"
-            >
-              {{ t("show-test", { n: state.verdict.test }) }}
-            </button>
           </div>
           <div v-if="c.hints.length > 0" class="hints">
             <ol v-if="state.hints > 0" ref="hintList" tabindex="-1" :aria-label="t('hints')">
@@ -428,7 +462,39 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
     display: block;
   }
 }
-.tests,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 2px solid #1f2a44;
+  margin-bottom: 0.25rem;
+}
+.tabs button {
+  border-radius: 0.4rem 0.4rem 0 0;
+  border-bottom: none;
+  margin-bottom: -2px;
+}
+.tabs button[aria-selected="true"] {
+  background: #1f2a44;
+  color: #fff;
+}
+.tabs button.ok span {
+  color: #2f7d32;
+}
+.tabs button.fail span {
+  color: #c0182c;
+}
+.tabs button[aria-selected="true"] span {
+  color: inherit;
+}
 .controls,
 .hints {
   display: flex;
