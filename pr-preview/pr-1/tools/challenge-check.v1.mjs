@@ -1,4 +1,4 @@
-// source: ec973d77a76efaa9
+// source: 9c211bd4150de2d7
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1295,6 +1295,8 @@ var de_default = {
   "authoring-link-en": "Link für englische Seiten:",
   "problem-json": "Das ist kein gültiges JSON. Fehlt ein Komma oder eine Klammer?",
   "solved-before": "schon gelöst",
+  "authoring-visit":
+    "Ein Link mit Aufgabe gilt für den ganzen Besuch. Wer in der Liste eine andere Aufgabe wählt, verlässt ihn; der Zurück-Knopf des Browsers führt wieder hin. Hängt an den Link also keine Route (#…).",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1475,6 +1477,8 @@ var en_default = {
   "authoring-link-en": "Link for English pages:",
   "problem-json": "This is not valid JSON. Is a comma or a bracket missing?",
   "solved-before": "solved before",
+  "authoring-visit":
+    "A link with a task holds for the whole visit. Choosing another task in the list leaves it; the browser’s back button returns to it. So do not add a route (#…) to the link.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
