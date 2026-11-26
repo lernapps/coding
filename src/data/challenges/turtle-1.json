@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "id": "turtle-1",
+  "title": {
+    "de": "Ein Quadrat",
+    "en": "A square"
+  },
+  "task": {
+    "de": "Lass Kiko das graue Quadrat nachzeichnen. Jede Seite ist 80 Schritte lang.",
+    "en": "Make Kiko draw the grey square. Each side is 80 steps long."
+  },
+  "world": {
+    "type": "turtle",
+    "version": 1,
+    "config": {
+      "ziel": {
+        "main": [
+          {
+            "s": "cmd",
+            "name": "gehe",
+            "args": [
+              {
+                "e": "num",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "drehe-rechts-um",
+            "args": [
+              {
+                "e": "num",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "gehe",
+            "args": [
+              {
+                "e": "num",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "drehe-rechts-um",
+            "args": [
+              {
+                "e": "num",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "gehe",
+            "args": [
+              {
+                "e": "num",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "drehe-rechts-um",
+            "args": [
+              {
+                "e": "num",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "gehe",
+            "args": [
+              {
+                "e": "num",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "drehe-rechts-um",
+            "args": [
+              {
+                "e": "num",
+                "value": 90
+              }
+            ]
+          }
+        ]
+      },
+      "start": {
+        "x": 60,
+        "y": 140,
+        "winkel": 0
+      }
+    }
+  },
+  "toolbox": ["gehe", "drehe-links-um", "drehe-rechts-um"],
+  "start": null,
+  "limits": {
+    "blocks": 8,
+    "steps": 200
+  },
+  "tests": [],
+  "checks": ["bild-gleich", "hoechstens-bloecke"],
+  "hints": [
+    {
+      "de": "Ein Quadrat hat 4 gleich lange Seiten und 4 Ecken.",
+      "en": "A square has 4 sides of the same length and 4 corners."
+    },
+    {
+      "de": "An jeder Ecke dreht sich Kiko um 90 Grad.",
+      "en": "At each corner Kiko turns by 90 degrees."
+    }
+  ],
+  "view": "bloecke"
+}

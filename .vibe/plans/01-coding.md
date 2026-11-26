@@ -229,10 +229,11 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - [x] Load skill `lernapps-interactive`.
 - [x] Muster: Kern (IR, Interpreter, Welt-Schnittstelle, Challenge-Validator, Weg A) und Welt Labyrinth mit labyrinth-1..3, Lösungen und Playthroughs; App-Seite mit Editor (nachgeladen), Welt, Steuerung, Rückmeldung je Testfall, Hinweise, Zurück; de und en; Roboter festlegen. Zeigt: eine Challenge lösen, mit Maus und Tastatur, 360 px hoch und quer
 <!-- tasks: pattern (1 added): the one page or screen that is the pattern for the others -->
-- [ ] **Checkpoint:** the pattern page. Load skill `lernapps-learner-check` and do its learner check on the page. Fix
+- [x] **Checkpoint:** the pattern page. Load skill `lernapps-learner-check` and do its learner check on the page. Fix
       what it finds. Then show the creator the page and ask whether the others may follow it. Stop and wait. A
       change: change the pattern first.
-- [ ] Welt Turtle mit turtle-1..3 (Prüfung bild-gleich), Lösungen und Playthroughs. Zeigt: Spirograph zeichnen
+      Creator: Ja, Turtle und die übrigen Teile folgen diesem Muster. (Orchestrator, Checkpoint 3)
+- [x] Welt Turtle mit turtle-1..3 (Prüfung bild-gleich), Lösungen und Playthroughs. Zeigt: Spirograph zeichnen
 - [ ] Schema challenge.v1 veröffentlichen (public/schemas) und Test, der Schema und Validator gleich hält. Zeigt: Schema unter coding/schemas/
 - [ ] Autorenseite (Route autoren): JSON einfügen, prüfen, ausprobieren, Link kopieren. Zeigt: eine eigene Challenge als Link
 - [ ] Prüfskript public/tools/challenge-check.mjs (Schema, Welt-Version, Länge, Lösung besteht alle Tests). Zeigt: Ausgabe für eine gute und eine kaputte Challenge

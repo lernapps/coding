@@ -19,7 +19,9 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   - `sequenz` – Ich kann Anweisungen in der richtigen Reihenfolge zu einer Sequenz anordnen. → `labyrinth-1`
   - `wiederholung-feste-anzahl` – Ich kann mit einer Wiederholung mit fester Anzahl Anweisungen mehrmals ausführen lassen. → `labyrinth-2`
   - `wiederholung-mit-bedingung`, `verzweigung` – Ich kann mit einer Wiederholung mit Bedingung … / mit einer Verzweigung … → `labyrinth-3`
-- Kapitel Turtle (Routen `turtle-1` … `turtle-3`): `sequenz` → `turtle-1`, `wiederholung-feste-anzahl` → `turtle-2`, `turtle-3`.
+- Kapitel Turtle (Routen `turtle-1` … `turtle-3`, Daten `src/data/challenges/turtle-*.json`): `sequenz` → `turtle-1`
+  (Quadrat, höchstens 8 Blöcke), `wiederholung-feste-anzahl` → `turtle-2` (Quadrat, höchstens 3 Blöcke), `turtle-3`
+  (Spirograph, verschachtelte Schleifen, höchstens 7 Blöcke).
 - `visuelle-programmierung` – in jeder Challenge.
 
 ## Content structure
@@ -28,13 +30,19 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   config}`, `toolbox`, `start`, `limits {blocks, steps}`, `tests[]`, `checks[]`, `hints[]`, `view`, `back`.
 - Jede eingebaute Challenge hat eine Musterlösung `src/data/solutions/<id>.json` (IR) und mindestens zwei Playthroughs
   `src/playthroughs/<id>-*.yaml`: gelöst, und ein typischer Fehler mit Rückmeldung.
-- Jede Challenge hat mindestens zwei Testfälle, sobald sie eine Schleife verlangt, damit fest codierte Schritte nicht
-  bestehen.
+- Eine Challenge mit bedingter Schleife („solange“) hat mindestens drei Testfälle, damit fest codierte Schritte nicht
+  bestehen. Zählschleifen erzwingt `limits.blocks` (ein Testfall genügt).
+- Welt Turtle: `world.config.ziel` ist das Zielbild als Programm; Prüfung `bild-gleich` (Abstand höchstens 2, Farbe
+  zählt nicht); die Rückmeldung nennt die Stelle (x|y), an der das Bild abweicht. Fläche 200 × 200, Start ohne
+  Angabe in der Mitte, Blick nach oben.
 
 ## Terminology
 
 - Lernende mit „du“ / „you“, einfache Sprache (ISO 24495), Plain English.
 - Für Lernende „Aufgabe“ (en „task“), nicht „Challenge“; „Testfall“ (en „test case“); „Block“; „Roboter“.
+- Blocktexte Turtle: `gehe … Schritte`, `drehe dich um … Grad nach links/rechts`, `Stift hoch`, `Stift runter`,
+  `nimm die Farbe …`; en: `move … steps`, `turn left/right by … degrees`, `pen up`, `pen down`, `use the colour …`.
+- Koordinaten: de „Feld (4|2)“ bzw. „(50|100)“, en „square (4, 2)“ bzw. „(50, 100)“.
 - Blocktexte: `gehe vorwärts`, `drehe dich nach links`, `drehe dich nach rechts`, `wiederhole … mal`, `solange … tue`, `wenn … dann … sonst`, `Wand voraus?`; en: `move forward`, `turn left`, `turn right`, `repeat … times`, `while … do`, `if … then … else`, `wall ahead?`.
 - Felder heißen nach Spalte und Zeile: „Feld (3|2)“, Zählung ab 1 von links oben.
 - Himmelsrichtungen nur in Rückmeldungen zur Drehung, sonst „vorne / links / rechts aus Sicht des Roboters“.

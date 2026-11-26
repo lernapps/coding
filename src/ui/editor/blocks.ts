@@ -10,6 +10,15 @@ import blocklyDe from "../../data/blockly-de.json";
 import { texts, type Key, type Lang } from "../texts.ts";
 
 const COLOURS = { move: 210, control: 120, sense: 290, start: 30 };
+
+/** The number fields of commands with arguments (name → one entry per argument); "colour" is a list of colours. */
+const ARGS: Readonly<Record<string, readonly ({ min: number; max: number; value: number } | "colour")[]>> = {
+  gehe: [{ min: 1, max: 200, value: 50 }],
+  "drehe-links-um": [{ min: 1, max: 360, value: 90 }],
+  "drehe-rechts-um": [{ min: 1, max: 360, value: 90 }],
+  farbe: ["colour"],
+};
+const COLOUR_COUNT = 4;
 export const START = "programm";
 
 /** Sets Blockly's language and defines the blocks with the texts of `lang`. Call before inject. */
@@ -36,6 +45,15 @@ export function setUp(lang: Lang): void {
     ...[...commands].map((name) => ({
       type: name,
       message0: label(name),
+      args0: (ARGS[name] ?? []).map((arg, i) =>
+        arg === "colour"
+          ? {
+              type: "field_dropdown",
+              name: `A${i}`,
+              options: Array.from({ length: COLOUR_COUNT }, (_, c) => [t(`colour-${c + 1}` as Key), String(c + 1)]),
+            }
+          : { type: "field_number", name: `A${i}`, value: arg.value, min: arg.min, max: arg.max, precision: 1 },
+      ),
       previousStatement: null,
       nextStatement: null,
       colour: COLOURS.move,
@@ -98,15 +116,15 @@ export function setUp(lang: Lang): void {
   ]);
 }
 
-/** The toolbox of a challenge: its blocks, in categories on a narrow screen or when they are many, else as one list. */
+/** The toolbox of a challenge: its blocks in categories, or as one list. */
 export function toolboxOf(
   blocks: readonly string[],
   lang: Lang,
-  narrow: boolean,
+  categories: boolean,
 ): Blockly.utils.toolbox.ToolboxDefinition {
   const { t } = texts(lang);
   const item = (type: string): Blockly.utils.toolbox.BlockInfo => ({ kind: "block", type });
-  if (!narrow) return { kind: "flyoutToolbox", contents: blocks.map(item) };
+  if (!categories) return { kind: "flyoutToolbox", contents: blocks.map(item) };
   const control = ["wiederhole", "solange", "wenn", "wenn-sonst"];
   const groups: [Key, number, string[]][] = [
     [
@@ -158,8 +176,14 @@ function chain(first: Blockly.Block | null): Stmt[] {
       case "wenn-sonst":
         out.push({ s: "if", cond: expr(b.getInputTargetBlock("COND")), then: body("DO"), else: body("ELSE"), id });
         break;
-      default:
-        out.push({ s: "cmd", name: b.type, args: [], id });
+      default: {
+        const block = b;
+        const args = (ARGS[b.type] ?? []).map((_, i): Expr => ({
+          e: "num",
+          value: Number(block.getFieldValue(`A${i}`)),
+        }));
+        out.push({ s: "cmd", name: b.type, args, id });
+      }
     }
   }
   return out;
@@ -215,9 +239,15 @@ function serialChain(stmts: readonly Stmt[]): Serial | null {
         put("DO", serialChain(s.then));
         if (s.else !== undefined) put("ELSE", serialChain(s.else));
         break;
-      case "cmd":
+      case "cmd": {
         block = { type: s.name };
+        const fields: Record<string, number | string> = {};
+        s.args.forEach((a, i) => {
+          if (a.e === "num") fields[`A${i}`] = ARGS[s.name]?.[i] === "colour" ? String(a.value) : a.value;
+        });
+        if (Object.keys(fields).length > 0) block.fields = fields as Record<string, number>;
         break;
+      }
       default:
         continue;
     }
@@ -229,9 +259,9 @@ function serialChain(stmts: readonly Stmt[]): Serial | null {
 }
 
 /** The editor's content for a program: the start block with the program's blocks below it. */
-export function workspaceOf(program: Program | null): object {
+export function workspaceOf(program: Program | null, x = 20): object {
   const body = program === null ? null : serialChain(program.main);
-  const start: Serial & { x: number; y: number; deletable: boolean } = { type: START, x: 20, y: 20, deletable: false };
+  const start: Serial & { x: number; y: number; deletable: boolean } = { type: START, x, y: 20, deletable: false };
   if (body !== null) start.inputs = { DO: { block: body } };
   return { blocks: { languageVersion: 0, blocks: [start] } };
 }

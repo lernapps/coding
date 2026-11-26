@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // Kiko, the robot of the workshop (a recurring picture of the computer science apps): drawn upright, centred on
-// (0, 0), about 40 units tall; the pointer on its ring shows where it faces. Self-drawn SVG, CC BY 4.0 like the content.
-defineProps<{ facing: "north" | "east" | "south" | "west"; crashed?: boolean }>();
-const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
+// (0, 0), about 40 units tall; the pointer on its ring shows where it faces (`angle` in degrees, 0 is to the right,
+// clockwise). Self-drawn SVG, CC BY 4.0 like the content.
+defineProps<{ angle: number; crashed?: boolean }>();
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
     <rect x="-7.5" y="3" width="15" height="8" rx="3" class="body" />
     <rect x="-8.5" y="11" width="6" height="3.5" rx="1.5" class="visor" />
     <rect x="2.5" y="11" width="6" height="3.5" rx="1.5" class="visor" />
-    <g :transform="`rotate(${ANGLE[facing]})`">
+    <g :transform="`rotate(${angle})`">
       <path d="M 17 -7 L 26 0 L 17 7 Z" class="pointer" />
     </g>
   </g>

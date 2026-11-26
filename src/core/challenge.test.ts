@@ -61,3 +61,16 @@ describe("interpreter", () => {
     expect(run.why).toEqual({ key: "fail-wall", params: { x: 2, y: 2 } });
   });
 });
+
+describe("turtle", () => {
+  it("names where a picture differs", async () => {
+    const { turtle } = await import("./worlds/turtle.ts");
+    const num = (value: number) => ({ e: "num" as const, value });
+    const config = { ziel: { main: [{ s: "cmd" as const, name: "gehe", args: [num(50)] }] } };
+    const short = runToEnd({ main: [{ s: "cmd", name: "gehe", args: [num(40)] }] }, turtle as never, config, 50);
+    expect(turtle.checks["bild-gleich"]?.(short.world as never, config)).toEqual({
+      ok: false,
+      why: { key: "fail-picture-missing", params: { x: 100, y: 57 } },
+    });
+  });
+});

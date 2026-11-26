@@ -13,6 +13,7 @@ const props = defineProps<{
   still: boolean;
 }>();
 const CELL = 40;
+const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
 const PAD = 22;
 const width = computed(() => (props.config.map[0]?.length ?? 1) * CELL + PAD + 8);
 const height = computed(() => props.config.map.length * CELL + PAD + 8);
@@ -51,7 +52,7 @@ const trail = computed(() => new Set(props.state.trail));
       :class="{ still }"
       :style="{ transform: `translate(${PAD + state.x * CELL + CELL / 2}px, ${PAD + state.y * CELL + CELL / 2}px)` }"
     >
-      <Robot :facing="state.facing" :crashed="crashed" />
+      <Robot :angle="ANGLE[state.facing]" :crashed="crashed" />
     </g>
   </svg>
 </template>

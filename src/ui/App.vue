@@ -61,7 +61,12 @@ const tests = computed(() => (c.value === null ? 0 : testCount(c.value)));
 const description = computed(() => {
   if (world.value === undefined || worldState.value === null || config.value === null) return "";
   const msg = world.value.describe(worldState.value, config.value);
-  const goal = msg.params?.["goal"] === "yes" ? ` ${t("describe-labyrinth-goal")}` : "";
+  const goal =
+    msg.params?.["goal"] === "yes"
+      ? ` ${t("describe-labyrinth-goal")}`
+      : msg.key === "describe-turtle"
+        ? ` ${t("describe-turtle-target")}`
+        : "";
   return say(msg) + goal;
 });
 const highlight = computed(() =>
@@ -153,7 +158,7 @@ const onProgram = (program: Program): void => act("programm", program as unknown
           <ul>
             <li>{{ t("help-blocks") }}</li>
             <li>{{ t("help-robot") }}</li>
-            <li>{{ t("help-map") }}</li>
+            <li>{{ t(`help-map-${c.world.type}` as Key) }}</li>
             <li>{{ t("help-run") }}</li>
             <li>{{ t("help-keys") }}</li>
           </ul>

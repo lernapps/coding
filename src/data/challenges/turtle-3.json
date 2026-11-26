@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "id": "turtle-3",
+  "title": {
+    "de": "Der Spirograph",
+    "en": "The spirograph"
+  },
+  "task": {
+    "de": "Zeichne die Blume aus 12 Quadraten. Nach jedem Quadrat dreht sich Kiko um 30 Grad. Du hast höchstens 7 Blöcke.",
+    "en": "Draw the flower made of 12 squares. After each square Kiko turns by 30 degrees. You have at most 7 blocks."
+  },
+  "world": {
+    "type": "turtle",
+    "version": 1,
+    "config": {
+      "ziel": {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 12
+            },
+            "body": [
+              {
+                "s": "repeat",
+                "times": {
+                  "e": "num",
+                  "value": 4
+                },
+                "body": [
+                  {
+                    "s": "cmd",
+                    "name": "gehe",
+                    "args": [
+                      {
+                        "e": "num",
+                        "value": 50
+                      }
+                    ]
+                  },
+                  {
+                    "s": "cmd",
+                    "name": "drehe-rechts-um",
+                    "args": [
+                      {
+                        "e": "num",
+                        "value": 90
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-rechts-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 30
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "toolbox": ["gehe", "drehe-links-um", "drehe-rechts-um", "wiederhole", "farbe"],
+  "start": null,
+  "limits": {
+    "blocks": 7,
+    "steps": 1000
+  },
+  "tests": [],
+  "checks": ["bild-gleich", "hoechstens-bloecke"],
+  "hints": [
+    {
+      "de": "Bau zuerst ein Quadrat mit Seiten von 50 Schritten.",
+      "en": "First build a square with sides of 50 steps."
+    },
+    {
+      "de": "Leg das Quadrat und eine Drehung um 30 Grad in eine zweite Schleife.",
+      "en": "Put the square and a turn by 30 degrees inside a second loop."
+    },
+    {
+      "de": "12 × 30 Grad = 360 Grad: einmal ganz herum.",
+      "en": "12 × 30 degrees = 360 degrees: once all the way round."
+    }
+  ],
+  "view": "bloecke"
+}

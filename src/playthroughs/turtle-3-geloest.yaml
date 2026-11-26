@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Der Spirograph: 12 Quadrate, jedes um 30 Grad gedreht, in Orange; die Farbe zählt beim Vergleich nicht.
+seed: 1
+route: turtle-3
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "farbe", "args": [{ "e": "num", "value": 2 }] },
+                  {
+                    "s": "repeat",
+                    "times": { "e": "num", "value": 12 },
+                    "body":
+                      [
+                        {
+                          "s": "repeat",
+                          "times": { "e": "num", "value": 4 },
+                          "body":
+                            [
+                              { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 50 }] },
+                              { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                            ],
+                        },
+                        { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 30 }] },
+                      ],
+                  },
+                ],
+            },
+        },
+        { kind: action, name: tempo, value: 5 },
+        { kind: action, name: start },
+      ]
+    state: { blocks: 6 }
+  - ticks: 400
+    state: { phase: done, solved: true, run: { commands: 109, world: { colour: 2 } } }

@@ -37,14 +37,17 @@ onMounted(() => {
   const lang = langOf(props.lang);
   setUp(lang);
   const narrow = root.clientWidth < 600;
-  const categories = narrow || props.toolbox.length > 6;
+  // Narrow: the blocks in a row above the work area, which stays free. Wide: categories when there are many blocks.
+  const categories = !narrow && props.toolbox.length > 6;
   workspace = Blockly.inject(root, {
     toolbox: toolboxOf(props.toolbox, lang, categories),
     renderer: "zelos",
+    horizontalLayout: narrow,
+    toolboxPosition: "start",
     sounds: false,
     media: new URL("../blockly-media/", import.meta.url).href,
     trashcan: true,
-    zoom: { controls: true, startScale: narrow ? 0.7 : 0.85 },
+    zoom: { controls: true, startScale: narrow ? 0.6 : 0.85 },
     move: { scrollbars: true, drag: true, wheel: false },
   });
   // Loading fires no change events: the core already has the start program, and a late event would overwrite a

@@ -832,7 +832,7 @@ path: src/core/challenge.ts
 
 ### Worlds
 
-The kinds of task, each a pure module by type and version (labyrinth 1). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
+The kinds of task, each a pure module by type and version (labyrinth 1, turtle 1; the turtle compares pictures with a tolerance of 2 units). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
 
 ```arc42
 :::building-block
@@ -895,7 +895,7 @@ protocol: Vue props and events
 <!-- app: begin ui -->
 ### Block editor
 
-Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (categories on narrow screens) and the generator blocks → IR. Only the input; it highlights the block that ran last.
+Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last.
 
 The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback:
 

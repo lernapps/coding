@@ -31,3 +31,9 @@ routes:
     title: { de: "Labyrinth 2: Die Treppe", en: "Maze 2: The stairs" }
   - id: labyrinth-3
     title: { de: "Labyrinth 3: Immer dem Gang nach", en: "Maze 3: Follow the corridor" }
+  - id: turtle-1
+    title: { de: "Turtle 1: Ein Quadrat", en: "Turtle 1: A square" }
+  - id: turtle-2
+    title: { de: "Turtle 2: Quadrat mit Schleife", en: "Turtle 2: Square with a loop" }
+  - id: turtle-3
+    title: { de: "Turtle 3: Der Spirograph", en: "Turtle 3: The spirograph" }

@@ -1,0 +1,62 @@
+{
+  "main": [
+    {
+      "s": "cmd",
+      "name": "farbe",
+      "args": [
+        {
+          "e": "num",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "s": "repeat",
+      "times": {
+        "e": "num",
+        "value": 12
+      },
+      "body": [
+        {
+          "s": "repeat",
+          "times": {
+            "e": "num",
+            "value": 4
+          },
+          "body": [
+            {
+              "s": "cmd",
+              "name": "gehe",
+              "args": [
+                {
+                  "e": "num",
+                  "value": 50
+                }
+              ]
+            },
+            {
+              "s": "cmd",
+              "name": "drehe-rechts-um",
+              "args": [
+                {
+                  "e": "num",
+                  "value": 90
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "s": "cmd",
+          "name": "drehe-rechts-um",
+          "args": [
+            {
+              "e": "num",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
