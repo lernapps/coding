@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein typischer Fehler: links statt rechts (aus Sicht des Betrachters). Der Roboter stößt an die Wand; die
+# Rückmeldung nennt das Feld.
+seed: 1
+route: labyrinth-1
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "links", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                ],
+            },
+        },
+        { kind: action, name: start },
+      ]
+    ticks: 100
+    state:
+      { phase: done, solved: false, verdict: { ok: false, test: 1, why: { key: fail-wall, params: { x: 4, y: 2 } } } }
+    announce: "Vor Kiko ist eine Wand. Er steht in Feld (4|2) und kann nicht vorwärts gehen."

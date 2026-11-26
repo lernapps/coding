@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Links statt rechts gedreht: Das Quadrat liegt auf der anderen Seite. Die Rückmeldung nennt die Stelle, an der ein
+# Stück der grauen Linie fehlt.
+seed: 1
+route: turtle-1
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-links-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-links-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-links-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                ],
+            },
+        },
+        { kind: action, name: tempo, value: 5 },
+        { kind: action, name: start },
+      ]
+    ticks: 40
+    state:
+      {
+        phase: done,
+        solved: false,
+        verdict: { ok: false, test: 1, why: { key: fail-picture-missing, params: { x: 63, y: 60 } } },
+      }
+    announce: "Dein Bild ist noch nicht gleich: Bei (63|60) fehlt ein Stück der grauen Linie."

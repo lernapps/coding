@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "id": "labyrinth-5",
+  "title": {
+    "de": "Immer dem Gang nach",
+    "en": "Follow the corridor"
+  },
+  "task": {
+    "de": "Bau ein Programm, das Kiko durch jeden Gang ins Ziel bringt. Benutz „wenn … dann … sonst“. Es gibt 3 Rätsel mit verschiedenen Gängen. Der Block „solange nicht am Ziel?“ ist schon da.",
+    "en": "Build a program that brings Kiko through any corridor to the goal. Use “if … then … else”. There are 3 puzzles with different corridors. The block “while not at the goal?” is already there."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["#########", "#S.....##", "######.##", "##Z....##", "#########"],
+      "facing": "east"
+    }
+  },
+  "toolbox": [
+    "vorwaerts",
+    "links",
+    "rechts",
+    "solange",
+    "wenn-sonst",
+    "nicht",
+    "wand-voraus",
+    "wand-rechts",
+    "am-ziel"
+  ],
+  "start": {
+    "main": [
+      {
+        "s": "while",
+        "cond": {
+          "e": "not",
+          "a": {
+            "e": "sense",
+            "name": "am-ziel",
+            "args": []
+          }
+        },
+        "body": []
+      }
+    ]
+  },
+  "limits": {
+    "blocks": 10,
+    "steps": 400
+  },
+  "tests": [
+    {
+      "config": {
+        "map": ["#######", "#S.####", "##.####", "##....#", "#####.#", "#Z....#", "#######"]
+      }
+    },
+    {
+      "config": {
+        "map": ["#########", "#Z......#", "#######.#", "#S......#", "#########"]
+      }
+    }
+  ],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:wenn-sonst"],
+  "hints": [
+    {
+      "de": "Bei jedem Durchgang der Schleife: Ist vorne frei, geht Kiko vorwärts. Sonst dreht er sich.",
+      "en": "Each time round the loop: if the way ahead is free, Kiko moves forward. If not, it turns."
+    },
+    {
+      "de": "Setz „wenn … dann … sonst“ mit „Wand voraus?“ in die Schleife: bei „sonst“ „gehe vorwärts“.",
+      "en": "Put “if … then … else” with “wall ahead?” into the loop: at “else”, “move forward”."
+    },
+    {
+      "de": "Bei „dann“ kommt ein zweites „wenn … dann … sonst“ hinein: Wand rechts? dann drehe dich nach links, sonst drehe dich nach rechts.",
+      "en": "At “then” goes a second “if … then … else”: wall on the right? then turn left, else turn right."
+    }
+  ],
+  "view": "bloecke"
+}

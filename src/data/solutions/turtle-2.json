@@ -1,0 +1,33 @@
+{
+  "main": [
+    {
+      "s": "repeat",
+      "times": {
+        "e": "num",
+        "value": 4
+      },
+      "body": [
+        {
+          "s": "cmd",
+          "name": "gehe",
+          "args": [
+            {
+              "e": "num",
+              "value": 80
+            }
+          ]
+        },
+        {
+          "s": "cmd",
+          "name": "drehe-rechts-um",
+          "args": [
+            {
+              "e": "num",
+              "value": 90
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

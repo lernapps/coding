@@ -1,0 +1,45 @@
+{
+  "format": 1,
+  "id": "labyrinth-4",
+  "title": {
+    "de": "Geradeaus oder abbiegen?",
+    "en": "Straight on or turn?"
+  },
+  "task": {
+    "de": "Manchmal ist vor Kiko eine Wand, manchmal nicht. Bring ihn in beiden Fällen ins Ziel. Das Ziel ist immer 2 Felder entfernt.",
+    "en": "Sometimes there is a wall in front of Kiko, sometimes not. Bring it to the goal in both cases. The goal is always 2 squares away."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["#####", "#S.Z#", "#####"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "links", "rechts", "wenn", "wand-voraus"],
+  "start": null,
+  "limits": {
+    "blocks": 5,
+    "steps": 20
+  },
+  "tests": [
+    {
+      "config": {
+        "map": ["###", "#S#", "#.#", "#Z#", "###"]
+      }
+    }
+  ],
+  "checks": ["ziel-erreicht", "benutzt-block:wenn"],
+  "hints": [
+    {
+      "de": "Schau dir beide Rätsel an. Was ist im zweiten anders?",
+      "en": "Look at both puzzles. What is different in the second one?"
+    },
+    {
+      "de": "Nur wenn eine Wand voraus ist, muss Kiko sich nach rechts drehen.",
+      "en": "Only if there is a wall ahead does Kiko have to turn right."
+    }
+  ],
+  "view": "bloecke"
+}

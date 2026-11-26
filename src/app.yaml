@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
+title: { de: Programmierwerkstatt, en: Coding workshop }
+description:
+  de: "Du programmierst mit Blöcken. Kiko, ein Roboter, führt dein Programm aus, Befehl für Befehl: Er läuft durch Labyrinthe und zeichnet Bilder. Für Klasse 7 und 8."
+  en: "You program with blocks. Kiko, a robot, runs your program, one command after another: it walks through mazes and draws pictures. For year 7 and 8 (age 12 to 14)."
+howto:
+  de: |
+    - Wähl eine Aufgabe.
+    - Zieh Blöcke in die Arbeitsfläche und steck sie zusammen. Mit der Tastatur: Tab bis zu den Blöcken, Enter fügt einen Block ein.
+    - Drück „Start“. Mit „Ein Schritt“ siehst du jeden Befehl einzeln.
+    - Manche Aufgaben probieren dein Programm in mehreren Labyrinthen aus. Es muss in allen klappen.
+  en: |
+    - Choose a task.
+    - Drag blocks onto the work area and snap them together. With the keyboard: Tab to the blocks, Enter adds a block.
+    - Press “Run”. With “One step” you see each command on its own.
+    - Some tasks try your program in several mazes. It has to work in all of them.
+competencies:
+  - de: Ich kann Befehle in die richtige Reihenfolge bringen (Sequenz).
+    en: I can put commands in the right order (a sequence).
+  - de: Ich kann Befehle mit „wiederhole … mal“ mehrmals ausführen lassen (Wiederholung mit fester Anzahl).
+    en: I can make commands run several times with “repeat … times” (a loop that counts).
+  - de: Ich kann Befehle mit „solange … tue“ wiederholen lassen, bis eine Bedingung nicht mehr stimmt (Wiederholung mit Bedingung).
+    en: I can make commands repeat with “while … do” until a condition is no longer true (a loop with a condition).
+  - de: Ich kann mit „wenn … dann … sonst“ festlegen, was je nach Bedingung passiert (Verzweigung).
+    en: I can use “if … then … else” to choose what happens depending on a condition (a choice).
+languages: [de, en]
+routes:
+  - id: labyrinth-1
+    title: { de: "Labyrinth 1: Um die Ecke", en: "Maze 1: Around the corner" }
+  - id: turtle-1
+    title: { de: "Zeichnen 1: Ein Quadrat", en: "Drawing 1: A square" }
+  - id: labyrinth-2
+    title: { de: "Labyrinth 2: Die Treppe", en: "Maze 2: The stairs" }
+  - id: turtle-2
+    title: { de: "Zeichnen 2: Quadrat mit Wiederholung", en: "Drawing 2: Square with repeat" }
+  - id: turtle-3
+    title: { de: "Zeichnen 3: Die Blume", en: "Drawing 3: The flower" }
+  - id: labyrinth-3
+    title: { de: "Labyrinth 3: Der lange Gang", en: "Maze 3: The long corridor" }
+  - id: labyrinth-4
+    title: { de: "Labyrinth 4: Geradeaus oder abbiegen?", en: "Maze 4: Straight on or turn?" }
+  - id: labyrinth-5
+    title: { de: "Labyrinth 5: Immer dem Gang nach", en: "Maze 5: Follow the corridor" }
+  - id: autoren
+    title: { de: "Eigene Aufgabe bauen", en: "Build your own task" }
+    description:
+      de: Für Lehrkräfte und Apps, die der Werkstatt eine Aufgabe als Link schicken.
+      en: For teachers and apps that send the workshop a task as a link.
+sections:
+  - id: fuer-autoren
+    title: { de: Für Lehrkräfte und Apps, en: For teachers and apps }
+    text:
+      de: |
+        Andere Apps schicken der Werkstatt eine Aufgabe als Link. So geht's:
+
+        - Schreib die Aufgabe als JSON nach dem [Schema](https://lernapps.net/coding/schemas/challenge.v1.schema.json). Welten: Labyrinth und Zeichnen (Turtle).
+        - Auf der Seite „Eigene Aufgabe bauen“ (in der Liste oben) prüfst du sie, probierst sie aus und kopierst den Link.
+        - Ein deutscher Explainer verlinkt die deutsche Seite der Werkstatt (/coding/app/), ein englischer die englische (/coding/en/app/).
+        - Zur Build-Zeit prüft das [Prüfskript](https://lernapps.net/coding/tools/challenge-check.v1.mjs) Aufgabe und Musterlösung, zum Beispiel mit „node challenge-check.v1.mjs aufgabe.json loesung.json“.
+        - Der Knopf „Zurück“ führt zur Adresse in „back.url“ und hängt „#werkstatt=id-der-aufgabe:geloest“ oder „:offen“ an.
+      en: |
+        Other apps send the workshop a task as a link. This is how:
+
+        - Write the task as JSON following the [schema](https://lernapps.net/coding/schemas/challenge.v1.schema.json). Worlds: maze and drawing (turtle).
+        - On the page “Build your own task” (in the list above) you check it, try it out and copy the link.
+        - A German explainer links the German page of the workshop (/coding/app/), an English one the English page (/coding/en/app/).
+        - At build time the [check script](https://lernapps.net/coding/tools/challenge-check.v1.mjs) checks the task and a model solution, for example with “node challenge-check.v1.mjs task.json solution.json”.
+        - The “Back” button leads to the address in “back.url” and adds “#werkstatt=task-id:geloest” or “:offen”.
+  - id: lizenzen
+    title: { de: Lizenzen, en: Licences }
+    text:
+      de: Die Blöcke kommen von [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache 2.0). Labyrinth und Turtle sind nach dem Vorbild von [Blockly Games](https://github.com/google/blockly-games) (Apache 2.0) gebaut. Kiko und die Bilder der Welten sind selbst gezeichnet (CC BY 4.0).
+      en: The blocks come from [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache 2.0). Maze and turtle follow the model of [Blockly Games](https://github.com/google/blockly-games) (Apache 2.0). Kiko and the pictures of the worlds are drawn for this app (CC BY 4.0).

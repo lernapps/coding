@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "id": "labyrinth-2",
+  "title": {
+    "de": "Die Treppe",
+    "en": "The stairs"
+  },
+  "task": {
+    "de": "Bring Kiko die Treppe hinunter ins Ziel. Du hast höchstens 5 Blöcke.",
+    "en": "Bring Kiko down the stairs to the goal. You have at most 5 blocks."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["#######", "#S.####", "##..###", "###..##", "####..#", "#####Z#", "#######"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "links", "rechts", "wiederhole"],
+  "start": null,
+  "limits": {
+    "blocks": 5,
+    "steps": 300
+  },
+  "tests": [],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke"],
+  "hints": [
+    {
+      "de": "Jede Stufe ist gleich. Welche Blöcke braucht eine Stufe?",
+      "en": "Each step of the stairs is the same. Which blocks does one step need?"
+    },
+    {
+      "de": "Leg die Blöcke für eine Stufe in „wiederhole … mal“.",
+      "en": "Put the blocks for one step inside “repeat … times”."
+    }
+  ],
+  "view": "bloecke"
+}

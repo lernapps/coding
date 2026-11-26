@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Eine Challenge mit einer Welt-Version, die die Werkstatt nicht kennt, wird nicht ausgeführt.
+seed: 1
+params:
+  {
+    c: "RZBNasMwEIWvIiZbp6FkUTCUQmnJAdpVQheyPLYHT6QwkvOLb9NjdJeLdZQ0KQghjb73NPNO0ARZ2wTlYwFUQwkJY5q21rdQQKLECOUJat3hDcUsrg_o9f7ZoXFBhOogMCptY3-HF9gZ8tEsCfnhplgEk3Sprg1WyyraBeE6q9Jhk3Vsq4OQT51qtiiRggqfCnDBN9RmcG03UK5g8jGBrwIa60hbKgFtTDDmNkLgKuwzsw2ysygpZjImKzqnH5gLYFqTltWu4uB6Pc2zVGfX40pp1-GlvIKjTjBFESTXpWzUaXt_1JZwp3-rh9KoLVfWXTIYhLU-I3-Nl_pZdB0jNehnL_Z5rqhOinzPaznI-cf15jiIeZeez98y_Ef9qra36HC_YevVU5MZx_EX",
+  }
+steps:
+  - ticks: 1
+    state:
+      {
+        source: address,
+        challenge: null,
+        problems: [{ path: world.version, key: problem-world-version, params: { newest: 1 } }],
+      }

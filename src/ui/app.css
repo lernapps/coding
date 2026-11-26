@@ -1,0 +1,4 @@
+/* The workshop needs room for the world and the editor side by side. */
+:root {
+  --page-max-width: 72rem;
+}

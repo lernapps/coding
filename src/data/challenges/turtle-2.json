@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "id": "turtle-2",
+  "title": {
+    "de": "Quadrat mit Wiederholung",
+    "en": "Square with repeat"
+  },
+  "task": {
+    "de": "Zeichne das Quadrat noch einmal: Jede Seite ist 80 Pixel lang. Diesmal hast du nur 3 Blöcke. Tipp: „wiederhole … mal“.",
+    "en": "Draw the square again: each side is 80 pixels long. This time you only have 3 blocks. Tip: “repeat … times”."
+  },
+  "world": {
+    "type": "turtle",
+    "version": 1,
+    "config": {
+      "ziel": {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 4
+            },
+            "body": [
+              {
+                "s": "cmd",
+                "name": "gehe",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 80
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-rechts-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 90
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "start": {
+        "x": 60,
+        "y": 140,
+        "winkel": 0
+      }
+    }
+  },
+  "toolbox": ["gehe", "drehe-links-um", "drehe-rechts-um", "wiederhole"],
+  "start": null,
+  "limits": {
+    "blocks": 3,
+    "steps": 200
+  },
+  "tests": [],
+  "checks": ["bild-gleich", "hoechstens-bloecke"],
+  "hints": [
+    {
+      "de": "Welche zwei Blöcke kommen viermal vor?",
+      "en": "Which two blocks come four times?"
+    },
+    {
+      "de": "Leg sie in „wiederhole … mal“.",
+      "en": "Put them inside “repeat … times”."
+    }
+  ],
+  "view": "bloecke"
+}

@@ -1,0 +1,18 @@
+Programmierwerkstatt (lernapps/coding)
+
+Copyright (c) 2026 Oliver Jägle.
+App code: MIT (LICENSE). Content (challenges, texts, pictures, Kiko): CC BY 4.0, © 2026 Oliver Jägle.
+
+This app bundles and uses:
+
+- Blockly 13.4.0 — https://github.com/RaspberryPiFoundation/blockly
+  Copyright Google LLC and the Raspberry Pi Foundation. Licensed under the Apache License, Version 2.0
+  (https://www.apache.org/licenses/LICENSE-2.0). Bundled in the app's JavaScript; its media files
+  (sprites, cursors, icons) are copied unchanged into public/blockly-media/. German texts for
+  screen readers that Blockly leaves in English are our own (src/data/blockly-de.json).
+
+- Blockly Games — https://github.com/google/blockly-games
+  Copyright Google LLC. Licensed under the Apache License, Version 2.0. Used as a model only: the ideas
+  of the worlds "maze" and "turtle". No code, picture or sound of Blockly Games is copied.
+
+Development only (not bundled): Ajv (MIT) in the unit tests.

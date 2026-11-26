@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "id": "labyrinth-3",
+  "title": {
+    "de": "Der lange Gang",
+    "en": "The long corridor"
+  },
+  "task": {
+    "de": "Kiko soll vorwärts gehen, bis er am Ziel ist. Der Gang ist mal kurz, mal lang: Das sind 3 Rätsel.",
+    "en": "Kiko should move forward until it is at the goal. The corridor is sometimes short, sometimes long: these are 3 puzzles."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["######", "#S..Z#", "######"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "solange", "nicht", "am-ziel"],
+  "start": null,
+  "limits": {
+    "blocks": 4,
+    "steps": 50
+  },
+  "tests": [
+    {
+      "config": {
+        "map": ["########", "#S....Z#", "########"]
+      }
+    },
+    {
+      "config": {
+        "map": ["###########", "#S.......Z#", "###########"]
+      }
+    }
+  ],
+  "checks": ["ziel-erreicht", "hoechstens-bloecke", "benutzt-block:solange"],
+  "hints": [
+    {
+      "de": "„wiederhole … mal“ reicht hier nicht: Du weißt nicht, wie lang der Gang ist.",
+      "en": "“repeat … times” is not enough here: you do not know how long the corridor is."
+    },
+    {
+      "de": "„solange … tue“ wiederholt, solange die Frage mit „ja“ beantwortet wird. Welche Frage passt?",
+      "en": "“while … do” repeats as long as the answer to the question is “yes”. Which question fits?"
+    },
+    {
+      "de": "Frag „nicht am Ziel?“.",
+      "en": "Ask “not at the goal?”."
+    }
+  ],
+  "view": "bloecke"
+}

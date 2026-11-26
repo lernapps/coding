@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Weg A: Die Challenge kommt in der Adresse (?c=…) und die Runtime gibt sie an start(). Eine gültige läuft.
+seed: 1
+params:
+  {
+    c: "RZBNasMwEIWvIiZbJ6FkZyiF0pIDtKuELmR5bA2WpTCS84tv02N0l4t15DSpMbY0-t7ozbtAE7jXCcqnAqiGEhLGNG-1b6GARMkhlBeo5QtvyGp9O0Av-0-LygRmqgPDKLSO3QNeo1Xko9oQusVdsQ4qySu6Nmgpi-gQ2NVZlU67rHO6OjH5ZEWzR44U_OTNBN9Qm8Fe76Dcwiw_As0-FpvpP-2_Cmi0ITFZAuqYYMzGQnBVOGbVPvBBI6eYyZg0y-R-cK4ARz1JWS6oXDCdrFZZKmnIciu0sTiVt3CWmebIjGRsyo2sGP6j9oQHuVt6CI3iq9JmSmVgJ_Ul-Vvg1C2jsQ6pQb980c8rQWV2dI8ENwNff0ynzgOrd-7c9ZuH__Bfpe09TDzunPbSU7Iax_EX",
+  }
+steps:
+  - ticks: 1
+    state: { source: address, problems: [], challenge: { id: test-gang }, test: 1 }
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value: { main: [{ s: cmd, name: vorwaerts, args: [] }, { s: cmd, name: vorwaerts, args: [] }] },
+        },
+        { kind: action, name: start },
+      ]
+    ticks: 60
+    state: { solved: true }

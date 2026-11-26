@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Das Quadrat als Folge von 8 Blöcken; das Bild ist gleich dem grauen.
+seed: 1
+route: turtle-1
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                  { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                  { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                ],
+            },
+        },
+        { kind: action, name: tempo, value: 5 },
+        { kind: action, name: start },
+      ]
+    state: { blocks: 8, phase: running }
+  - ticks: 40
+    state: { phase: done, solved: true, run: { commands: 8, world: { x: 60, y: 140, winkel: 0 } } }
+    announce: "Geschafft! Dein Bild stimmt."

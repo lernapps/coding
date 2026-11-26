@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ohne „wenn“, nur geradeaus: klappt im ersten Rätsel; im zweiten steht eine Wand vor Kiko. Die Werkstatt verlangt
+# zuerst den Block „wenn“.
+seed: 1
+route: labyrinth-4
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [{ "s": "cmd", "name": "vorwaerts", "args": [] }, { "s": "cmd", "name": "vorwaerts", "args": [] }],
+            },
+        },
+        { kind: action, name: start },
+      ]
+    state: { phase: done, verdict: { ok: false, test: 0, why: { key: fail-missing-block, params: { block: wenn } } } }

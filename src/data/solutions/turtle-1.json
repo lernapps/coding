@@ -1,0 +1,84 @@
+{
+  "main": [
+    {
+      "s": "cmd",
+      "name": "gehe",
+      "args": [
+        {
+          "e": "num",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "drehe-rechts-um",
+      "args": [
+        {
+          "e": "num",
+          "value": 90
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "gehe",
+      "args": [
+        {
+          "e": "num",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "drehe-rechts-um",
+      "args": [
+        {
+          "e": "num",
+          "value": 90
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "gehe",
+      "args": [
+        {
+          "e": "num",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "drehe-rechts-um",
+      "args": [
+        {
+          "e": "num",
+          "value": 90
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "gehe",
+      "args": [
+        {
+          "e": "num",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "s": "cmd",
+      "name": "drehe-rechts-um",
+      "args": [
+        {
+          "e": "num",
+          "value": 90
+        }
+      ]
+    }
+  ]
+}

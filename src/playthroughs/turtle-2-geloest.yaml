@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Das Quadrat mit „wiederhole 4 mal“: 3 Blöcke.
+seed: 1
+route: turtle-2
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  {
+                    "s": "repeat",
+                    "times": { "e": "num", "value": 4 },
+                    "body":
+                      [
+                        { "s": "cmd", "name": "gehe", "args": [{ "e": "num", "value": 80 }] },
+                        { "s": "cmd", "name": "drehe-rechts-um", "args": [{ "e": "num", "value": 90 }] },
+                      ],
+                  },
+                ],
+            },
+        },
+        { kind: action, name: tempo, value: 5 },
+        { kind: action, name: start },
+      ]
+    state: { blocks: 3 }
+  - ticks: 40
+    state: { phase: done, solved: true }

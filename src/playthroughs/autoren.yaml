@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Die Autorenseite: ein Entwurf ohne Start S hat ein Problem mit Pfad; kein JSON hat ein Problem; ein gültiger Entwurf
+# lässt sich ausprobieren und wieder bearbeiten.
+seed: 1
+route: autoren
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: entwurf,
+          value: '{"format": 1, "id": "mein-gang", "title": {"de": "Mein Gang"}, "task": {"de": "Geh ins Ziel."}, "world": {"type": "labyrinth", "version": 1, "config": {"map": ["#####", "#..Z#", "#####"], "facing": "east"}}, "toolbox": ["vorwaerts"], "start": null, "limits": {}, "tests": [], "checks": ["ziel-erreicht"], "hints": [], "view": "bloecke"}',
+        },
+      ]
+    state: { challenge: null, problems: [{ path: world.config.map, key: problem-map-start }] }
+  - inputs: [{ kind: action, name: entwurf, value: "{ format: 1" }]
+    state: { problems: [{ path: "", key: problem-json }] }
+  - inputs: [{ kind: action, name: ausprobieren }]
+    state: { challenge: null }
+  - inputs:
+      [
+        {
+          kind: action,
+          name: entwurf,
+          value: '{"format": 1, "id": "mein-gang", "title": {"de": "Mein Gang"}, "task": {"de": "Geh ins Ziel."}, "world": {"type": "labyrinth", "version": 1, "config": {"map": ["#####", "#S.Z#", "#####"], "facing": "east"}}, "toolbox": ["vorwaerts"], "start": null, "limits": {}, "tests": [], "checks": ["ziel-erreicht"], "hints": [], "view": "bloecke"}',
+        },
+        { kind: action, name: ausprobieren },
+      ]
+    state: { problems: [], challenge: { id: mein-gang }, phase: edit }
+  - inputs: [{ kind: action, name: bearbeiten }]
+    state: { challenge: null, problems: [] }

@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein Schritt, Start, Stopp und Zurücksetzen; das Tempo ändert, wie viele Ticks ein Befehl dauert.
+seed: 1
+route: labyrinth-1
+steps:
+  - inputs:
+      [
+        {
+          kind: action,
+          name: programm,
+          value:
+            {
+              "main":
+                [
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "rechts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                  { "s": "cmd", "name": "vorwaerts", "args": [] },
+                ],
+            },
+        },
+        { kind: action, name: schritt },
+      ]
+    state: { phase: paused, run: { commands: 1, world: { x: 2, y: 1 } } }
+  - inputs: [{ kind: action, name: schritt }]
+    state: { phase: paused, run: { commands: 2 } }
+  - inputs: [{ kind: action, name: tempo, value: 5 }, { kind: action, name: start }]
+    ticks: 3
+    state: { phase: running, tempo: 5, run: { commands: 3 } }
+  - inputs: [{ kind: action, name: stopp }]
+    ticks: 20
+    state: { phase: paused, run: { commands: 3 } }
+  - inputs: [{ kind: action, name: zuruecksetzen }]
+    state: { phase: edit, run: null, verdict: null }
