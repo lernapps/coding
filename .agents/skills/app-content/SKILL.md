@@ -26,6 +26,13 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Content structure
 
+- Routen (`src/app.yaml`): sechs eingebaute Aufgaben und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
+  kopieren). Mit `?c=` in der Adresse zeigt die Werkstatt die Challenge aus dem Link (Weg A); sie gilt für den ganzen
+  Besuch, ein Klick auf eine Route der Liste startet einen neuen Besuch ohne `c`.
+- Jede Aufgabenseite: Titel, Aufgabe, Blockzahl, Testfälle (erklärt, wenn mehr als einer), „So funktioniert die
+  Werkstatt“ (offen bei der ersten Route), „Blöcke in dieser Aufgabe“ (Schlüssel `explain-<block>` in den
+  Message-Dateien), Welt, Steuerung, Rückmeldung, Hinweise, Editor, Rückweg und Ergebniszeile.
+- Auf dem Gerät (`src/ui/progress.ts`): gelöste Aufgaben und das letzte Programm je Aufgabe (höchstens 50).
 - Eine Challenge (Schema `public/schemas/challenge.v1.schema.json`): `id`, `title`, `task`, `world {type, version,
   config}`, `toolbox`, `start`, `limits {blocks, steps}`, `tests[]`, `checks[]`, `hints[]`, `view`, `back`.
 - Jede eingebaute Challenge hat eine Musterlösung `src/data/solutions/<id>.json` (IR) und mindestens zwei Playthroughs
@@ -58,6 +65,10 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Figures
 
+- Labyrinth: Felder 40 × 40, Spalten- und Zeilennummern am Rand, Wand dunkel, Weg hell, Ziel grün mit Fahne, Spur als
+  Punkte. Turtle: Fläche 200 × 200 mit Skala alle 50, Zielbild grau und breit, gezeichnete Linien in vier Farben.
+- Kiko steht aufrecht; das gelbe Dreieck am Kreis zeigt die Blickrichtung (Name und Aussehen festgelegt, #495 übernimmt
+  sie; nicht ändern). Datei `public/kiko.svg`, Komponente `src/ui/worlds/Robot.vue`.
 - Welten als SVG aus dem Zustand (`src/ui/worlds/<id>/View.vue`); Farben aus CSS-Variablen der App, Kontrast ≥ 3:1
   für Wände und Figur. Jede Welt liefert `describe` als Text für Screenreader.
 - Der Roboter (`src/ui/Robot.vue`) ist selbst gezeichnet (SVG), wiederkehrendes Bild des Epics.
@@ -70,12 +81,20 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Adding a chapter or round
 
-- Neue Challenge: `src/data/challenges/<id>.json` nach Schema, `src/data/solutions/<id>.json`, Route in
-  `src/app.yaml` (de und en), zwei Playthroughs, `lernapps check`, Commit.
+- Neue Challenge: `src/data/challenges/<id>.json` nach Schema, `src/data/solutions/<id>.json`, beide in
+  `src/data/index.ts` eintragen, Route in `src/app.yaml` (de und en), zwei Playthroughs (gelöst, typischer Fehler),
+  `lernapps check`, Commit. Neue Blöcke brauchen `block-<id>` und `explain-<id>` in beiden Message-Dateien.
 - Neue Welt: Kern `src/core/worlds/<id>.ts` (Schnittstelle `World` in `src/core/worlds/types.ts`), Ansicht und Blöcke
-  in `src/ui/worlds/<id>/`, `$defs` im Schema, Eintrag in beiden Registries, drei Challenges, arc42-Block, ein PR.
+  in `src/ui/worlds/<id>/` (Zahlenfelder der Befehle in `ARGS` von `src/ui/editor/blocks.ts`), `$defs` und
+  `world.oneOf` im Schema, Eintrag in beiden Registries, drei Challenges, arc42-Prosa, ein PR. Danach
+  `npm run build:check-script` (ein Test meldet ein veraltetes Prüfskript) und eine neue Version der Welt nur als neues
+  Modul: alte Versionen bleiben, damit alte Links laufen.
 
 ## Rules learned from mistakes
+
+- Der Kern ändert sich → `npm run build:check-script`, sonst schlägt der Test des Prüfskripts fehl (auch bei geänderten
+  Message-Dateien).
+- Ein Abschnitt der Startseite verlinkt keine Route (`app/#…`): Der Test der Runtime erwartet genau einen Link je Route.
 
 - Testfälle zählen ab 1; Testfall 1 ist `world.config` selbst, Testfall n ≥ 2 ist `tests[n-2]` (`configAt`). Ein Versatz um eins ließ Testfall 1 die Karte von Testfall 2 zeigen.
 - Zahlen in Ansagen formatiert der Translator nach Sprache („1.000“); Playthroughs erwarten die formatierte Zahl.
