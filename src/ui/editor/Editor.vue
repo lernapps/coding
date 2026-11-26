@@ -95,3 +95,12 @@ onBeforeUnmount(() => {
   min-height: 18rem;
 }
 </style>
+
+<style>
+/* The block that ran last: a clear yellow frame instead of Blockly's pale emboss, which looks like a switched-off block. */
+.blocklyHighlighted > .blocklyPath {
+  filter: none;
+  stroke: #ffc300;
+  stroke-width: 4px;
+}
+</style>
