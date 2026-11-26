@@ -1,4 +1,4 @@
-// source: 5236e8a8d167286e
+// source: ec973d77a76efaa9
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1294,6 +1294,7 @@ var de_default = {
   "authoring-link-de": "Link für deutsche Seiten:",
   "authoring-link-en": "Link für englische Seiten:",
   "problem-json": "Das ist kein gültiges JSON. Fehlt ein Komma oder eine Klammer?",
+  "solved-before": "schon gelöst",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1473,6 +1474,7 @@ var en_default = {
   "authoring-link-de": "Link for German pages:",
   "authoring-link-en": "Link for English pages:",
   "problem-json": "This is not valid JSON. Is a comma or a bracket missing?",
+  "solved-before": "solved before",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -1558,4 +1560,3 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
-export {};
