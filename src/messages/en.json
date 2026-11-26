@@ -160,5 +160,6 @@
   "authoring-length": "Length after c=: {length} of at most {max} characters",
   "authoring-link-de": "Link for German pages:",
   "authoring-link-en": "Link for English pages:",
-  "problem-json": "This is not valid JSON. Is a comma or a bracket missing?"
+  "problem-json": "This is not valid JSON. Is a comma or a bracket missing?",
+  "solved-before": "solved before"
 }

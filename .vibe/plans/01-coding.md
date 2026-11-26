@@ -239,7 +239,7 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 - [x] Schema challenge.v1 veröffentlichen (public/schemas) und Test, der Schema und Validator gleich hält. Zeigt: Schema unter coding/schemas/
 - [x] Autorenseite (Route autoren): JSON einfügen, prüfen, ausprobieren, Link kopieren. Zeigt: eine eigene Challenge als Link
 - [x] Prüfskript public/tools/challenge-check.mjs (Schema, Welt-Version, Länge, Lösung besteht alle Tests). Zeigt: Ausgabe für eine gute und eine kaputte Challenge
-- [ ] Fortschritt im Speicher (gelöst, letztes Programm), Querformat nebeneinander und Hinweis zum Drehen, Startseite mit Abschnitt für Autoren, NOTICE mit Lizenzen. Zeigt: Neuladen behält das Programm
+- [x] Fortschritt im Speicher (gelöst, letztes Programm), Querformat nebeneinander und Hinweis zum Drehen, Startseite mit Abschnitt für Autoren, NOTICE mit Lizenzen. Zeigt: Neuladen behält das Programm
 <!-- tasks: pages (5 added): the other pages or screens, after the pattern -->
 - [ ] Update the content guide so that it describes the app as built (`app-content-matches`).
 - [ ] Run `npx --no -- lernapps check` until it passes.

@@ -42,3 +42,28 @@ routes:
     description:
       de: Für Lehrkräfte und Apps, die der Werkstatt eine Aufgabe als Link schicken.
       en: For teachers and apps that send the workshop a task as a link.
+sections:
+  - id: fuer-autoren
+    title: { de: Für Lehrkräfte und Apps, en: For teachers and apps }
+    text:
+      de: |
+        Andere Apps schicken der Werkstatt eine Aufgabe als Link. So geht's:
+
+        - Schreib die Aufgabe als JSON nach dem [Schema](https://lernapps.net/coding/schemas/challenge.v1.schema.json). Welten: Labyrinth und Turtle.
+        - Auf der Seite [Eigene Aufgabe bauen](https://lernapps.net/coding/app/#autoren) prüfst du sie, probierst sie aus und kopierst den Link.
+        - Ein deutscher Explainer verlinkt die deutsche Seite der Werkstatt (/coding/app/), ein englischer die englische (/coding/en/app/).
+        - Zur Build-Zeit prüft das [Prüfskript](https://lernapps.net/coding/tools/challenge-check.v1.mjs) Aufgabe und Musterlösung, zum Beispiel mit „node challenge-check.v1.mjs aufgabe.json loesung.json“.
+        - Der Knopf „Zurück“ führt zur Adresse in „back.url“ und hängt „#werkstatt=id-der-aufgabe:geloest“ oder „:offen“ an.
+      en: |
+        Other apps send the workshop a task as a link. This is how:
+
+        - Write the task as JSON following the [schema](https://lernapps.net/coding/schemas/challenge.v1.schema.json). Worlds: maze and turtle.
+        - On the page [Build your own task](https://lernapps.net/coding/en/app/#autoren) you check it, try it out and copy the link.
+        - A German explainer links the German page of the workshop (/coding/app/), an English one the English page (/coding/en/app/).
+        - At build time the [check script](https://lernapps.net/coding/tools/challenge-check.v1.mjs) checks the task and a model solution, for example with “node challenge-check.v1.mjs task.json solution.json”.
+        - The “Back” button leads to the address in “back.url” and adds “#werkstatt=task-id:geloest” or “:offen”.
+  - id: lizenzen
+    title: { de: Lizenzen, en: Licences }
+    text:
+      de: Die Blöcke kommen von [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache 2.0). Labyrinth und Turtle sind nach dem Vorbild von [Blockly Games](https://github.com/google/blockly-games) (Apache 2.0) gebaut. Kiko und die Bilder der Welten sind selbst gezeichnet (CC BY 4.0).
+      en: The blocks come from [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache 2.0). Maze and turtle follow the model of [Blockly Games](https://github.com/google/blockly-games) (Apache 2.0). Kiko and the pictures of the worlds are drawn for this app (CC BY 4.0).

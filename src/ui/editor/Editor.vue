@@ -12,6 +12,8 @@ const props = defineProps<{
   toolbox: readonly string[];
   start: Program | null;
   highlight: string | null;
+  /** The start is a program saved on the device: its blocks get new ids, so the editor sends it once after loading. */
+  restored?: boolean;
 }>();
 const emit = defineEmits<{ program: [program: Program] }>();
 const host = useTemplateRef<HTMLDivElement>("host");
@@ -62,6 +64,7 @@ onMounted(() => {
   const observer = new MutationObserver(() => hideFlyoutFigures(root));
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["role"] });
   stopObserving = () => observer.disconnect();
+  if (props.restored === true) emit("program", programOf(workspace));
   // Loose blocks (not under "Programm") turn pale, so that a learner sees they do not run.
   workspace.addChangeListener(Blockly.Events.disableOrphans);
   workspace.addChangeListener((event) => {

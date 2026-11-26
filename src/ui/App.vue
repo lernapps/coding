@@ -12,6 +12,7 @@ import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
 import { worldOf } from "../core/worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
+import { progress, type Progress } from "./progress.ts";
 import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
@@ -30,6 +31,19 @@ const Editor = defineAsyncComponent({
 });
 
 const origin = ref("https://lernapps.net");
+let memory: Progress | undefined;
+/** The key of the task on this device, its program saved there and whether it was solved before. */
+const taskKey = computed(() =>
+  props.state.challenge === null ? null : `${props.state.source}:${props.state.challenge.id}`,
+);
+const saved = ref<{ key: string; program: Program | undefined; solved: boolean } | null>(null);
+const remember = (): void => {
+  const key = taskKey.value;
+  if (memory === undefined || key === null) return;
+  const program = memory.program(key);
+  saved.value = { key, program, solved: memory.solved(key) };
+  if (program !== undefined) act("programm", program as unknown as Json);
+};
 const still = ref(false);
 let copyText: ((value: string) => Promise<void>) | undefined;
 const copied = ref(false);
@@ -39,6 +53,8 @@ onMounted(() => {
     origin.value = location.origin;
   still.value = prefersReducedMotion();
   if (navigator.clipboard !== undefined) copyText = (value) => navigator.clipboard.writeText(value);
+  memory = progress();
+  remember();
   // The parameters of the address (?c=) hold for the whole visit (runtime contract). A learner who clicks a route of the
   // list leaves the challenge of the address: a new visit of that route, without `c`.
   document.addEventListener("click", (event) => {
@@ -123,7 +139,24 @@ async function copy(): Promise<void> {
   copied.value = true;
   announce(t("copied"));
 }
-const onProgram = (program: Program): void => act("programm", program as unknown as Json);
+const onProgram = (program: Program): void => {
+  act("programm", program as unknown as Json);
+  if (taskKey.value !== null) memory?.keep(taskKey.value, program);
+};
+watch(taskKey, remember);
+watch(
+  () => props.state.solved,
+  (solved) => {
+    if (solved && taskKey.value !== null) memory?.markSolved(taskKey.value);
+  },
+);
+/** The program the editor starts with: the one saved for this task, else the challenge's own. */
+const editorStart = computed(() =>
+  saved.value !== null && saved.value.key === taskKey.value && saved.value.program !== undefined
+    ? saved.value.program
+    : (c.value?.start ?? null),
+);
+const solvedBefore = computed(() => saved.value !== null && saved.value.key === taskKey.value && saved.value.solved);
 </script>
 
 <template>
@@ -147,7 +180,9 @@ const onProgram = (program: Program): void => act("programm", program as unknown
         <a v-if="backHref !== null && c.back !== undefined" class="back-top" :href="backHref"
           >← {{ text(c.back.label) }}</a
         >
-        <h2>{{ text(c.title) }}</h2>
+        <h2>
+          {{ text(c.title) }} <span v-if="solvedBefore" class="solved-before">✓ {{ t("solved-before") }}</span>
+        </h2>
         <p>{{ text(c.task) }}</p>
         <p class="meta">
           <span>{{
@@ -256,10 +291,11 @@ const onProgram = (program: Program): void => act("programm", program as unknown
         </div>
         <div class="workbench">
           <Editor
-            :key="`${state.source}:${c.id}`"
+            :key="`${state.source}:${c.id}:${saved?.key ?? ''}`"
             :lang="lang"
             :toolbox="c.toolbox"
-            :start="c.start"
+            :start="editorStart"
+            :restored="editorStart !== c.start"
             :highlight="highlight"
             @program="onProgram"
           />
@@ -279,6 +315,11 @@ const onProgram = (program: Program): void => act("programm", program as unknown
 <style scoped>
 .werkstatt h2 {
   margin: 0 0 0.25rem;
+}
+.solved-before {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2f7d32;
 }
 .task p {
   margin: 0.25rem 0;
