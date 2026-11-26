@@ -37,8 +37,9 @@ onMounted(() => {
   const lang = langOf(props.lang);
   setUp(lang);
   const narrow = root.clientWidth < 600;
+  const categories = narrow || props.toolbox.length > 6;
   workspace = Blockly.inject(root, {
-    toolbox: toolboxOf(props.toolbox, lang, narrow),
+    toolbox: toolboxOf(props.toolbox, lang, categories),
     renderer: "zelos",
     sounds: false,
     media: new URL("../blockly-media/", import.meta.url).href,
@@ -58,6 +59,8 @@ onMounted(() => {
   const observer = new MutationObserver(() => hideFlyoutFigures(root));
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["role"] });
   stopObserving = () => observer.disconnect();
+  // Loose blocks (not under "Programm") turn pale, so that a learner sees they do not run.
+  workspace.addChangeListener(Blockly.Events.disableOrphans);
   workspace.addChangeListener((event) => {
     if (event.isUiEvent || workspace === undefined || workspace.isDragging()) return;
     emit("program", programOf(workspace));

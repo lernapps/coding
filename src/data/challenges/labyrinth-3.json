@@ -6,8 +6,8 @@
     "en": "Follow the corridor"
   },
   "task": {
-    "de": "Bau ein Programm, das den Roboter durch jeden Gang ins Ziel bringt. Es wird mit 3 Gängen getestet.",
-    "en": "Build a program that brings the robot through any corridor to the goal. It is tested with 3 corridors."
+    "de": "Bau ein Programm, das den Roboter durch jeden Gang ins Ziel bringt. Wir probieren es in 3 Gängen aus. Der Block „solange nicht am Ziel?“ ist schon da.",
+    "en": "Build a program that brings the robot through any corridor to the goal. We try it in 3 corridors. The block “while not at the goal?” is already there."
   },
   "world": {
     "type": "labyrinth",
@@ -28,10 +28,25 @@
     "wand-rechts",
     "am-ziel"
   ],
-  "start": null,
+  "start": {
+    "main": [
+      {
+        "s": "while",
+        "cond": {
+          "e": "not",
+          "a": {
+            "e": "sense",
+            "name": "am-ziel",
+            "args": []
+          }
+        },
+        "body": []
+      }
+    ]
+  },
   "limits": {
     "blocks": 10,
-    "steps": 1000
+    "steps": 400
   },
   "tests": [
     {
@@ -48,12 +63,12 @@
   "checks": ["ziel-erreicht", "hoechstens-bloecke"],
   "hints": [
     {
-      "de": "Der Roboter soll so lange etwas tun, bis er am Ziel ist.",
-      "en": "The robot should keep doing something until it is at the goal."
+      "de": "Was soll Kiko in jedem Schritt tun? Ist vorne frei, geht er vorwärts. Sonst muss er sich drehen.",
+      "en": "What should Kiko do each time? If the way ahead is free, it moves forward. If not, it has to turn."
     },
     {
-      "de": "Ist vorne frei, geht er vorwärts. Sonst dreht er sich.",
-      "en": "If the way ahead is free, it moves forward. If not, it turns."
+      "de": "Mit „wenn … dann … sonst“ und „Wand voraus?“ entscheidet Kiko, ob er geht oder sich dreht.",
+      "en": "With “if … then … else” and “wall ahead?”, Kiko decides whether to move or to turn."
     },
     {
       "de": "In welche Richtung dreht er? Frag, ob rechts eine Wand ist.",

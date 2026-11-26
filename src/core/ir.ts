@@ -4,6 +4,8 @@ import { isInt, isObject, type Problem } from "./json.ts";
 
 export type Expr =
   | { e: "num"; value: number }
+  /** An empty slot of a block (a "solange" without its question): the program does not run. */
+  | { e: "empty" }
   | { e: "var"; name: string }
   | { e: "sense"; name: string; args: Expr[] }
   | { e: "not"; a: Expr }
@@ -54,6 +56,8 @@ export function programProblems(value: unknown, path = "program"): Problem[] {
     switch (v["e"]) {
       case "num":
         if (typeof v["value"] !== "number" || !Number.isFinite(v["value"])) bad(at);
+        return;
+      case "empty":
         return;
       case "var":
         if (!name(v["name"])) bad(at);
@@ -141,6 +145,7 @@ function blockOf(node: Stmt | Expr): string | null {
   }
   switch (node.e) {
     case "num":
+    case "empty":
       return null;
     case "sense":
       return node.name;
@@ -203,3 +208,19 @@ export function blocksOf(program: Program): string[] {
 }
 
 export { isInt };
+
+/** The block with an empty slot, if any (its toolbox id). */
+export function emptySlot(program: Program): string | null {
+  let found: string | null = null;
+  const walk = (node: Stmt | Expr, owner: string | null): void => {
+    if (found !== null) return;
+    if ("e" in node && node.e === "empty") {
+      found = owner;
+      return;
+    }
+    const type = blockOf(node);
+    children(node).forEach((child) => walk(child, type ?? owner));
+  };
+  program.main.forEach((s) => walk(s, null));
+  return found;
+}

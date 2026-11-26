@@ -25,4 +25,4 @@ steps:
     ticks: 100
     state:
       { phase: done, solved: false, verdict: { ok: false, test: 1, why: { key: fail-wall, params: { x: 4, y: 2 } } } }
-    announce: "Testfall 1: Der Roboter stößt in Feld (4|2) an die Wand."
+    announce: "Vor dem Roboter ist eine Wand. Er steht in Feld (4|2) und kann nicht vorwärts gehen."

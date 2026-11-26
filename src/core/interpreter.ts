@@ -59,6 +59,8 @@ function evaluate(e: Expr, run: Run, world: World, config: Json): number | boole
   switch (e.e) {
     case "num":
       return e.value;
+    case "empty":
+      throw new RunError({ key: "fail-empty-slot", params: { block: "?" } });
     case "var": {
       const v = lookup(run, e.name);
       if (v === undefined) throw new RunError({ key: "fail-unknown-variable", params: { name: e.name } });
@@ -95,6 +97,8 @@ function lookup(run: Run, name: string): number | undefined {
   return run.vars[name];
 }
 
+const truthy = (v: number | boolean): boolean => (typeof v === "boolean" ? v : v !== 0);
+
 /** Runs control steps up to and including the next world command; the run as it is then. */
 export function advance(start: Run, program: Program, world: World, config: Json, limit: number): Run {
   if (start.status !== "running") return start;
@@ -111,7 +115,7 @@ export function advance(start: Run, program: Program, world: World, config: Json
         if (loop?.k === "repeat" && loop.left > 1) {
           top.loop = { k: "repeat", left: loop.left - 1 };
           top.at = 0;
-        } else if (loop?.k === "while" && evaluate(loop.cond, run, world, config) !== false) {
+        } else if (loop?.k === "while" && truthy(evaluate(loop.cond, run, world, config))) {
           top.at = 0;
         } else run.frames.pop();
         continue;
@@ -128,11 +132,11 @@ export function advance(start: Run, program: Program, world: World, config: Json
           continue;
         }
         case "while":
-          if (evaluate(s.cond, run, world, config) !== false)
+          if (truthy(evaluate(s.cond, run, world, config)))
             run.frames.push({ body: s.body, at: 0, loop: { k: "while", cond: s.cond } });
           continue;
         case "if": {
-          const branch = evaluate(s.cond, run, world, config) !== false ? s.then : (s.else ?? []);
+          const branch = truthy(evaluate(s.cond, run, world, config)) ? s.then : (s.else ?? []);
           if (branch.length > 0) run.frames.push({ body: branch, at: 0 });
           continue;
         }

@@ -8,9 +8,6 @@ const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
 <template>
   <g class="kiko" aria-hidden="true">
     <circle r="19" class="ring" :class="{ crashed }" />
-    <g :transform="`rotate(${ANGLE[facing]})`">
-      <path d="M 16 -5 L 22 0 L 16 5 Z" class="pointer" />
-    </g>
     <line x1="0" y1="-11" x2="0" y2="-16" class="line" />
     <circle cx="0" cy="-16.5" r="2" class="lamp" />
     <rect x="-10" y="-11" width="20" height="13" rx="5" class="body" />
@@ -20,6 +17,9 @@ const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
     <rect x="-7.5" y="3" width="15" height="8" rx="3" class="body" />
     <rect x="-8.5" y="11" width="6" height="3.5" rx="1.5" class="visor" />
     <rect x="2.5" y="11" width="6" height="3.5" rx="1.5" class="visor" />
+    <g :transform="`rotate(${ANGLE[facing]})`">
+      <path d="M 17 -7 L 26 0 L 17 7 Z" class="pointer" />
+    </g>
   </g>
 </template>
 
@@ -33,9 +33,14 @@ const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
   stroke: #c0182c;
   stroke-width: 3;
 }
-.pointer,
 .visor {
   fill: #1f2a44;
+}
+.pointer {
+  fill: #ffc300;
+  stroke: #1f2a44;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
 }
 .line {
   stroke: #5c2400;

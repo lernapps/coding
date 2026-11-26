@@ -107,5 +107,10 @@
   "WORKSPACE_ROLEDESCRIPTION": "Arbeitsfläche",
   "ZOOM_IN": "Größer",
   "ZOOM_OUT": "Kleiner",
-  "ZOOM_TO_FIT_ARIA_LABEL": "Alles zeigen"
+  "ZOOM_TO_FIT_ARIA_LABEL": "Alles zeigen",
+  "ANNOUNCE_MOVE_OF": "%1 von %2",
+  "INPUT_LABEL_END_STATEMENT": "Ende %1",
+  "SCREENREADER_HINT": "Bewege dich mit den Pfeiltasten. Mit %1 schaltest du den Modus für Screenreader an oder aus.",
+  "SCREENREADER_MODE_DISABLED": "Der Modus für Screenreader ist aus. Mit %1 schaltest du ihn an.",
+  "SCREENREADER_MODE_ENABLED": "Der Modus für Screenreader ist an. Mit %1 schaltest du ihn aus."
 }

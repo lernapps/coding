@@ -28,11 +28,11 @@
   "hints": [
     {
       "de": "Jede Stufe ist gleich. Welche Blöcke braucht eine Stufe?",
-      "en": "Every step is the same. Which blocks does one step need?"
+      "en": "Every stair is the same. Which blocks does one stair need?"
     },
     {
       "de": "Leg die Blöcke für eine Stufe in „wiederhole … mal“.",
-      "en": "Put the blocks for one step inside “repeat … times”."
+      "en": "Put the blocks for one stair inside “repeat … times”."
     }
   ],
   "view": "bloecke"

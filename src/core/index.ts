@@ -91,17 +91,23 @@ function settle(state: State, c: Challenge): State {
   const run = state.run;
   const world = worldFor(c);
   if (run === null || world === undefined || run.status === "running") return state;
+  const attempts = state.attempts + 1;
   const shown = judgeRun(c, world, state.test, run);
+  const why = (msg: Msg | undefined): { why?: Msg } => (msg === undefined ? {} : { why: msg });
   if (!shown.ok)
-    return {
-      ...state,
-      phase: "done",
-      verdict: { ok: false, test: state.test, ...(shown.why ? { why: shown.why } : {}) },
-    };
+    return { ...state, attempts, phase: "done", verdict: { ok: false, test: state.test, ...why(shown.why) } };
   const failure = firstFailure(c, state.program);
   if (failure !== null)
-    return { ...state, phase: "done", verdict: { ok: false, test: failure.test, why: failure.why } };
-  return { ...state, phase: "done", verdict: { ok: true, test: state.test }, solved: true };
+    // Shows the test case that failed, with the robot where that run ended.
+    return {
+      ...state,
+      attempts,
+      phase: "done",
+      test: failure.test > 0 ? failure.test : state.test,
+      run: failure.run ?? state.run,
+      verdict: { ok: false, test: failure.test, why: failure.why },
+    };
+  return { ...state, attempts, phase: "done", verdict: { ok: true, test: state.test }, solved: true };
 }
 
 function stepRun(state: State, c: Challenge): State {
@@ -113,10 +119,16 @@ function stepRun(state: State, c: Challenge): State {
 
 /** Starts a run: the program's own checks first (block limit), then the shown test case. */
 function launch(state: State, c: Challenge, phase: Phase): State {
-  const attempts = state.attempts + 1;
   const pre = programVerdict(c, state.program);
-  if (pre !== null) return { ...state, attempts, run: null, phase: "done", verdict: { ok: false, test: 0, why: pre } };
-  return { ...begun({ ...state, attempts, verdict: null }, c), phase };
+  if (pre !== null)
+    return {
+      ...state,
+      attempts: state.attempts + 1,
+      run: null,
+      phase: "done",
+      verdict: { ok: false, test: 0, why: pre },
+    };
+  return { ...begun({ ...state, verdict: null }, c), phase };
 }
 
 export function step(state: State, input: Input): State {
@@ -151,7 +163,7 @@ export function step(state: State, input: Input): State {
     case "testfall": {
       const n = Number(input.value);
       if (c === null || !Number.isInteger(n) || n < 1 || n > testCount(c) || state.phase === "running") return state;
-      return { ...state, test: n, run: null, phase: "edit" };
+      return { ...state, test: n, run: null, phase: "edit", verdict: null };
     }
     case "tempo": {
       const t = Number(input.value);

@@ -98,7 +98,7 @@ export function setUp(lang: Lang): void {
   ]);
 }
 
-/** The toolbox of a challenge: its blocks, in categories on a narrow screen, else as one list. */
+/** The toolbox of a challenge: its blocks, in categories on a narrow screen or when they are many, else as one list. */
 export function toolboxOf(
   blocks: readonly string[],
   lang: Lang,
@@ -134,7 +134,7 @@ const isSensor = (type: string): boolean =>
   Object.values(WORLDS).some((versions) => Object.values(versions).some((w) => type in w.sensors));
 
 function expr(block: Blockly.Block | null): Expr {
-  if (block === null || !block.isEnabled()) return { e: "num", value: 0 };
+  if (block === null || !block.isEnabled()) return { e: "empty" };
   if (block.type === "nicht") return { e: "not", a: expr(block.getInputTargetBlock("A")) };
   return { e: "sense", name: block.type, args: [] };
 }

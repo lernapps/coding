@@ -84,6 +84,9 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 
 
+**Prüfung als Lernende 7-8 (Muster), behoben**: Einführung „So funktioniert die Werkstatt“ und Erklärung der Blöcke je Aufgabe; „Testfall“ erklärt, bei nur einem Testfall nicht mehr genannt; Rückmeldung zur Wand nennt das Feld, auf dem Kiko steht, und dass vor ihm eine Wand ist; Richtungspfeil gelb und vor der Antenne; Koordinaten en als (4, 2); lose Blöcke werden blass; leere Frage in „solange“ wird gemeldet statt endlos zu laufen; Versuche zählen erst mit einem Ergebnis; ein Fehlschlag in einem anderen Testfall zeigt diesen Testfall mit dem Endstand; Schrittlimit Labyrinth 3 auf 400; Labyrinth 3 mit Startvorgabe „solange nicht am Ziel?“; Kategorien bei mehr als 6 Blöcken; Tempo mit „langsam/schnell“; Link zur nächsten Aufgabe; Rückweg auch oben; Ergebniszeile mit Titel und Zweck; `back.url` je Sprache möglich; Blockly-Texte für Screenreader ergänzt; „stair“ statt „step“ (en).
+**Nicht behoben, an den Orchestrator**: Sprachumschalter und Routen-Links der Runtime verlieren `?c=` bzw. markieren die erste Route als aktuell (bis #201/#202); Titel bricht auf 360 px als „Programmierwerkstat t“ (h1 der Runtime ohne Silbentrennung); geöffnete Kategorie verdeckt auf 360 px den Block „Programm“ (Blockly); Programm geht beim Wechsel von Aufgabe oder Sprache verloren (Speicher folgt in der Aufgabe „Fortschritt im Speicher“).
+
 ## Explore
 
 <!--

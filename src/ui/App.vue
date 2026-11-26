@@ -11,8 +11,10 @@ import { currentBlock } from "../core/interpreter.ts";
 import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
 import { worldOf } from "../core/worlds/index.ts";
+import { BUILT_IN, ROUTES } from "../data/index.ts";
 import { readChallenge } from "./address.ts";
-import { texts } from "./texts.ts";
+import { texts, type Key } from "./texts.ts";
+import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
 
 const props = defineProps<{ state: State; lang: string }>();
@@ -68,12 +70,24 @@ const highlight = computed(() =>
 const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
-  if (v.ok) return t("solved");
+  if (v.ok) return tests.value > 1 ? t("solved-all", { count: tests.value }) : t("solved");
   const why = say(v.why ?? ({ key: "fail-limit" } as Msg));
-  return v.test === 0 ? why : t("failed-test", { n: v.test, why });
+  return v.test === 0 || tests.value === 1 ? why : t("failed-test", { n: v.test, why });
+});
+/** Explanations of the blocks of this task that are more than a command. */
+const explained = computed(() =>
+  (c.value?.toolbox ?? []).filter((b) => `explain-${b}` in de).map((b) => t(`explain-${b}` as Key)),
+);
+/** The next task of the collection, after a solved one. */
+const next = computed(() => {
+  if (props.state.source !== "route" || c.value === null || !props.state.solved) return null;
+  const id = ROUTES[ROUTES.indexOf(c.value.id) + 1];
+  const task = id === undefined ? undefined : BUILT_IN[id];
+  return id === undefined || task === undefined ? null : { href: `#${id}`, title: text(task.title) };
 });
 const statusText = computed(() => {
   const s = props.state;
+  if (s.verdict !== null) return "";
   if (s.phase === "running") return t("phase-running");
   if (s.phase === "paused") return t("phase-paused", { commands: s.run?.commands ?? 0 });
   return s.phase === "edit" ? t("phase-edit") : "";
@@ -85,12 +99,17 @@ watch(verdictText, (value) => {
 const backHref = computed(() => {
   const back = c.value?.back;
   if (back === undefined || c.value === null) return null;
-  return `${origin.value}${back.url}#werkstatt=${c.value.id}:${props.state.solved ? "geloest" : "offen"}`;
+  const url = typeof back.url === "string" ? back.url : text(back.url);
+  return `${origin.value}${url}#werkstatt=${c.value.id}:${props.state.solved ? "geloest" : "offen"}`;
 });
 const result = computed(() =>
   c.value === null
     ? ""
-    : t(props.state.solved ? "result-solved" : "result-open", { id: c.value.id, attempts: props.state.attempts }),
+    : t(props.state.solved ? "result-solved" : "result-open", {
+        id: c.value.id,
+        title: text(c.value.title),
+        attempts: props.state.attempts,
+      }),
 );
 async function copy(): Promise<void> {
   if (copyText === undefined) return;
@@ -115,6 +134,9 @@ const onProgram = (program: Program): void => act("programm", program as unknown
     </div>
     <template v-else>
       <header class="task">
+        <a v-if="backHref !== null && c.back !== undefined" class="back-top" :href="backHref"
+          >← {{ text(c.back.label) }}</a
+        >
         <h2>{{ text(c.title) }}</h2>
         <p>{{ text(c.task) }}</p>
         <p class="meta">
@@ -125,6 +147,23 @@ const onProgram = (program: Program): void => act("programm", program as unknown
           }}</span>
           <span v-if="tests > 1"> · {{ t("test-shown", { n: state.test, count: tests }) }}</span>
         </p>
+        <p v-if="tests > 1">{{ t("tests-explain", { count: tests }) }}</p>
+        <details class="help" :open="state.source === 'route' && c.id === ROUTES[0]">
+          <summary>{{ t("help") }}</summary>
+          <ul>
+            <li>{{ t("help-blocks") }}</li>
+            <li>{{ t("help-robot") }}</li>
+            <li>{{ t("help-map") }}</li>
+            <li>{{ t("help-run") }}</li>
+            <li>{{ t("help-keys") }}</li>
+          </ul>
+        </details>
+        <details v-if="explained.length > 0" class="help" open>
+          <summary>{{ t("new-blocks") }}</summary>
+          <ul>
+            <li v-for="(line, i) in explained" :key="i">{{ line }}</li>
+          </ul>
+        </details>
       </header>
       <div class="columns">
         <div class="stage">
@@ -164,6 +203,7 @@ const onProgram = (program: Program): void => act("programm", program as unknown
             </button>
             <label class="tempo">
               {{ t("tempo") }}
+              <span aria-hidden="true">{{ t("tempo-slow") }}</span>
               <input
                 type="range"
                 min="1"
@@ -172,8 +212,10 @@ const onProgram = (program: Program): void => act("programm", program as unknown
                 :aria-valuetext="
                   state.tempo <= 2 ? t('tempo-slow') : state.tempo >= 4 ? t('tempo-fast') : String(state.tempo)
                 "
+                :aria-label="t('tempo')"
                 @input="act('tempo', Number(($event.target as HTMLInputElement).value))"
               />
+              <span aria-hidden="true">{{ t("tempo-fast") }}</span>
             </label>
           </div>
           <p class="status">{{ statusText }}</p>
@@ -181,6 +223,9 @@ const onProgram = (program: Program): void => act("programm", program as unknown
             <p>{{ verdictText }}</p>
             <p v-if="state.verdict.ok">
               {{ state.attempts <= 1 ? t("solved-first") : t("solved-attempts", { attempts: state.attempts }) }}
+            </p>
+            <p v-if="next !== null">
+              <a :href="next.href">{{ t("next", { title: next.title }) }} →</a>
             </p>
             <button
               v-if="!state.verdict.ok && state.verdict.test > 0 && state.verdict.test !== state.test"
@@ -210,9 +255,9 @@ const onProgram = (program: Program): void => act("programm", program as unknown
           />
         </div>
       </div>
-      <footer v-if="backHref !== null || state.attempts > 0" class="back">
+      <footer v-if="backHref !== null || state.verdict !== null" class="back">
         <a v-if="backHref !== null && c.back !== undefined" :href="backHref">← {{ text(c.back.label) }}</a>
-        <p v-if="state.attempts > 0" class="result">
+        <p v-if="state.attempts > 0 && state.verdict !== null" class="result">
           <span>{{ t("back-result") }}: </span><output>{{ result }}</output>
           <button type="button" @click="copy">{{ copied ? t("copied") : t("copy") }}</button>
         </p>
@@ -324,6 +369,21 @@ button:disabled {
 }
 .back {
   margin-top: 1rem;
+}
+.back-top {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+.help {
+  margin: 0.5rem 0;
+}
+.help summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.help ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
 }
 .result {
   display: flex;

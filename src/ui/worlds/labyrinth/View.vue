@@ -14,8 +14,8 @@ const props = defineProps<{
 }>();
 const CELL = 40;
 const PAD = 22;
-const width = computed(() => (props.config.map[0]?.length ?? 1) * CELL + PAD);
-const height = computed(() => props.config.map.length * CELL + PAD);
+const width = computed(() => (props.config.map[0]?.length ?? 1) * CELL + PAD + 8);
+const height = computed(() => props.config.map.length * CELL + PAD + 8);
 const cells = computed(() =>
   props.config.map.flatMap((row, y) =>
     [...row].map((ch, x) => ({ ch, x: PAD + x * CELL, y: PAD + y * CELL, key: `${x},${y}` })),

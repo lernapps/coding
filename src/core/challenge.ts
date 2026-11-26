@@ -1,7 +1,7 @@
 // A challenge (format 1, public/schemas/challenge.v1.schema.json): a world, a task, the toolbox, limits, test cases and
 // checks. This validator follows the schema and is the one the workshop runs (no schema library: those compile code
 // with `new Function`); src/core/challenge.test.ts keeps both alike.
-import { blocksOf, programProblems, type Program } from "./ir.ts";
+import { blocksOf, emptySlot, programProblems, type Program } from "./ir.ts";
 import { runToEnd, type Run } from "./interpreter.ts";
 import { isInt, isObject, type Json, type Msg, type Problem } from "./json.ts";
 import { newestVersion, worldOf, WORLDS } from "./worlds/index.ts";
@@ -21,7 +21,7 @@ export interface Challenge {
   checks: string[];
   hints: Text[];
   view: "bloecke";
-  back?: { url: string; label: Text };
+  back?: { url: string | Text; label: Text };
 }
 
 export const LANGUAGES = ["de", "en"] as const;
@@ -142,7 +142,16 @@ export function challengeProblems(value: unknown): Problem[] {
   if (value["view"] !== "bloecke") p.push({ path: "view", key: "problem-view" });
   const back = value["back"];
   if (back !== undefined) {
-    if (!isObject(back) || typeof back["url"] !== "string" || !BACK_URL.test(back["url"]))
+    const url = isObject(back) ? back["url"] : undefined;
+    const urls = typeof url === "string" ? [url] : isObject(url) ? Object.values(url) : [];
+    const langs = isObject(url) ? Object.keys(url) : ["de"];
+    if (
+      !isObject(back) ||
+      urls.length === 0 ||
+      !urls.every((u) => typeof u === "string" && BACK_URL.test(u)) ||
+      !langs.includes("de") ||
+      !langs.every((l) => (LANGUAGES as readonly string[]).includes(l))
+    )
       p.push({ path: "back.url", key: "problem-back-url" });
     else p.push(...textProblems(back["label"], "back.label", 60));
   }
@@ -172,6 +181,8 @@ export function judgeRun(c: Challenge, world: World, n: number, run: Run): TestR
 export function programVerdict(c: Challenge, program: Program): Msg | null {
   const blocks = blocksOf(program);
   if (blocks.length === 0) return { key: "fail-empty" };
+  const slot = emptySlot(program);
+  if (slot !== null) return { key: "fail-empty-slot", params: { block: slot } };
   const max = c.limits.blocks;
   if (max !== undefined && blocks.length > max)
     return { key: "fail-too-many-blocks", params: { used: blocks.length, max } };
@@ -182,7 +193,7 @@ export function programVerdict(c: Challenge, program: Program): Msg | null {
 }
 
 /** Runs the program on every test case; the first that fails, or null when all pass. */
-export function firstFailure(c: Challenge, program: Program): { test: number; why: Msg } | null {
+export function firstFailure(c: Challenge, program: Program): { test: number; why: Msg; run?: Run } | null {
   const world = worldOf(c.world.type, c.world.version);
   if (world === undefined) return { test: 1, why: { key: "problem-world-version", params: { newest: 0 } } };
   const pre = programVerdict(c, program);
@@ -190,7 +201,7 @@ export function firstFailure(c: Challenge, program: Program): { test: number; wh
   for (let n = 1; n <= testCount(c); n++) {
     const run = runToEnd(program, world, configAt(c, n), c.limits.steps ?? DEFAULT_STEPS);
     const result = judgeRun(c, world, n, run);
-    if (!result.ok) return { test: n, why: result.why ?? { key: "fail-limit" } };
+    if (!result.ok) return { test: n, why: result.why ?? { key: "fail-limit" }, run };
   }
   return null;
 }

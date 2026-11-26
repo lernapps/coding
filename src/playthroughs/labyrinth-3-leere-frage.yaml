@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein „solange“ ohne Frage läuft nicht: Die Werkstatt sagt, in welchem Block die Frage fehlt. Die Startvorgabe
+# „solange nicht am Ziel?“ ohne Blöcke darin hört nicht auf und stoppt am Schrittlimit.
+seed: 1
+route: labyrinth-3
+steps:
+  - inputs:
+      - {
+          kind: action,
+          name: programm,
+          value: { main: [{ s: while, cond: { e: empty }, body: [{ s: cmd, name: vorwaerts, args: [] }] }] },
+        }
+      - { kind: action, name: start }
+    state: { run: null, verdict: { ok: false, test: 0, why: { key: fail-empty-slot, params: { block: solange } } } }
+    announce: "Im Block „solange … tue“ fehlt noch eine Frage. Setz eine Frage in die Lücke."

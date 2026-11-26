@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
 # Ein Programm, das sich an jeder Wand nach rechts dreht: Es klappt im gezeigten Gang, aber nicht in Testfall 2.
-# Dort läuft der Roboter hin und her, bis das Schrittlimit greift; „Testfall ansehen“ zeigt Testfall 2.
+# Dort läuft der Roboter hin und her, bis das Schrittlimit greift; die Werkstatt zeigt Testfall 2 mit dem Endstand.
 seed: 1
 route: labyrinth-3
 steps:
@@ -32,7 +32,13 @@ steps:
         { kind: action, name: start },
       ]
     ticks: 400
-    state: { phase: done, verdict: { ok: false, test: 2, why: { key: fail-limit, params: { steps: 1000 } } } }
-    announce: "Testfall 2: Nach 1.000 Schritten ist der Roboter noch nicht im Ziel."
-  - inputs: [{ kind: action, name: testfall, value: 2 }]
-    state: { test: 2, run: null, phase: edit }
+    state:
+      {
+        phase: done,
+        test: 2,
+        run: { status: limit },
+        verdict: { ok: false, test: 2, why: { key: fail-limit, params: { steps: 400 } } },
+      }
+    announce: "Testfall 2: Das Programm hört nicht auf: Nach 400 Schritten ist der Roboter noch nicht im Ziel. Läuft er im Kreis?"
+  - inputs: [{ kind: action, name: testfall, value: 1 }]
+    state: { test: 1, run: null, phase: edit, verdict: null }

@@ -22,7 +22,8 @@ steps:
         },
         { kind: action, name: start },
       ]
-    state: { phase: running, blocks: 5, attempts: 1 }
+    state: { phase: running, blocks: 5, attempts: 0 }
   - ticks: 100
-    state: { phase: done, solved: true, verdict: { ok: true }, run: { world: { x: 3, y: 3 }, commands: 5 } }
-    announce: "Geschafft! Dein Programm klappt in jedem Testfall."
+    state:
+      { phase: done, solved: true, attempts: 1, verdict: { ok: true }, run: { world: { x: 3, y: 3 }, commands: 5 } }
+    announce: "Geschafft! Der Roboter ist im Ziel."
