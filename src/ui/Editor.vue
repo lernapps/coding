@@ -2,19 +2,21 @@
 // Spike: Blockly als reine Eingabe. Jede Änderung → Aktion "programm" mit dem IR.
 import { onBeforeUnmount, onMounted, useTemplateRef } from "vue";
 import type { Stmt } from "../core/index.ts";
-import { Blockly, toIR, toolbox } from "./blocks.ts";
+import { Blockly, setLanguage, toIR, toolbox } from "./blocks.ts";
 
+const props = defineProps<{ lang: string }>();
 const emit = defineEmits<{ program: [ir: Stmt[]] }>();
 const host = useTemplateRef<HTMLDivElement>("host");
 let ws: Blockly.WorkspaceSvg | undefined;
 
 onMounted(() => {
   if (host.value === null) return;
+  setLanguage(props.lang);
   ws = Blockly.inject(host.value, {
     toolbox,
     trashcan: true,
     sounds: false,
-    media: "../blockly-media/",
+    media: new URL("../blockly-media/", import.meta.url).href,
     renderer: "zelos",
     zoom: { controls: true, startScale: 0.8 },
     move: { scrollbars: true, drag: true, wheel: false },

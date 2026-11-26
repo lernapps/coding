@@ -7,10 +7,11 @@ import type { Input, Json } from "@lernapps/app-templates/interactive";
 import type { State, Stmt } from "../core/index.ts";
 import Editor from "./Editor.vue";
 import de from "../messages/de.json";
+import en from "../messages/en.json";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
-const t = translator(de);
+const t = translator(props.lang === "en" ? en : de);
 const act = (name: string, value?: Json): void =>
   emit("input", value === undefined ? { kind: "action", name } : { kind: "action", name, value });
 
@@ -63,7 +64,7 @@ const CELL = 24;
     </svg>
     <p>{{ t(`status-${state.status}`) }} · {{ state.steps }}</p>
     <p v-if="state.error">{{ t("invalid") }}</p>
-    <Editor @program="(ir: Stmt[]) => act('programm', ir as unknown as Json)" />
+    <Editor :lang="lang" @program="(ir: Stmt[]) => act('programm', ir as unknown as Json)" />
     <div class="buttons">
       <button type="button" @click="act('start')">{{ t("run") }}</button>
       <button type="button" @click="act('schritt')">{{ t("step") }}</button>

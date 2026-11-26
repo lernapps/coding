@@ -1,0 +1,14 @@
+{
+  "app": "Coding workshop",
+  "maze": "Maze, robot in column {x}, row {y}",
+  "run": "Run",
+  "step": "One step",
+  "stop": "Stop",
+  "invalid": "I cannot read this task.",
+  "status-edit": "Ready",
+  "status-running": "Running",
+  "status-won": "Done: the robot reached the goal.",
+  "status-crashed": "The robot bumps into the wall.",
+  "status-stopped": "Stopped.",
+  "status-limit": "Too many steps."
+}

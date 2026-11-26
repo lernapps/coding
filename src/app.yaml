@@ -1,13 +1,16 @@
 # yaml-language-server: $schema=../node_modules/@lernapps/app-templates/runtime/interactive/interactive.v1.schema.json
-title: Programmierwerkstatt (Spike)
-description: Du programmierst einen Roboter mit Blöcken.
-howto: |
-  - Zieh Blöcke in die Fläche. Drücke „Start“.
+title: { de: Programmierwerkstatt (Spike), en: Coding workshop (spike) }
+description: { de: Du programmierst einen Roboter mit Blöcken., en: You program a robot with blocks. }
+howto:
+  de: |
+    - Zieh Blöcke in die Fläche. Drücke „Start“.
+  en: |
+    - Drag blocks onto the area. Press “Run”.
 competencies:
-  - Ich kann eine Folge von Befehlen bauen.
-languages: [de]
+  - { de: Ich kann eine Folge von Befehlen bauen., en: I can build a sequence of commands. }
+languages: [de, en]
 routes:
   - id: gang
-    title: Der lange Gang
+    title: { de: Der lange Gang, en: The long corridor }
   - id: ecke
-    title: Um die Ecke
+    title: { de: Um die Ecke, en: Around the corner }
