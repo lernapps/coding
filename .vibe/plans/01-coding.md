@@ -221,9 +221,9 @@ Später (eigene Inkremente): `struktogramm`, `pseudocode`, `textbasierte-program
 
 - [x] Load skill `lernapps-cli`. Create the app as its section "Create" says:
       `npx --no -- lernapps create --archetype interactive`.
-- [ ] Fill the content guide `.agents/skills/app-content/SKILL.md` from "Notes" and "Content method": every heading,
+- [x] Fill the content guide `.agents/skills/app-content/SKILL.md` from "Notes" and "Content method": every heading,
       no "FILL IN" left. Commit it before any content.
-- [ ] Load skill `lernapps-interactive`.
+- [x] Load skill `lernapps-interactive`.
 - [ ] Muster: Kern (IR, Interpreter, Welt-Schnittstelle, Challenge-Validator, Weg A) und Welt Labyrinth mit labyrinth-1..3, Lösungen und Playthroughs; App-Seite mit Editor (nachgeladen), Welt, Steuerung, Rückmeldung je Testfall, Hinweise, Zurück; de und en; Roboter festlegen. Zeigt: eine Challenge lösen, mit Maus und Tastatur, 360 px hoch und quer
 <!-- tasks: pattern (1 added): the one page or screen that is the pattern for the others -->
 - [ ] **Checkpoint:** the pattern page. Load skill `lernapps-learner-check` and do its learner check on the page. Fix
