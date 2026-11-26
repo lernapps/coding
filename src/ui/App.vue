@@ -475,25 +475,33 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
   flex-wrap: wrap;
   gap: 0.25rem;
   border-bottom: 2px solid #1f2a44;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
+/* Not chosen: grey and set back, like a card behind. */
 .tabs button {
   border-radius: 0.4rem 0.4rem 0 0;
+  border: 1px solid #9aa0ab;
   border-bottom: none;
-  margin-bottom: -2px;
+  background: #e9ebef;
+  color: #374151;
+  margin-top: 0.3rem;
 }
+/* Chosen: white like the page, bold, a coloured bar on top, open towards the picture below. */
 .tabs button[aria-selected="true"] {
-  background: #1f2a44;
-  color: #fff;
+  background: #fff;
+  color: #1f2a44;
+  font-weight: 700;
+  border: 2px solid #1f2a44;
+  border-top: 5px solid #2f7d32;
+  border-bottom: 2px solid #fff;
+  margin-top: 0;
+  margin-bottom: -2px;
 }
 .tabs button.ok span {
   color: #2f7d32;
 }
 .tabs button.fail span {
   color: #c0182c;
-}
-.tabs button[aria-selected="true"] span {
-  color: inherit;
 }
 .controls,
 .hints {
