@@ -135,6 +135,14 @@ export function step(state: State, input: Input): State {
         ? fresh(state.seed, "address", null, problems)
         : fresh(state.seed, "address", input.value as unknown as Challenge);
     }
+    case "route": {
+      // TODO(lernapps/app-templates#201): leaving a challenge of the address for a route of the collection; the runtime
+      // does not restart when the route of the address is the one it started with.
+      const id = String(input.value);
+      return state.source === "address" && BUILT_IN[id] !== undefined
+        ? fresh(state.seed, "route", BUILT_IN[id])
+        : state;
+    }
     case "programm": {
       if (c === null || programProblems(input.value).length > 0) return state;
       const program = input.value as unknown as Program;

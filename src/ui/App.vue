@@ -40,6 +40,11 @@ onMounted(async () => {
   // TODO(lernapps/app-templates#201): read by the runtime and given to start() once it passes the address's parameters.
   const found = await readChallenge(location.search, MAX_LINK);
   if (found !== undefined) act("challenge", found as Json);
+  addEventListener("hashchange", () => {
+    if (props.state.source !== "address") return;
+    history.replaceState(null, "", location.pathname + location.hash);
+    act("route", decodeURIComponent(location.hash.slice(1)));
+  });
 });
 
 const c = computed(() => props.state.challenge);

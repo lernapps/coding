@@ -86,3 +86,5 @@ steps:
       }
   - inputs: [{ kind: action, name: challenge, value: null }]
     state: { challenge: null, problems: [{ path: "", key: problem-unreadable }] }
+  - inputs: [{ kind: action, name: route, value: labyrinth-1 }]
+    state: { source: route, challenge: { id: labyrinth-1 }, problems: [] }
