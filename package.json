@@ -6,7 +6,8 @@
     "dev": "vp dev",
     "build": "vp build",
     "check": "lernapps check",
-    "prepare": "lernapps hooks"
+    "prepare": "lernapps hooks",
+    "build:check-script": "node scripts/build-check-script.ts"
   },
   "dependencies": {
     "blockly": "13.4.0"
@@ -15,6 +16,7 @@
     "@doctc/arc42": "0.38.0",
     "@lernapps/app-templates": "^0.20.0",
     "@lernapps/tooling": "^0.19.0",
+    "@types/node": "22.19.1",
     "ajv": "8.17.1",
     "typescript": "6.0.3",
     "vite-plus": "1.4.0",

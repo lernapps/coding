@@ -739,11 +739,13 @@ flowchart LR
         bb-interpreter["Interpreter"]
         bb-challenge["Challenge"]
         bb-worlds["Worlds"]
+        bb-check-script["Check script"]
     end
     bb-interpreter -->|"if-program"| bb-program
     bb-interpreter -->|"if-world"| bb-worlds
     bb-challenge -->|"if-interpreter"| bb-interpreter
     bb-challenge -->|"if-world"| bb-worlds
+    bb-check-script -->|"if-challenge"| bb-challenge
 ```
 
 ```arc42
@@ -856,6 +858,39 @@ title: World (start, command, sense, checks, describe), registry by type and ver
 provider: bb-worlds
 protocol: TypeScript interface
 path: src/core/worlds/types.ts
+:::
+```
+### Check script
+
+The check script for the apps that send challenges (`src/tools/challenge-check.ts`): built by
+`npm run build:check-script` into one file without dependencies, `public/tools/challenge-check.v1.mjs`, published with
+the app. It checks a challenge as the workshop does, the length of its link and a model solution on every test case,
+and prints the links; a test checks that the published file is the build of the current sources.
+
+```arc42
+:::building-block
+id: bb-check-script
+title: Check script
+parent: bb-interactive-core
+technology: TypeScript, Node 22, built with Vite
+path: src/tools
+requires: if-challenge
+implements: concept-workshop-challenges
+:::
+```
+
+#### Check script interface
+
+An app runs it in its build: `node challenge-check.v1.mjs <challenge.json> [<solution.json>] [--lang en]`; exit code
+0 when all holds, 1 when not.
+
+```arc42
+:::interface
+id: if-check-script
+title: challenge-check.v1.mjs (command line)
+provider: bb-check-script
+protocol: CLI, exit code
+path: src/tools/challenge-check.ts
 :::
 ```
 <!-- app: end core -->

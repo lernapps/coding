@@ -210,7 +210,7 @@ hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-editor, bb-world-
 
 ## Workshop build
 
-The build plays the playthroughs and the unit tests run every model solution on every test case.
+The build plays the playthroughs, the unit tests run every model solution on every test case, and the check script is built here (`npm run build:check-script`) and checked against its sources.
 
 ```arc42
 :::deployment-node
@@ -218,7 +218,7 @@ id: dn-workshop-build
 title: Workshop build
 type: container
 parent: dn-interactive-build
-hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-collection, bb-solutions
+hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-collection, bb-solutions, bb-check-script
 :::
 ```
 <!-- app: end -->

@@ -169,4 +169,18 @@ trigger: The learner presses Run or One step
 involves: bb-editor, bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-world-views, bb-collection, bb-solutions
 :::
 ```
+
+## An app checks its challenge
+
+An app that sends the workshop a challenge runs the check script in its build: the script checks the challenge as the
+workshop does and runs the app's model solution on every test case, then prints the links for German and English pages.
+
+```arc42
+:::runtime-scenario
+id: scenario-workshop-check-script
+title: An app checks its challenge
+trigger: The build of an app that links a challenge
+involves: bb-check-script, bb-challenge, bb-interpreter, bb-worlds, bb-program
+:::
+```
 <!-- app: end -->
