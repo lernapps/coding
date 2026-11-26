@@ -60,7 +60,8 @@ export const labyrinth: World<LabyrinthConfig, LabyrinthState> = {
     return problems;
   },
   commands: { vorwaerts: 0, links: 0, rechts: 0 },
-  sensors: { "wand-voraus": 0, "wand-links": 0, "wand-rechts": 0, "am-ziel": 0 },
+  /** "weg-frei" is "wand-voraus" turned round, for beginners: no "nicht" needed. */
+  sensors: { "wand-voraus": 0, "wand-links": 0, "wand-rechts": 0, "am-ziel": 0, "weg-frei": 0 },
   checks: {
     "ziel-erreicht": (s, c): Verdict =>
       at(c, s.x, s.y) === "Z" ? { ok: true } : { ok: false, why: { key: "fail-not-at-goal", params: field(s) } },
@@ -80,6 +81,7 @@ export const labyrinth: World<LabyrinthConfig, LabyrinthState> = {
   },
   sense(s, c, name) {
     if (name === "am-ziel") return at(c, s.x, s.y) === "Z";
+    if (name === "weg-frei") return !wall(s, c, 0);
     return wall(s, c, name === "wand-links" ? -1 : name === "wand-rechts" ? 1 : 0);
   },
   describe: (s, c) => ({

@@ -66,6 +66,21 @@ sections:
         - A German explainer links the German page of the workshop (/coding/app/), an English one the English page (/coding/en/app/).
         - At build time the [check script](https://lernapps.net/coding/tools/challenge-check.v1.mjs) checks the task and a model solution, for example with “node challenge-check.v1.mjs task.json solution.json”.
         - The “Back” button leads to the address in “back.url” and adds “#werkstatt=task-id:geloest” or “:offen”.
+  - id: karten
+    title: { de: Zum Ausdrucken, en: To print }
+    text:
+      de: |
+        Für den Anfang ohne Computer: Kiko-Befehlskarten und ein Spielfeld, A4, auch schwarz-weiß lesbar. Die Karten haben dieselben Wörter und Farben wie die Blöcke. Ein Kind ist Kiko und folgt den Karten, die anderen legen das Programm.
+
+        - [Befehlskarten](https://lernapps.net/coding/karten/de/befehlskarten-1.svg)
+        - [Karten für Schleifen, Entscheidungen und Fragen](https://lernapps.net/coding/karten/de/befehlskarten-2.svg)
+        - [Spielfeld mit Kiko, Ziel und Wänden](https://lernapps.net/coding/karten/de/spielfeld.svg)
+      en: |
+        To start without a computer: Kiko command cards and a board, A4, readable in black and white too. The cards have the same words and colours as the blocks. One child is Kiko and follows the cards, the others lay out the program.
+
+        - [Command cards](https://lernapps.net/coding/karten/en/befehlskarten-1.svg)
+        - [Cards for loops, choices and questions](https://lernapps.net/coding/karten/en/befehlskarten-2.svg)
+        - [Board with Kiko, goal and walls](https://lernapps.net/coding/karten/en/spielfeld.svg)
   - id: lizenzen
     title: { de: Lizenzen, en: Licences }
     text:

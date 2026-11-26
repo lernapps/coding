@@ -8,7 +8,8 @@
     "build": "vp build",
     "check": "lernapps check",
     "prepare": "lernapps hooks",
-    "build:check-script": "node scripts/build-check-script.ts"
+    "build:check-script": "node scripts/build-check-script.ts",
+    "build:cards": "node scripts/build-cards.ts"
   },
   "dependencies": {
     "blockly": "13.4.0"

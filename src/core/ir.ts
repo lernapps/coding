@@ -13,7 +13,10 @@ export type Expr =
   | { e: "cmp"; op: "<" | "<=" | "=" | "!=" | ">=" | ">"; a: Expr; b: Expr }
   | { e: "arith"; op: "+" | "-" | "*" | "/" | "%"; a: Expr; b: Expr };
 
-/** A statement; `id` is the id of its block in the editor (to highlight it while it runs), ignored otherwise. */
+/**
+ * A statement; `id` is the id of its block in the editor (to highlight it while it runs), ignored otherwise; `locked`
+ * (in a start program) keeps the block where it is: it cannot be moved or deleted, only its gaps filled.
+ */
 export type Stmt = (
   | { s: "cmd"; name: string; args: Expr[] }
   | { s: "repeat"; times: Expr; body: Stmt[] }
@@ -21,7 +24,7 @@ export type Stmt = (
   | { s: "if"; cond: Expr; then: Stmt[]; else?: Stmt[] }
   | { s: "set"; name: string; value: Expr }
   | { s: "call"; name: string; args: Expr[] }
-) & { id?: string };
+) & { id?: string; locked?: boolean };
 
 export interface Proc {
   name: string;
@@ -87,6 +90,7 @@ export function programProblems(value: unknown, path = "program"): Problem[] {
   };
   const stmt = (v: unknown, at: string, depth: number): void => {
     if (++nodes > MAX_NODES || depth > MAX_DEPTH || !isObject(v)) return bad(at);
+    if (v["locked"] !== undefined && typeof v["locked"] !== "boolean") return bad(`${at}.locked`);
     switch (v["s"]) {
       case "cmd":
       case "call":

@@ -44,6 +44,9 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   config}`, `toolbox`, `start`, `limits {blocks, steps}`, `tests[]`, `checks[]`, `hints[]`, `view`, `back`.
 - Jede eingebaute Challenge hat eine Musterlösung `src/data/solutions/<id>.json` (IR) und mindestens zwei Playthroughs
   `src/playthroughs/<id>-*.yaml`: gelöst, und ein typischer Fehler mit Rückmeldung.
+- Sensor `weg-frei` („Weg frei?“) für Einsteiger statt „nicht Wand voraus?“ (Labyrinth 3).
+- Lückenaufgaben: Befehle im Startprogramm mit `"locked": true` sind fest (nicht verschiebbar, nicht löschbar, ihre
+  Fragen auch); Lernende füllen nur die Lücken (Labyrinth 5).
 - Das Ziel beendet das Programm nicht: Blöcke nach dem Ziel laufen weiter (eine zu große Zahl in „wiederhole“ stößt an
   die Wand). Pflichtblöcke mit `benutzt-block:<block>`, damit das Konzept der Aufgabe nicht umgangen wird.
 - Das Schrittlimit (`limits.steps`) zählt Befehle der Welt; Rückmeldung „Nach … Befehlen“.
@@ -83,6 +86,10 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   für Wände und Figur. Jede Welt liefert `describe` als Text für Screenreader.
 - Der Roboter (`src/ui/Robot.vue`) ist selbst gezeichnet (SVG), wiederkehrendes Bild des Epics.
 - Blockly-Medien aus `public/blockly-media/` (Apache 2.0, NOTICE).
+
+- Zum Ausdrucken (`public/karten/<lang>/`): Befehlskarten (2 Seiten) und Spielfeld, A4, schwarz-weiß lesbar, erzeugt
+  von `scripts/build-cards.ts` aus den Blocktexten der Message-Dateien und den Blockfarben (`npm run build:cards`;
+  ein Test meldet veraltete Karten).
 
 ## Sources
 

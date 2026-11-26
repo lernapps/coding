@@ -6,8 +6,8 @@
     "en": "Follow the corridor"
   },
   "task": {
-    "de": "Bau ein Programm, das Kiko durch jeden Gang ins Ziel bringt. Benutz „wenn … dann … sonst“. Es gibt 3 Rätsel mit verschiedenen Gängen. Der Block „solange nicht am Ziel?“ ist schon da.",
-    "en": "Build a program that brings Kiko through any corridor to the goal. Use “if … then … else”. There are 3 puzzles with different corridors. The block “while not at the goal?” is already there."
+    "de": "Bau ein Programm, das Kiko durch jeden Gang ins Ziel bringt. Benutz „wenn … dann … sonst“. Es gibt 3 Rätsel mit verschiedenen Gängen. Der Block „solange nicht am Ziel?“ ist schon da und fest: Füll die Lücke darin.",
+    "en": "Build a program that brings Kiko through any corridor to the goal. Use “if … then … else”. There are 3 puzzles with different corridors. The block “while not at the goal?” is already there and fixed: fill the gap inside it."
   },
   "world": {
     "type": "labyrinth",
@@ -40,7 +40,8 @@
             "args": []
           }
         },
-        "body": []
+        "body": [],
+        "locked": true
       }
     ]
   },

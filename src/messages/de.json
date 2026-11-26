@@ -189,5 +189,9 @@
   "scroll-hint": "Wisch die Reihe der Blöcke zur Seite, dann siehst du alle.",
   "test-ok": "gelöst",
   "test-fail": "nicht gelöst",
-  "running-test": "Kiko löst Rätsel {n} von {count}."
+  "running-test": "Kiko löst Rätsel {n} von {count}.",
+  "block-weg-frei": "Weg frei?",
+  "explain-weg-frei": "„Weg frei?“ fragt: Kann Kiko vorwärts gehen, ohne an eine Wand zu stoßen?",
+  "word-weg-frei": "Weg frei?",
+  "authoring-beginners": "Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit \"locked\": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben)."
 }

@@ -17,7 +17,7 @@
       "facing": "east"
     }
   },
-  "toolbox": ["vorwaerts", "solange", "nicht", "am-ziel"],
+  "toolbox": ["vorwaerts", "solange", "weg-frei", "nicht", "am-ziel"],
   "start": null,
   "limits": {
     "blocks": 4,
@@ -46,8 +46,8 @@
       "en": "“while … do” repeats as long as the answer to the question is “yes”. Which question fits?"
     },
     {
-      "de": "Frag „nicht am Ziel?“.",
-      "en": "Ask “not at the goal?”."
+      "de": "Frag „Weg frei?“ oder „nicht am Ziel?“.",
+      "en": "Ask “way ahead clear?” or “not at the goal?”."
     }
   ],
   "view": "bloecke"

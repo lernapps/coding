@@ -189,5 +189,9 @@
   "scroll-hint": "Swipe the row of blocks sideways to see them all.",
   "test-ok": "solved",
   "test-fail": "not solved",
-  "running-test": "Kiko is solving puzzle {n} of {count}."
+  "running-test": "Kiko is solving puzzle {n} of {count}.",
+  "block-weg-frei": "way ahead clear?",
+  "explain-weg-frei": "“way ahead clear?” asks: can Kiko move forward without bumping into a wall?",
+  "word-weg-frei": "way ahead clear?",
+  "authoring-beginners": "For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with \"locked\": true in the start program is fixed: learners only fill its gaps (gap tasks)."
 }
