@@ -1,4 +1,4 @@
-// source: f961eccc4e7b13e3
+// source: 097c59b780097bcd
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -134,6 +134,7 @@ function programProblems(value, path = "program") {
   };
   const stmt = (v, at, depth) => {
     if (++nodes > MAX_NODES || depth > MAX_DEPTH || !isObject(v)) return bad(at);
+    if (v["locked"] !== void 0 && typeof v["locked"] !== "boolean") return bad(`${at}.locked`);
     switch (v["s"]) {
       case "cmd":
       case "call":
@@ -628,11 +629,13 @@ var labyrinth = {
     links: 0,
     rechts: 0,
   },
+  /** "weg-frei" is "wand-voraus" turned round, for beginners: no "nicht" needed. */
   sensors: {
     "wand-voraus": 0,
     "wand-links": 0,
     "wand-rechts": 0,
     "am-ziel": 0,
+    "weg-frei": 0,
   },
   checks: {
     "ziel-erreicht": (s, c) =>
@@ -684,6 +687,7 @@ var labyrinth = {
   },
   sense(s, c, name) {
     if (name === "am-ziel") return at(c, s.x, s.y) === "Z";
+    if (name === "weg-frei") return !wall(s, c, 0);
     return wall(s, c, name === "wand-links" ? -1 : name === "wand-rechts" ? 1 : 0);
   },
   describe: (s, c) => ({
@@ -1428,6 +1432,11 @@ var de_default = {
   "test-ok": "gelöst",
   "test-fail": "nicht gelöst",
   "running-test": "Kiko löst Rätsel {n} von {count}.",
+  "block-weg-frei": "Weg frei?",
+  "explain-weg-frei": "„Weg frei?“ fragt: Kann Kiko vorwärts gehen, ohne an eine Wand zu stoßen?",
+  "word-weg-frei": "Weg frei?",
+  "authoring-beginners":
+    'Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit "locked": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben).',
 };
 var en_default = {
   app: "Coding workshop",
@@ -1639,6 +1648,11 @@ var en_default = {
   "test-ok": "solved",
   "test-fail": "not solved",
   "running-test": "Kiko is solving puzzle {n} of {count}.",
+  "block-weg-frei": "way ahead clear?",
+  "explain-weg-frei": "“way ahead clear?” asks: can Kiko move forward without bumping into a wall?",
+  "word-weg-frei": "way ahead clear?",
+  "authoring-beginners":
+    'For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with "locked": true in the start program is fixed: learners only fill its gaps (gap tasks).',
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -1726,3 +1740,4 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
+export {};
