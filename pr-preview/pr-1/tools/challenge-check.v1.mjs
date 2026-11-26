@@ -1,4 +1,4 @@
-// source: 9c211bd4150de2d7
+// source: 4c5877290012a39c
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -11,6 +11,71 @@ function translator(messages, locale = "de-DE") {
       if (value === void 0) return placeholder;
       return typeof value === "number" ? numbers.format(value) : value;
     });
+}
+// src/core/fits.ts
+/** The range of the number in "wiederhole … mal". */
+var REPEAT_RANGE = [1, 99];
+function fitProblems(program, world, path) {
+  const problems = [];
+  const bad = (at, name) => {
+    problems.push(
+      name === void 0
+        ? {
+            path: at,
+            key: "problem-program",
+          }
+        : {
+            path: at,
+            key: "problem-block",
+            params: { name },
+          },
+    );
+  };
+  const literal = (e, [min, max], at) => {
+    if (e.e !== "num" || !Number.isFinite(e.value) || e.value < min || e.value > max)
+      problems.push({
+        path: at,
+        key: "problem-number",
+        params: {
+          min,
+          max,
+        },
+      });
+  };
+  const expr = (e, at) => {
+    if (e.e === "empty") return;
+    if (e.e === "not") return expr(e.a, `${at}.a`);
+    if (e.e === "sense" && e.name in world.sensors && e.args.length === 0) return;
+    bad(at, e.e === "sense" ? e.name : void 0);
+  };
+  const block = (stmts, at) =>
+    stmts.forEach((s, i) => {
+      const here = `${at}[${i}]`;
+      switch (s.s) {
+        case "cmd": {
+          if (!(s.name in world.commands) || s.args.length !== world.commands[s.name]) return bad(here, s.name);
+          const ranges = world.ranges?.[s.name] ?? [];
+          s.args.forEach((a, j) => literal(a, ranges[j] ?? [-1e6, 1e6], `${here}.args[${j}]`));
+          return;
+        }
+        case "repeat":
+          literal(s.times, REPEAT_RANGE, `${here}.times`);
+          return block(s.body, `${here}.body`);
+        case "while":
+          expr(s.cond, `${here}.cond`);
+          return block(s.body, `${here}.body`);
+        case "if":
+          expr(s.cond, `${here}.cond`);
+          block(s.then, `${here}.then`);
+          if (s.else !== void 0) block(s.else, `${here}.else`);
+          return;
+        default:
+          return bad(here);
+      }
+    });
+  block(program.main, `${path}.main`);
+  if ((program.procs ?? []).length > 0) bad(`${path}.procs`);
+  return problems.slice(0, 5);
 }
 // src/core/json.ts
 var isObject = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -207,8 +272,10 @@ function emptySlot(program) {
 // src/core/worlds/types.ts
 var isFailure = (value) => typeof value === "object" && value !== null && "fail" in value;
 // src/core/interpreter.ts
-/** The hard limit of steps of any run. */
-var MAX_STEPS = 1e4;
+/** The most commands of any run. */
+var MAX_COMMANDS = 1e4;
+/** The hard limit of all steps of a run, control steps included. */
+var MAX_STEPS = 5e4;
 function begin(program, world, config) {
   return {
     world: world.start(config),
@@ -312,10 +379,10 @@ function advance(start, program, world, config, limit) {
     frames: start.frames.map((f) => ({ ...f })),
     vars: { ...start.vars },
   };
-  const max = Math.min(limit, MAX_STEPS);
+  const max = Math.min(limit, MAX_COMMANDS);
   try {
     while (run.frames.length > 0) {
-      if (run.steps >= max)
+      if (run.commands >= max)
         return {
           ...run,
           status: "limit",
@@ -323,6 +390,12 @@ function advance(start, program, world, config, limit) {
             key: "fail-limit",
             params: { steps: max },
           },
+        };
+      if (run.steps >= 5e4)
+        return {
+          ...run,
+          status: "limit",
+          why: { key: "fail-endless" },
         };
       const top = run.frames[run.frames.length - 1];
       if (top === void 0) break;
@@ -354,7 +427,7 @@ function advance(start, program, world, config, limit) {
                 left: Math.floor(n),
               },
             });
-          else if (n >= 1) run.steps += Math.floor(n);
+          else if (n >= 1) run.steps += Math.min(Math.floor(n), MAX_STEPS);
           continue;
         }
         case "while":
@@ -377,9 +450,20 @@ function advance(start, program, world, config, limit) {
             });
           continue;
         }
-        case "set":
-          run.vars[s.name] = Number(evaluate(s.value, run, world, config));
+        case "set": {
+          const value = Number(evaluate(s.value, run, world, config));
+          const frame = [...run.frames].reverse().find((f) => f.loop?.k === "proc" && s.name in f.loop.vars);
+          if (frame?.loop?.k === "proc")
+            frame.loop = {
+              k: "proc",
+              vars: {
+                ...frame.loop.vars,
+                [s.name]: value,
+              },
+            };
+          else run.vars[s.name] = value;
           continue;
+        }
         case "call": {
           const proc = program.procs?.find((p) => p.name === s.name);
           if (proc === void 0)
@@ -602,7 +686,6 @@ var labyrinth = {
     if (name === "am-ziel") return at(c, s.x, s.y) === "Z";
     return wall(s, c, name === "wand-links" ? -1 : name === "wand-rechts" ? 1 : 0);
   },
-  finished: (s, c) => at(c, s.x, s.y) === "Z",
   describe: (s, c) => ({
     key: "describe-labyrinth",
     params: {
@@ -613,7 +696,10 @@ var labyrinth = {
   }),
 };
 var TOLERANCE = 2;
-var MAX_LINES = 2e3;
+var MAX_LINES = 1e3;
+/** The grid of the comparison: one cell per unit, a margin of 50 around the sheet. */
+var MARGIN = 50;
+var GRID = 300;
 var round = (v) => Math.round(v * 100) / 100;
 function startOf(c) {
   const s = c.start ?? {
@@ -630,45 +716,44 @@ function startOf(c) {
     lines: [],
   };
 }
-/** Points along the lines, every unit (for the comparison of pictures). */
-function samples(lines) {
-  const out = [];
+/** The cells a picture covers: every line sampled twice per unit (at most 2000 samples a line), off the grid clamped. */
+function cover(lines) {
+  const grid = new Uint8Array(GRID * GRID);
+  const cell = (v) => Math.min(299, Math.max(0, Math.floor(v + MARGIN)));
   for (const [x1, y1, x2, y2] of lines) {
-    const n = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1)));
-    for (let i = 0; i <= n; i++) out.push([x1 + ((x2 - x1) * i) / n, y1 + ((y2 - y1) * i) / n]);
+    const n = Math.min(2e3, Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) * 2)));
+    for (let i = 0; i <= n; i++) grid[cell(y1 + ((y2 - y1) * i) / n) * GRID + cell(x1 + ((x2 - x1) * i) / n)] = 1;
   }
+  return grid;
+}
+/** The cells within TOLERANCE of a covered cell. */
+function widen(grid) {
+  const out = new Uint8Array(grid.length);
+  for (let y = 0; y < GRID; y++)
+    for (let x = 0; x < GRID; x++) {
+      if (grid[y * GRID + x] !== 1) continue;
+      for (let dy = -2; dy <= TOLERANCE; dy++)
+        for (let dx = -2; dx <= TOLERANCE; dx++) {
+          const yy = y + dy;
+          const xx = x + dx;
+          if (yy >= 0 && yy < GRID && xx >= 0 && xx < GRID) out[yy * GRID + xx] = 1;
+        }
+    }
   return out;
 }
-function distanceToLines(p, lines) {
-  let best = Infinity;
-  for (const [x1, y1, x2, y2] of lines) {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const len = dx * dx + dy * dy;
-    const t = len === 0 ? 0 : Math.max(0, Math.min(1, ((p[0] - x1) * dx + (p[1] - y1) * dy) / len));
-    best = Math.min(best, Math.hypot(p[0] - (x1 + t * dx), p[1] - (y1 + t * dy)));
-  }
-  return best;
+/** The first cell of `a` that `near` does not cover, as a point of the sheet; null when there is none. */
+function firstOutside(a, near) {
+  for (let i = 0; i < a.length; i++)
+    if (a[i] === 1 && near[i] !== 1)
+      return {
+        x: (i % GRID) - MARGIN,
+        y: Math.floor(i / GRID) - MARGIN,
+      };
+  return null;
 }
 /** The lines of the target picture. */
 function targetLines(c) {
   return runToEnd(c.ziel, turtle, c, 1e4).world.lines;
-}
-var COMMANDS = {
-  gehe: 1,
-  "drehe-links-um": 1,
-  "drehe-rechts-um": 1,
-  "stift-hoch": 0,
-  "stift-runter": 0,
-  farbe: 1,
-};
-function commandsOf(stmts) {
-  return stmts.flatMap((s) => {
-    if (s.s === "cmd") return [s.name];
-    if (s.s === "repeat" || s.s === "while") return commandsOf(s.body);
-    if (s.s === "if") return [...commandsOf(s.then), ...commandsOf(s.else ?? [])];
-    return [];
-  });
 }
 var turtle = {
   id: "turtle",
@@ -689,13 +774,9 @@ var turtle = {
           key: "problem-unknown-field",
         });
     const ziel = config["ziel"];
-    const zielProblems = programProblems(ziel, `${path}.ziel`);
-    if (zielProblems.length > 0) problems.push(...zielProblems);
-    else if (commandsOf(ziel.main).some((n) => !(n in COMMANDS)))
-      problems.push({
-        path: `${path}.ziel`,
-        key: "problem-program",
-      });
+    const syntax = programProblems(ziel, `${path}.ziel`);
+    const fit = syntax.length > 0 ? syntax : fitProblems(ziel, turtle, `${path}.ziel`);
+    problems.push(...fit);
     const start = config["start"];
     if (
       start !== void 0 &&
@@ -706,38 +787,55 @@ var turtle = {
         key: "problem-turtle-start",
         params: { size: 200 },
       });
+    if (fit.length === 0 && problems.length === 0) {
+      const run = runToEnd(ziel, turtle, config, 1e4);
+      const lines = run.world.lines.length;
+      if (run.status !== "done" || lines > 200)
+        problems.push({
+          path: `${path}.ziel`,
+          key: "problem-target-lines",
+          params: { max: 200 },
+        });
+    }
     return problems;
   },
-  commands: COMMANDS,
+  commands: {
+    gehe: 1,
+    "drehe-links-um": 1,
+    "drehe-rechts-um": 1,
+    "stift-hoch": 0,
+    "stift-runter": 0,
+    farbe: 1,
+  },
+  ranges: {
+    gehe: [[1, 200]],
+    "drehe-links-um": [[1, 360]],
+    "drehe-rechts-um": [[1, 360]],
+    farbe: [[1, 4]],
+  },
   sensors: {},
   checks: {
     "bild-gleich": (s, c) => {
-      const target = targetLines(c).filter((l) => l[0] !== l[2] || l[1] !== l[3]);
-      const drawn = s.lines.filter((l) => l[0] !== l[2] || l[1] !== l[3]);
-      for (const p of samples(target))
-        if (distanceToLines(p, drawn) > TOLERANCE)
-          return {
-            ok: false,
-            why: {
-              key: "fail-picture-missing",
-              params: {
-                x: Math.round(p[0]),
-                y: Math.round(p[1]),
-              },
-            },
-          };
-      for (const p of samples(drawn))
-        if (distanceToLines(p, target) > TOLERANCE)
-          return {
-            ok: false,
-            why: {
-              key: "fail-picture-extra",
-              params: {
-                x: Math.round(p[0]),
-                y: Math.round(p[1]),
-              },
-            },
-          };
+      const target = cover(targetLines(c).filter((l) => l[0] !== l[2] || l[1] !== l[3]));
+      const drawn = cover(s.lines.filter((l) => l[0] !== l[2] || l[1] !== l[3]));
+      const missing = firstOutside(target, widen(drawn));
+      if (missing !== null)
+        return {
+          ok: false,
+          why: {
+            key: "fail-picture-missing",
+            params: missing,
+          },
+        };
+      const extra = firstOutside(drawn, widen(target));
+      if (extra !== null)
+        return {
+          ok: false,
+          why: {
+            key: "fail-picture-extra",
+            params: extra,
+          },
+        };
       return { ok: true };
     },
   },
@@ -939,7 +1037,11 @@ function challengeProblems(value) {
           params: { name: String(b) },
         });
     });
-  if (value["start"] !== null && value["start"] !== void 0) p.push(...programProblems(value["start"], "start"));
+  if (value["start"] !== null && value["start"] !== void 0) {
+    const syntax = programProblems(value["start"], "start");
+    p.push(...syntax);
+    if (syntax.length === 0 && world !== void 0) p.push(...fitProblems(value["start"], world, "start"));
+  }
   const limits = value["limits"];
   if (!isObject(limits))
     p.push({
@@ -1138,7 +1240,6 @@ var de_default = {
   "phase-edit": "Bau dein Programm. Dann drück „Start“.",
   "phase-running": "Der Roboter führt dein Programm aus.",
   "phase-paused": "Angehalten. Ausgeführte Blöcke: {commands}",
-  solved: "Geschafft! Der Roboter ist im Ziel.",
   "solved-attempts": "Du hast {attempts} Versuche gebraucht.",
   "solved-first": "Gleich im ersten Versuch!",
   "failed-test": "Testfall {n}: {why}",
@@ -1155,8 +1256,7 @@ var de_default = {
   "problem-at": "{path}: {what}",
   "fail-wall": "Vor dem Roboter ist eine Wand. Er steht in Feld ({x}|{y}) und kann nicht vorwärts gehen.",
   "fail-not-at-goal": "Das Programm ist zu Ende, aber der Roboter steht in Feld ({x}|{y}), nicht im Ziel.",
-  "fail-limit":
-    "Das Programm hört nicht auf: Nach {steps} Schritten ist der Roboter noch nicht im Ziel. Läuft er im Kreis?",
+  "fail-limit": "Das Programm hört nicht auf: Nach {steps} Befehlen ist es noch nicht fertig. Läuft es im Kreis?",
   "fail-empty": "Dein Programm hat noch keine Blöcke. Häng Blöcke unter „Programm“.",
   "fail-too-many-blocks": "Du hast {used} Blöcke benutzt. Erlaubt sind höchstens {max}.",
   "fail-missing-block": "Benutz den Block „{block}“.",
@@ -1219,7 +1319,7 @@ var de_default = {
   "fail-empty-slot": "Im Block „{block}“ fehlt noch eine Frage. Setz eine Frage in die Lücke.",
   "solved-all": "Geschafft! Dein Programm klappt in allen {count} Testfällen.",
   "tests-explain":
-    "Dein Programm muss in {count} verschiedenen Labyrinthen klappen. Jedes davon heißt Testfall. Mit den Knöpfen unter dem Bild schaust du sie dir an.",
+    "Dein Programm muss in {count} verschiedenen Fällen klappen. Jeder Fall heißt Testfall. Mit den Knöpfen unter dem Bild schaust du sie dir an.",
   help: "So funktioniert die Werkstatt",
   "help-blocks":
     "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass.",
@@ -1228,10 +1328,10 @@ var de_default = {
   "help-run":
     "„Start“ führt dein Programm aus. „Ein Schritt“ führt nur einen Block aus. In der Arbeitsfläche ist der Block markiert, der gerade dran war.",
   "help-keys":
-    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz, eine Ansage sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste.",
+    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz, eine Ansage sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
   "new-blocks": "Blöcke in dieser Aufgabe",
   "explain-wiederhole":
-    "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Die Zahl änderst du mit einem Klick darauf.",
+    "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Die Zahl änderst du mit einem Klick darauf oder mit der Tastatur.",
   "explain-solange":
     "„solange … tue“: Die Blöcke darin laufen immer wieder, solange die Antwort auf die Frage „ja“ ist.",
   "explain-wenn": "„wenn … dann“: Die Blöcke darin laufen nur, wenn die Antwort auf die Frage „ja“ ist.",
@@ -1253,7 +1353,7 @@ var de_default = {
   next: "Weiter zur nächsten Aufgabe: {title}",
   "help-map-labyrinth":
     "Dunkle Felder sind Wände, helle Felder sind Weg, das grüne Feld mit der Fahne ist das Ziel. Die Punkte zeigen, wo Kiko schon war. Oben stehen die Spalten, links die Zeilen: Feld (4|2) heißt Spalte 4, Zeile 2.",
-  "block-gehe": "gehe %1 Schritte",
+  "block-gehe": "gehe %1 Pixel",
   "block-drehe-links-um": "drehe dich um %1 Grad nach links",
   "block-drehe-rechts-um": "drehe dich um %1 Grad nach rechts",
   "block-stift-hoch": "Stift hoch",
@@ -1263,20 +1363,20 @@ var de_default = {
   "colour-2": "Orange",
   "colour-3": "Grün",
   "colour-4": "Lila",
-  "explain-gehe": "„gehe … Schritte“: Kiko geht so viele Schritte nach vorn und zeichnet dabei eine Linie.",
+  "explain-gehe": "„gehe … Pixel“: Kiko geht so viele Pixel nach vorn und zeichnet dabei eine Linie.",
   "explain-drehe-rechts-um":
     "„drehe dich um … Grad“: Kiko dreht sich auf der Stelle. 90 Grad sind eine Vierteldrehung, 360 Grad einmal ganz herum.",
   "explain-farbe": "„nimm die Farbe …“: Ab jetzt zeichnet Kiko in dieser Farbe. Die Farbe zählt beim Vergleich nicht.",
   "explain-stift-hoch": "„Stift hoch“: Kiko geht, ohne zu zeichnen. „Stift runter“: Er zeichnet wieder.",
   "describe-turtle":
-    "Zeichenfläche. Kiko steht bei ({x}|{y}) und schaut in Richtung {winkel} Grad. Er hat {lines} Linien gezeichnet.",
+    "Zeichenfläche. Kiko steht bei ({x}|{y}) und schaut in Richtung {winkel} Grad (0 Grad ist oben). Er hat {lines} Linien gezeichnet.",
   "describe-turtle-target": "Das graue Bild zeigt, was Kiko zeichnen soll.",
   "fail-picture-missing": "Dein Bild ist noch nicht gleich: Bei ({x}|{y}) fehlt ein Stück der grauen Linie.",
   "fail-picture-extra": "Bei ({x}|{y}) hast du eine Linie gezeichnet, die im grauen Bild nicht vorkommt.",
   "fail-too-many-lines": "Kiko hat mehr als {max} Linien gezeichnet. Hört dein Programm auf?",
   "problem-turtle-start": "Der Start hat x und y von 0 bis {size} und einen Winkel von 0 bis 359.",
   "help-map-turtle":
-    "Kiko zeichnet auf einer Fläche von 200 × 200 Schritten. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten.",
+    "Kiko zeichnet auf einer Fläche von 200 × 200 Pixeln. Das graue Bild soll er nachzeichnen. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten.",
   authoring: "Eigene Aufgabe bauen",
   "authoring-intro":
     "Für Lehrkräfte und Apps: Füg eine Aufgabe als JSON ein. Die Werkstatt prüft sie sofort. Dann probierst du sie aus und kopierst den Link.",
@@ -1297,6 +1397,29 @@ var de_default = {
   "solved-before": "schon gelöst",
   "authoring-visit":
     "Ein Link mit Aufgabe gilt für den ganzen Besuch. Wer in der Liste eine andere Aufgabe wählt, verlässt ihn; der Zurück-Knopf des Browsers führt wieder hin. Hängt an den Link also keine Route (#…).",
+  "problem-number": "Hier ist eine Zahl von {min} bis {max} erlaubt.",
+  "problem-target-lines": "Das Zielbild hat zu viele Linien (höchstens {max}) oder hört nicht auf.",
+  "fail-endless": "Dein Programm läuft im Kreis, ohne dass Kiko etwas tut. Sieh dir die Schleifen an.",
+  "solved-labyrinth": "Geschafft! Der Roboter ist im Ziel.",
+  "solved-turtle": "Geschafft! Dein Bild stimmt.",
+  "word-gehe": "gehe … Pixel",
+  "word-drehe-links-um": "drehe dich um … Grad nach links",
+  "word-drehe-rechts-um": "drehe dich um … Grad nach rechts",
+  "word-farbe": "nimm die Farbe …",
+  "word-stift-hoch": "Stift hoch",
+  "word-stift-runter": "Stift runter",
+  "word-wand-voraus": "Wand voraus?",
+  "word-am-ziel": "am Ziel?",
+  "word-wand-rechts": "Wand rechts?",
+  "word-wand-links": "Wand links?",
+  "describe-labyrinth-around": "Frei: {free}. Das Ziel ist in Feld ({gx}|{gy}).",
+  "word-dir-ahead": "vorne",
+  "word-dir-left": "links",
+  "word-dir-right": "rechts",
+  "word-dir-none": "nirgends",
+  "copy-for": "{what} kopieren",
+  "copy-missing": "Kopieren geht hier nicht. Markier den Text und kopier ihn selbst.",
+  "problem-solution-block": "Die Musterlösung benutzt den Block „{name}“, der nicht in der Werkzeugkiste ist.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1320,7 +1443,6 @@ var en_default = {
   "phase-edit": "Build your program. Then press “Run”.",
   "phase-running": "The robot is running your program.",
   "phase-paused": "Paused. Blocks run so far: {commands}",
-  solved: "Done! The robot is at the goal.",
   "solved-attempts": "You needed {attempts} attempts.",
   "solved-first": "On your first attempt!",
   "failed-test": "Test case {n}: {why}",
@@ -1337,8 +1459,7 @@ var en_default = {
   "problem-at": "{path}: {what}",
   "fail-wall": "There is a wall in front of the robot. It stands at square ({x}, {y}) and cannot move forward.",
   "fail-not-at-goal": "The program has ended, but the robot is at square ({x}, {y}), not at the goal.",
-  "fail-limit":
-    "The program does not stop: after {steps} steps the robot is still not at the goal. Is it going round in circles?",
+  "fail-limit": "The program does not stop: after {steps} commands it is still not done. Is it going round in circles?",
   "fail-empty": "Your program has no blocks yet. Attach blocks below “Program”.",
   "fail-too-many-blocks": "You used {used} blocks. At most {max} are allowed.",
   "fail-missing-block": "Use the block “{block}”.",
@@ -1401,7 +1522,7 @@ var en_default = {
   "fail-empty-slot": "The block “{block}” still needs a question. Put a question into the gap.",
   "solved-all": "Done! Your program works in all {count} test cases.",
   "tests-explain":
-    "Your program has to work in {count} different mazes. Each one is called a test case. Use the buttons below the picture to look at them.",
+    "Your program has to work in {count} different cases. Each case is called a test case. Use the buttons below the picture to look at them.",
   help: "How the workshop works",
   "help-blocks":
     "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale.",
@@ -1410,10 +1531,10 @@ var en_default = {
   "help-run":
     "“Run” runs your program. “One step” runs just one block. The block that just ran is marked in the work area.",
   "help-keys":
-    "With the keyboard: press Tab until you are in the list of blocks. Enter picks a block. Use the arrow keys to choose its place; you will hear where it goes. Enter puts it down. Press T to go back to the list.",
+    "With the keyboard: press Tab until you are in the list of blocks. Enter picks a block. Use the arrow keys to choose its place; you will hear where it goes. Enter puts it down. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
   "new-blocks": "Blocks in this task",
   "explain-wiederhole":
-    "“repeat … times”: the blocks inside run as many times as the number says. Click the number to change it.",
+    "“repeat … times”: the blocks inside run as many times as the number says. Change the number by clicking it or with the keyboard.",
   "explain-solange":
     "“while … do”: the blocks inside run again and again as long as the answer to the question is “yes”.",
   "explain-wenn": "“if … then”: the blocks inside only run if the answer to the question is “yes”.",
@@ -1435,7 +1556,7 @@ var en_default = {
   next: "On to the next task: {title}",
   "help-map-labyrinth":
     "Dark squares are walls, light squares are the path, the green square with the flag is the goal. The dots show where Kiko has been. The numbers at the top are columns, the numbers on the left are rows: square (4, 2) means column 4, row 2.",
-  "block-gehe": "move %1 steps",
+  "block-gehe": "move %1 pixels",
   "block-drehe-links-um": "turn left by %1 degrees",
   "block-drehe-rechts-um": "turn right by %1 degrees",
   "block-stift-hoch": "pen up",
@@ -1445,20 +1566,21 @@ var en_default = {
   "colour-2": "orange",
   "colour-3": "green",
   "colour-4": "purple",
-  "explain-gehe": "“move … steps”: Kiko moves forward that many steps and draws a line.",
+  "explain-gehe": "“move … pixels”: Kiko moves forward that many pixels and draws a line.",
   "explain-drehe-rechts-um":
     "“turn by … degrees”: Kiko turns on the spot. 90 degrees is a quarter turn, 360 degrees is once all the way round.",
   "explain-farbe":
     "“use the colour …”: from now on Kiko draws in this colour. The colour does not count when the pictures are compared.",
   "explain-stift-hoch": "“pen up”: Kiko moves without drawing. “pen down”: it draws again.",
-  "describe-turtle": "Drawing area. Kiko is at ({x}, {y}) and faces {winkel} degrees. It has drawn {lines} lines.",
+  "describe-turtle":
+    "Drawing area. Kiko is at ({x}, {y}) and faces {winkel} degrees (0 degrees is up). It has drawn {lines} lines.",
   "describe-turtle-target": "The grey picture shows what Kiko should draw.",
   "fail-picture-missing": "Your picture is not the same yet: at ({x}, {y}) a piece of the grey line is missing.",
   "fail-picture-extra": "At ({x}, {y}) you drew a line that is not in the grey picture.",
   "fail-too-many-lines": "Kiko has drawn more than {max} lines. Does your program stop?",
   "problem-turtle-start": "The start has x and y from 0 to {size} and an angle from 0 to 359.",
   "help-map-turtle":
-    "Kiko draws on an area of 200 × 200 steps. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down.",
+    "Kiko draws on an area of 200 × 200 pixels. It should copy the grey picture. The numbers on the edge help you find places: (50, 100) means 50 to the right, 100 down.",
   authoring: "Build your own task",
   "authoring-intro":
     "For teachers and apps: paste a task as JSON. The workshop checks it at once. Then try it out and copy the link.",
@@ -1479,6 +1601,29 @@ var en_default = {
   "solved-before": "solved before",
   "authoring-visit":
     "A link with a task holds for the whole visit. Choosing another task in the list leaves it; the browser’s back button returns to it. So do not add a route (#…) to the link.",
+  "problem-number": "A number from {min} to {max} is allowed here.",
+  "problem-target-lines": "The target picture has too many lines (at most {max}) or does not end.",
+  "fail-endless": "Your program goes round in circles without Kiko doing anything. Look at your loops.",
+  "solved-labyrinth": "Done! The robot is at the goal.",
+  "solved-turtle": "Done! Your picture is right.",
+  "word-gehe": "move … pixels",
+  "word-drehe-links-um": "turn left by … degrees",
+  "word-drehe-rechts-um": "turn right by … degrees",
+  "word-farbe": "use the colour …",
+  "word-stift-hoch": "pen up",
+  "word-stift-runter": "pen down",
+  "word-wand-voraus": "wall ahead?",
+  "word-am-ziel": "at the goal?",
+  "word-wand-rechts": "wall on the right?",
+  "word-wand-links": "wall on the left?",
+  "describe-labyrinth-around": "Free: {free}. The goal is at square ({gx}, {gy}).",
+  "word-dir-ahead": "ahead",
+  "word-dir-left": "left",
+  "word-dir-right": "right",
+  "word-dir-none": "nowhere",
+  "copy-for": "Copy {what}",
+  "copy-missing": "Copying does not work here. Select the text and copy it yourself.",
+  "problem-solution-block": "The model solution uses the block “{name}”, which is not in the toolbox.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -1536,6 +1681,8 @@ function main(argv) {
           what: say(p),
         })}`,
       );
+    const outside = wrong.length > 0 ? [] : blocksOf(solution).filter((b) => !challenge.toolbox.includes(b));
+    for (const b of new Set(outside)) fail(`${solutionFile}: ${t("problem-solution-block", { name: b })}`);
     if (wrong.length === 0) {
       const failure = firstFailure(challenge, solution);
       if (failure !== null)
@@ -1564,3 +1711,4 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
+export {};
