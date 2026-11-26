@@ -1,4 +1,4 @@
-// source: 3007524d555a5d18
+// source: 5236e8a8d167286e
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1558,3 +1558,4 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
+export {};
