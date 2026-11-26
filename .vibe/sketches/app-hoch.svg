@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 900" font-family="sans-serif" font-size="13">
+  <title>Skizze: App-Seite im Hochformat 360 px</title>
+  <rect width="360" height="900" fill="#fff"/>
+  <rect x="16" y="12" width="328" height="40" rx="6" fill="#ffd"/>
+  <text x="26" y="36">↻ Dreh dein Gerät quer, dann hast du mehr Platz.</text>
+  <text x="16" y="80" font-size="20" font-weight="bold">Der lange Gang</text>
+  <text x="16" y="102">Bring den Roboter mit höchstens 3 Blöcken</text>
+  <text x="16" y="118">ans Ziel.</text>
+  <rect x="16" y="132" width="328" height="180" fill="#eef" stroke="#99a"/>
+  <text x="110" y="226">Welt (SVG)</text>
+  <g transform="translate(16,324)">
+    <rect width="60" height="30" rx="4" fill="#2a6"/><text x="12" y="20" fill="#fff">Start</text>
+    <rect x="68" width="90" height="30" rx="4" fill="#ddd"/><text x="76" y="20">Ein Schritt</text>
+    <rect x="166" width="60" height="30" rx="4" fill="#ddd"/><text x="174" y="20">Stopp</text>
+    <rect x="234" width="94" height="30" rx="4" fill="#ddd"/><text x="240" y="20">Zurücksetzen</text>
+  </g>
+  <rect x="16" y="366" width="328" height="60" fill="#fde" stroke="#c88"/>
+  <text x="24" y="388">Testfall 2: Der Roboter bleibt in Feld 4</text>
+  <text x="24" y="406">stehen. Der Gang ist länger.</text>
+  <rect x="16" y="438" width="328" height="380" fill="#fafafa" stroke="#99a"/>
+  <rect x="16" y="438" width="328" height="34" fill="#e8e8e8"/>
+  <text x="24" y="460">Kategorien: Bewegen | Schleifen | Fragen</text>
+  <text x="110" y="640">Arbeitsfläche</text>
+  <text x="16" y="846" fill="#06c" text-decoration="underline">← Zurück zur Erklärung</text>
+</svg>
