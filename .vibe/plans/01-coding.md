@@ -6,9 +6,9 @@ archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit.
 phase: code
 # prePushFailures: failed pre-push runs, written by the hook.
-prePushFailures: 0
+prePushFailures: 2
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { app-content-guide: 1, checks-pass: 8, plan-file: 1 }
+failedChecks: { app-content-guide: 1, checks-pass: 11, plan-file: 1 }
 ---
 
 # Plan: coding, first version
