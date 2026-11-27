@@ -40,4 +40,4 @@ steps:
   - inputs: [{ kind: action, name: start }]
     ticks: 600
     state: { phase: done, solved: true, attempts: 1, test: 2, results: [ok, ok], verdict: { ok: true, test: 2 } }
-    announce: "Richtig vorhergesagt, in allen 2 Rätseln!"
+    announce: "Richtig vorhergesagt, in beiden Rätseln!"

@@ -20,6 +20,7 @@ import {
   judgePrediction,
   missingPrediction,
   numbered,
+  partedEarly,
   picturesOf,
   withField,
   type Prediction,
@@ -152,10 +153,17 @@ function begun(state: State, c: Challenge): State {
 function settle(state: State, c: Challenge): State {
   const run = state.run;
   const world = worldFor(c);
-  if (run === null || world === undefined || run.status === "running") return state;
-  const result = isPrediction(c)
-    ? judgePrediction(c, state.test, run, state.predictions[state.test - 1] ?? null, state.seed)
-    : judgeRun(c, world, state.test, run);
+  if (run === null || world === undefined) return state;
+  const prediction = state.predictions[state.test - 1] ?? null;
+  // A prediction stops the run at the first step where it parted from it (the rest of the way stays hidden).
+  const early =
+    run.status === "running" && isPrediction(c) ? partedEarly(c, state.test, run, prediction, state.seed) : null;
+  if (run.status === "running" && early === null) return state;
+  const result =
+    early ??
+    (isPrediction(c)
+      ? judgePrediction(c, state.test, run, prediction, state.seed)
+      : judgeRun(c, world, state.test, run));
   const results = Array.from({ length: testCount(c) }, (_, i) => state.results[i] ?? null);
   results[state.test - 1] = result.ok ? "ok" : "fail";
   if (!result.ok) {

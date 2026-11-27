@@ -843,8 +843,9 @@ path: src/core/challenge.ts
 ### Prediction
 
 The check `vorhersage`: the program of the challenge is fixed, the learner predicts the run (labyrinth: the fields in
-order; turtle: one of several pictures, the wrong ones programs of the author, shuffled by the seed), and the verdict
-names the first step or line where prediction and run part. Its validator refuses a prediction it could not judge: a
+order; turtle: one of several pictures, the wrong ones programs of the author, shuffled by the seed), and the run
+stops at the first step or line where it parts from the prediction, which the verdict names (the rest of the way stays
+hidden). Its validator refuses a prediction it could not judge: a
 run that does not end, a wrong picture that is the right one.
 
 ```arc42

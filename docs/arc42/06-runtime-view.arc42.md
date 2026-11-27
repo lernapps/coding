@@ -179,7 +179,7 @@ involves: bb-editor, bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-wor
 
 In a challenge with the check `vorhersage` the editor only shows the program. The learner sets a way field by field or
 chooses a picture for every puzzle; Run first asks for a missing prediction (no attempt), then runs the program on every
-puzzle as above and compares each run with its prediction.
+puzzle as above and compares each step with the prediction: the run stops at the first step that parts from it.
 
 ```arc42
 :::runtime-scenario

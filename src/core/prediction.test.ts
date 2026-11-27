@@ -98,6 +98,19 @@ describe("prediction of a way", () => {
     });
   });
 
+  it("stops Kiko at the first step that parts from the prediction", () => {
+    const fork: Challenge = {
+      ...way,
+      world: { ...way.world, config: { map: ["#####", "#S..#", "#.#.#", "#.#Z#", "#####"], facing: "east" } },
+    };
+    const done = run(setWay(withChallenge(fork), ["2,1", "3,1", "4,1"].slice(0, 1).concat(["1,1"])));
+    expect(done.predictions[0]).toEqual(["2,1", "1,1"]);
+    expect(done.verdict?.why?.key).toBe("fail-predict-step");
+    // Kiko went to (3,1), not on to the end of the way.
+    expect(done.run?.world).toMatchObject({ x: 3, y: 1 });
+    expect(done.attempts).toBe(1);
+  });
+
   it("refuses a field that is not next to the last one, a wall, or outside", () => {
     const s = withChallenge(way);
     expect(act(s, "feld", "3,1")).toBe(s);

@@ -26,6 +26,7 @@ steps:
       phase: done
       solved: false
       attempts: 1
+      run: { world: { x: 4, y: 3 } }
       verdict:
         { ok: false, test: 1, why: { key: fail-predict-step, params: { ok: 6, step: 7, x: 5, y: 4, px: 7, py: 4 } } }
     announce: "Bis Schritt 6 stimmt deine Vorhersage. In Schritt 7 geht Kiko auf Feld (5|4), du hast Feld (7|4) gesetzt."

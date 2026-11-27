@@ -177,7 +177,9 @@ const verdictText = computed(() => {
   if (v === null) return "";
   if (v.ok && predicting.value)
     return tests.value > 1
-      ? t("solved-predict-all", { count: tests.value })
+      ? tests.value === 2
+        ? t("solved-predict-both")
+        : t("solved-predict-all", { count: tests.value })
       : t(c.value?.world.type === "turtle" ? "solved-predict-picture" : "solved-predict");
   if (v.ok)
     return tests.value === 2
@@ -190,7 +192,9 @@ const verdictText = computed(() => {
 });
 /** Explanations of the blocks of this task that are more than a command. */
 const explained = computed(() =>
-  (c.value?.toolbox ?? []).filter((b) => `explain-${b}` in de).map((b) => t(`explain-${b}` as Key)),
+  (c.value?.toolbox ?? [])
+    .filter((b) => `explain-${b}` in de)
+    .map((b) => t((predicting.value && `explain-predict-${b}` in de ? `explain-predict-${b}` : `explain-${b}`) as Key)),
 );
 /** The last task of the collection, solved. */
 const lastOfCollection = computed(
@@ -369,7 +373,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             <li>{{ t("help-keys") }}</li>
           </ul>
         </details>
-        <details v-if="explained.length > 0 && !predicting" class="help" open>
+        <details v-if="explained.length > 0" class="help" open>
           <summary>{{ t("new-blocks") }}</summary>
           <ul>
             <li v-for="(line, i) in explained" :key="i">{{ line }}</li>
@@ -481,7 +485,9 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             <p v-if="next !== null">
               <a :href="next.href">{{ t("next", { title: next.title }) }} →</a>
             </p>
-            <p v-else-if="lastOfCollection">{{ t("all-done") }}</p>
+            <p v-else-if="lastOfCollection">
+              {{ t("all-done") }} <a href="#autoren">{{ t("all-done-more") }} →</a>
+            </p>
           </div>
           <div v-if="c.hints.length > 0" class="hints">
             <ol v-if="state.hints > 0" ref="hintList" tabindex="-1" :aria-label="t('hints')">

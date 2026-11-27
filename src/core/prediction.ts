@@ -156,6 +156,29 @@ function comparePicture(run: Run, chosen: readonly Line[]): TestResult {
   return { ok: false, why: { key: "fail-predict-line-less", params: { ok: at, lines: drawn.length } } };
 }
 
+/**
+ * While the run goes on: the first step (or line) where it already left the prediction, judged at once, so that Kiko
+ * stops there and the rest of the right answer stays hidden; null while both agree so far.
+ */
+export function partedEarly(
+  c: Challenge,
+  n: number,
+  run: Run,
+  prediction: Prediction,
+  seed: number,
+): TestResult | null {
+  if (Array.isArray(prediction)) {
+    const went = way(run);
+    return went.some((f, k) => prediction[k] !== f) ? compareWay(run, prediction) : null;
+  }
+  if (typeof prediction === "number") {
+    const chosen = picturesOf(c, n, seed)[prediction] ?? [];
+    const drawn = linesOf(run);
+    return drawn.some((l, k) => chosen[k] === undefined || !near(l, chosen[k])) ? comparePicture(run, chosen) : null;
+  }
+  return null;
+}
+
 /** Judges a finished run of test case `n` against the learner's prediction. */
 export function judgePrediction(c: Challenge, n: number, run: Run, prediction: Prediction, seed: number): TestResult {
   if (run.status !== "done") return { ok: false, why: run.why ?? { key: "fail-limit", params: { steps: run.steps } } };
