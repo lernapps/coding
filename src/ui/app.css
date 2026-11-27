@@ -2,3 +2,9 @@
 :root {
   --page-max-width: 72rem;
 }
+
+/* The title of the app breaks at a syllable on a narrow screen, not inside a letter pair ("Programmierwerkstat/t"). */
+h1 {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}

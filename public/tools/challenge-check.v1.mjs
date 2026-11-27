@@ -1,4 +1,4 @@
-// source: 097c59b780097bcd
+// source: 122dea543ad786ae
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1250,8 +1250,8 @@ var de_default = {
   "hint-show": "Hinweis zeigen ({n} von {count})",
   hints: "Hinweise",
   "back-result": "Für deine Lehrkraft (oder einen KI-Tutor, wenn ihr einen benutzt)",
-  "result-solved": "Aufgabe „{title}“ ({id}): gelöst im {attempts}. Versuch",
-  "result-open": "Aufgabe „{title}“ ({id}): noch nicht gelöst, Versuche: {attempts}",
+  "result-solved": "Aufgabe „{title}“: gelöst im {attempts}. Versuch",
+  "result-open": "Aufgabe „{title}“: noch nicht gelöst, Versuche: {attempts}",
   copy: "Kopieren",
   copied: "Kopiert.",
   "problems-title": "Diese Aufgabe kann die Werkstatt nicht öffnen.",
@@ -1326,13 +1326,13 @@ var de_default = {
     "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes. Dein Programm muss alle lösen. „Start“ probiert es in allen nacheinander aus. Mit den Reitern über dem Bild schaust du dir jedes Rätsel an.",
   help: "So funktioniert die Werkstatt",
   "help-blocks":
-    "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass (ein Screenreader sagt „ausgeschaltet“).",
+    "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Legst du einen Block unter das Programm, hängt er sich unten an. Lose Blöcke sind blass und haben ein Warnzeichen (ein Screenreader sagt „ausgeschaltet“).",
   "help-robot":
     "Kiko ist ein Roboter. Das Dreieck an seinem Kreis zeigt, wohin er schaut. „links“ und „rechts“ gelten aus seiner Sicht, also vom Dreieck aus.",
   "help-run":
     "„Start“ führt dein Programm aus. „Ein Schritt“ führt nur einen Block aus. In der Arbeitsfläche ist der Block markiert, der gerade dran war.",
   "help-keys":
-    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Mit den Pfeiltasten gehst du durch die Liste (in einer Reihe mit Pfeil nach rechts). Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz; ein Screenreader sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
+    "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Mit den Pfeiltasten gehst du durch die Liste (in einer Reihe mit Pfeil nach rechts). Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz; ein Screenreader sagt dir, wohin er kommt. Enter legt ihn ab; ohne gewählten Platz kommt er ans Ende des Programms. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
   "new-blocks": "Blöcke in dieser Aufgabe",
   "explain-wiederhole":
     "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Ein Block, der andere Blöcke wiederholt, heißt Schleife. Die Zahl änderst du mit einem Klick darauf oder mit der Tastatur.",
@@ -1437,6 +1437,9 @@ var de_default = {
   "word-weg-frei": "Weg frei?",
   "authoring-beginners":
     'Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit "locked": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben).',
+  "loose-block": "Dieser Block hängt nicht am Programm und läuft nicht. Häng ihn unter den letzten Block.",
+  "loose-blocks":
+    "Lose Blöcke: {count}. Sie hängen nicht am Programm und laufen nicht. Du erkennst sie am Warnzeichen.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1466,8 +1469,8 @@ var en_default = {
   "hint-show": "Show a hint ({n} of {count})",
   hints: "Hints",
   "back-result": "For your teacher (or an AI tutor, if you use one)",
-  "result-solved": "Task “{title}” ({id}): solved on attempt {attempts}",
-  "result-open": "Task “{title}” ({id}): not solved yet, attempts: {attempts}",
+  "result-solved": "Task “{title}”: solved on attempt {attempts}",
+  "result-open": "Task “{title}”: not solved yet, attempts: {attempts}",
   copy: "Copy",
   copied: "Copied.",
   "problems-title": "The workshop cannot open this task.",
@@ -1542,13 +1545,13 @@ var en_default = {
     "This task has {count} puzzles: variants of the maze or picture. Your program has to solve them all. “Run” tries it in each one in turn. Use the tabs above the picture to look at each puzzle.",
   help: "How the workshop works",
   "help-blocks":
-    "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale (a screen reader says “disabled”).",
+    "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. If you drop a block below the program, it hangs itself on at the end. Loose blocks are pale and have a warning sign (a screen reader says “disabled”).",
   "help-robot":
     "Kiko is a robot. The triangle on its circle shows where it is looking. “left” and “right” are from Kiko's point of view, so from the triangle.",
   "help-run":
     "“Run” runs your program. “One step” runs just one block. The block that just ran is marked in the work area.",
   "help-keys":
-    "With the keyboard: press Tab until you are in the list of blocks. Use the arrow keys to go through the list (in a row, the right arrow). Enter picks a block. Use the arrow keys to choose its place; a screen reader tells you where it goes. Enter puts it down. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
+    "With the keyboard: press Tab until you are in the list of blocks. Use the arrow keys to go through the list (in a row, the right arrow). Enter picks a block. Use the arrow keys to choose its place; a screen reader tells you where it goes. Enter puts it down; without a chosen place it goes to the end of the program. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
   "new-blocks": "Blocks in this task",
   "explain-wiederhole":
     "“repeat … times”: the blocks inside run as many times as the number says. A block that repeats other blocks is called a loop. Change the number by clicking it or with the keyboard.",
@@ -1653,6 +1656,9 @@ var en_default = {
   "word-weg-frei": "way ahead clear?",
   "authoring-beginners":
     'For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with "locked": true in the start program is fixed: learners only fill its gaps (gap tasks).',
+  "loose-block": "This block does not hang on the program and does not run. Hang it under the last block.",
+  "loose-blocks":
+    "Loose blocks: {count}. They do not hang on the program and do not run. You can tell them by the warning sign.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -1740,4 +1746,3 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
-export {};

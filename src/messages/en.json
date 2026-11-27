@@ -26,8 +26,8 @@
   "hint-show": "Show a hint ({n} of {count})",
   "hints": "Hints",
   "back-result": "For your teacher (or an AI tutor, if you use one)",
-  "result-solved": "Task “{title}” ({id}): solved on attempt {attempts}",
-  "result-open": "Task “{title}” ({id}): not solved yet, attempts: {attempts}",
+  "result-solved": "Task “{title}”: solved on attempt {attempts}",
+  "result-open": "Task “{title}”: not solved yet, attempts: {attempts}",
   "copy": "Copy",
   "copied": "Copied.",
   "problems-title": "The workshop cannot open this task.",
@@ -99,10 +99,10 @@
   "solved-all": "Done! Your program solves all {count} puzzles.",
   "tests-explain": "This task has {count} puzzles: variants of the maze or picture. Your program has to solve them all. “Run” tries it in each one in turn. Use the tabs above the picture to look at each puzzle.",
   "help": "How the workshop works",
-  "help-blocks": "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. Loose blocks are pale (a screen reader says “disabled”).",
+  "help-blocks": "Drag blocks from the list and hang them under the brown block “Program”. Only blocks that hang there will run. If you drop a block below the program, it hangs itself on at the end. Loose blocks are pale and have a warning sign (a screen reader says “disabled”).",
   "help-robot": "Kiko is a robot. The triangle on its circle shows where it is looking. “left” and “right” are from Kiko's point of view, so from the triangle.",
   "help-run": "“Run” runs your program. “One step” runs just one block. The block that just ran is marked in the work area.",
-  "help-keys": "With the keyboard: press Tab until you are in the list of blocks. Use the arrow keys to go through the list (in a row, the right arrow). Enter picks a block. Use the arrow keys to choose its place; a screen reader tells you where it goes. Enter puts it down. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
+  "help-keys": "With the keyboard: press Tab until you are in the list of blocks. Use the arrow keys to go through the list (in a row, the right arrow). Enter picks a block. Use the arrow keys to choose its place; a screen reader tells you where it goes. Enter puts it down; without a chosen place it goes to the end of the program. Press T to go back to the list. To change a number in a block: arrow right to the number, Enter, type the number, Enter.",
   "new-blocks": "Blocks in this task",
   "explain-wiederhole": "“repeat … times”: the blocks inside run as many times as the number says. A block that repeats other blocks is called a loop. Change the number by clicking it or with the keyboard.",
   "explain-solange": "“while … do”: the blocks inside run again and again as long as the answer to the question is “yes”.",
@@ -193,5 +193,7 @@
   "block-weg-frei": "way ahead clear?",
   "explain-weg-frei": "“way ahead clear?” asks: can Kiko move forward without bumping into a wall?",
   "word-weg-frei": "way ahead clear?",
-  "authoring-beginners": "For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with \"locked\": true in the start program is fixed: learners only fill its gaps (gap tasks)."
+  "authoring-beginners": "For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with \"locked\": true in the start program is fixed: learners only fill its gaps (gap tasks).",
+  "loose-block": "This block does not hang on the program and does not run. Hang it under the last block.",
+  "loose-blocks": "Loose blocks: {count}. They do not hang on the program and do not run. You can tell them by the warning sign."
 }
