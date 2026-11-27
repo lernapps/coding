@@ -934,7 +934,7 @@ protocol: Vue props and events
 <!-- app: begin ui -->
 ### Block editor
 
-Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last.
+Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last. A block dropped below the program, or put down by keyboard without a chosen place, goes to the end of the program; a block left loose gets a warning and is counted below the work area (#495).
 
 The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed):
 
@@ -959,7 +959,7 @@ flowchart LR
 id: bb-editor
 title: Block editor
 parent: bb-interactive-ui
-technology: Vue, Blockly 13.4
+technology: Vue, Blockly 13.4 (keyboard navigation built in)
 path: src/ui/editor
 requires: if-program
 implements: concept-workshop-ir
@@ -968,12 +968,12 @@ implements: concept-workshop-ir
 
 #### Block editor interface
 
-The root component mounts it per challenge and sends each program it emits to the core.
+The root component mounts it per challenge and sends each program it emits to the core; a program with a block it attached after a drop comes as any other.
 
 ```arc42
 :::interface
 id: if-editor
-title: Editor component (lang, toolbox, start, highlight; emits program)
+title: Editor component (lang, toolbox, start, highlight; emits program; attaches dropped blocks)
 provider: bb-editor
 protocol: Vue props and events
 path: src/ui/editor/Editor.vue
