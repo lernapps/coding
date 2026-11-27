@@ -234,5 +234,12 @@
   "help-predict-run": "“Run” lets Kiko carry out the program. Then you see whether your prediction is right, and if not, at which step it differs. Then you change it and try again.",
   "tests-explain-predict": "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
   "solved-predict": "Well predicted! Kiko does exactly what you said.",
-  "solved-predict-all": "Well predicted, in all {count} puzzles!"
+  "solved-predict-all": "Well predicted, in all {count} puzzles!",
+  "picture-name": "Picture {letter}",
+  "picture-line": "Line {n}: from ({x1}, {y1}) to ({x2}, {y2})",
+  "picture-chosen": "{name} chosen.",
+  "picture-legend": "Which picture does Kiko draw?",
+  "picture-describe": "Description: {count} lines",
+  "help-predict-picture": "Below the sheet there are several pictures. Kiko draws only one of them with this program. Choose it. Each picture has a description, line by line.",
+  "help-map-turtle-predict": "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up."
 }

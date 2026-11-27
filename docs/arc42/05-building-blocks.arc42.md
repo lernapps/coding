@@ -974,7 +974,7 @@ protocol: Vue props and events
 
 Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last.
 
-The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed). With a prediction it adds `PredictWay.vue` (the predicted way as a list, buttons for the next field up, right, down or left: the keyboard way) and `ProgramText.vue` (the program as text, in the words of the blocks):
+The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed). With a prediction it adds `PredictWay.vue` (the predicted way as a list, buttons for the next field up, right, down or left: the keyboard way), `PredictPicture.vue` (the pictures as radio buttons, each described line by line) and `ProgramText.vue` (the program as text, in the words of the blocks):
 
 ```arc42
 :::diagram
@@ -1034,12 +1034,12 @@ path: src/ui/worlds
 
 #### World views interface
 
-The root component picks the view by the world's type; the label is the world's text for screen readers. The labyrinth shows a predicted way and takes a click on a field.
+The root component picks the view by the world's type; the label is the world's text for screen readers. The labyrinth shows a predicted way and takes a click on a field; the turtle hides its target picture with a prediction.
 
 ```arc42
 :::interface
 id: if-world-view
-title: World view component (config, state, crashed, label, still, predicted; emits field)
+title: World view component (config, state, crashed, label, still, predicted, hideTarget; emits field)
 provider: bb-world-views
 protocol: Vue props
 path: src/ui/worlds/index.ts

@@ -11,11 +11,13 @@ const props = defineProps<{
   crashed: boolean;
   label: string;
   still: boolean;
+  /** A prediction: the target is one of the pictures to choose from, so the sheet does not show it. */
+  hideTarget?: boolean;
 }>();
 const PAD = 26;
 const TICKS = [0, 50, 100, 150, 200];
 const COLOURS = ["#1f5fbf", "#d9480f", "#2b8a3e", "#7048e8"];
-const target = computed(() => targetLines(props.config));
+const target = computed(() => (props.hideTarget === true ? [] : targetLines(props.config)));
 </script>
 
 <template>

@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein typischer Fehler: das gespiegelte Dreieck (Drehung nach links). Die erste Linie stimmt; die Rückmeldung nennt
+# Linie 2 mit ihren Enden.
+seed: 1
+route: vorhersage-3
+steps:
+  - inputs: [{ kind: action, name: bild, value: 3 }, { kind: action, name: start }]
+    ticks: 200
+    state:
+      phase: done
+      solved: false
+      attempts: 1
+      verdict:
+        {
+          ok: false,
+          test: 1,
+          why: { key: fail-predict-line, params: { ok: 1, line: 2, x1: 100, y1: 40, x2: 152, y2: 70, px: 48, py: 70 } },
+        }
+    announce: "Bis Linie 1 stimmt dein Bild. Linie 2 zeichnet Kiko von (100|40) nach (152|70), in deinem Bild geht sie nach (48|70)."

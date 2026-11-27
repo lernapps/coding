@@ -10,7 +10,7 @@ import type { State } from "../core/index.ts";
 import { currentBlock } from "../core/interpreter.ts";
 import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
-import { isPrediction } from "../core/prediction.ts";
+import { isPrediction, picturesOf } from "../core/prediction.ts";
 import type { LabyrinthConfig } from "../core/worlds/labyrinth.ts";
 import { worldOf } from "../core/worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
@@ -19,6 +19,7 @@ import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
 import Authoring from "./Authoring.vue";
+import PredictPicture from "./PredictPicture.vue";
 import PredictWay from "./PredictWay.vue";
 import ProgramText from "./ProgramText.vue";
 
@@ -84,6 +85,16 @@ const predictedWay = computed(() => {
   const p = props.state.predictions[props.state.test - 1];
   return Array.isArray(p) ? p : [];
 });
+/** The pictures to choose from on the puzzle shown, and the one chosen (turtle). */
+const pictures = computed(() =>
+  predicting.value && c.value !== null && c.value.world.type === "turtle"
+    ? picturesOf(c.value, props.state.test, props.state.seed)
+    : [],
+);
+const chosenPicture = computed(() => {
+  const p = props.state.predictions[props.state.test - 1];
+  return typeof p === "number" ? p : null;
+});
 const view = computed(() => (c.value === null ? undefined : VIEWS[c.value.world.type]));
 const tests = computed(() => (c.value === null ? 0 : testCount(c.value)));
 const description = computed(() => {
@@ -92,7 +103,7 @@ const description = computed(() => {
   const goal =
     msg.params?.["goal"] === "yes"
       ? ` ${t("describe-labyrinth-goal")}`
-      : msg.key === "describe-turtle"
+      : msg.key === "describe-turtle" && !predicting.value
         ? ` ${t("describe-turtle-target")}`
         : "";
   return say(msg) + goal + around();
@@ -298,8 +309,8 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           <ul v-if="predicting">
             <li>{{ t("help-predict-read") }}</li>
             <li>{{ t("help-robot") }}</li>
-            <li>{{ t(`help-map-${c.world.type}` as Key) }}</li>
-            <li v-if="c.world.type === 'labyrinth'">{{ t("help-predict-way") }}</li>
+            <li>{{ t(c.world.type === "turtle" ? "help-map-turtle-predict" : "help-map-labyrinth") }}</li>
+            <li>{{ t(c.world.type === "labyrinth" ? "help-predict-way" : "help-predict-picture") }}</li>
             <li>{{ t("help-predict-run") }}</li>
           </ul>
           <ul v-else>
@@ -357,6 +368,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               :label="description"
               :still="still"
               :predicted="predicting && c.world.type === 'labyrinth' ? predictedWay : undefined"
+              :hide-target="predicting"
               @field="(key: string) => act('feld', key)"
             />
           </div>
@@ -367,6 +379,15 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             :lang="lang"
             :busy="state.phase === 'running'"
             @act="(name: string, value?: string) => act(name, value)"
+          />
+          <PredictPicture
+            v-if="pictures.length > 0"
+            :pictures="pictures"
+            :chosen="chosenPicture"
+            :lang="lang"
+            :busy="state.phase === 'running'"
+            :test="state.test"
+            @act="(name: string, value: number) => act(name, value)"
           />
           <div class="controls">
             <button type="button" class="primary" :aria-disabled="state.phase === 'running'" @click="act('start')">

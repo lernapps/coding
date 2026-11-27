@@ -34,6 +34,11 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   9-10, setzt `wiederholung-mit-bedingung` voraus; die Aufgaben nutzen nur Blöcke der Kapitel davor).
   - `vorhersage-1` – Labyrinth, Zählschleifen und zwei Rechtsdrehungen; der Gang geht weiter als die Zählschleife (Fehler
     „bis zur Wand“), Kiko schaut nach unten, wenn er rechts abbiegt (Fehler „rechts auf der Karte“).
+  - `vorhersage-2` – Labyrinth, „solange nicht am Ziel?“ mit „wenn Wand rechts? dann vorwärts sonst rechts, vorwärts“,
+    zwei Rätsel: ein Gang um zwei Ecken, und ein Gang mit Abzweig nach rechts (Fehler „geradeaus weiter“).
+  - `vorhersage-3` – Turtle, „wiederhole 3 mal: gehe 60, drehe rechts 120“ (Dreieck); falsche Bilder: links statt
+    rechts, 90 statt 120 Grad, 60 statt 120 Grad. Im Vorhersage-Turtle zeigt die Fläche kein graues Zielbild (es wäre
+    die Antwort); `world.config.ziel` ist dort das Startprogramm.
 
 ## Content structure
 

@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Das richtige Bild: Bei Seed 1 ist es Bild A, das Dreieck mit Drehungen nach rechts. „Start“ zeichnet es, die
+# Vorhersage stimmt. Ein Start ohne Bild zählt keinen Versuch.
+seed: 1
+route: vorhersage-3
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: done, attempts: 0, verdict: { ok: false, test: 1, why: { key: fail-predict-no-picture } } }
+    announce: "Wähl zuerst das Bild, das Kiko malt."
+  - inputs: [{ kind: action, name: bild, value: 0 }, { kind: action, name: start }]
+    ticks: 200
+    state: { phase: done, solved: true, attempts: 1, predictions: [0], verdict: { ok: true } }
+    announce: "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast."

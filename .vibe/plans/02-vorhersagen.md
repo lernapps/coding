@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: failed pre-push runs of this increment, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { checks-pass: 3 }
+failedChecks: { checks-pass: 4 }
 ---
 
 # Increment: vorhersagen
@@ -38,6 +38,9 @@ Lauf auseinandergehen.
   `arc42 diff --staged` meldete Prosa ohne Block in `06-runtime-view` (Szenario „pages“, Sprachwechsel trägt Suche und
   Hash). Das ist der generische Teil, den das Update selbst ersetzt, nicht der Teil der App: angenommen mit
   `ARC42_CONSISTENT=e8deefa…`.
+- Commit „Vorhersage 2 und 3“: `arc42 diff` meldete Prosa ohne Block bei `bb-editor`. Der geänderte Satz beschreibt die
+  Teile des Wurzel-Bausteins (neu `PredictPicture.vue`), steht aber im Abschnitt des Editors; der Editor selbst blieb
+  gleich. Angenommen mit `ARC42_CONSISTENT`.
 
 ## Notes
 
@@ -168,8 +171,8 @@ Interpreter der App.
 - [x] Load skill `lernapps-interactive` and the content guide.
 - [x] Kern und Schema: Prüfung vorhersage, Feld vorhersage (Turtle: bilder), Aktionen zum Setzen und Vergleichen, erster abweichender Schritt, Rückmeldungen de/en, Tests, Prüfskript neu bauen (allein, kein Sub-Agent)
 - [x] Labyrinth-Vorhersage in der Oberfläche (Felder setzen mit Maus und Tastatur, Weg als Liste) und Aufgabe vorhersage-1 mit Musterlösung und zwei Playthroughs (allein)
-- [ ] Aufgabe vorhersage-2 (Labyrinth, solange und wenn, zwei Rätsel) mit Playthroughs (allein)
-- [ ] Turtle-Bildwahl in der Oberfläche und Aufgabe vorhersage-3 (vier Bilder) mit Playthroughs (allein)
+- [x] Aufgabe vorhersage-2 (Labyrinth, solange und wenn, zwei Rätsel) mit Playthroughs (allein)
+- [x] Turtle-Bildwahl in der Oberfläche und Aufgabe vorhersage-3 (vier Bilder) mit Playthroughs (allein)
 <!-- tasks: slices (4 added): one per competency, as written in Plan -->
 - [ ] **Checkpoint:** the pattern page, after the first slice. A slice in a pattern the app already has: show it to
       the creator and go on. A new pattern: load skill `lernapps-learner-check`, do its learner check, fix what it

@@ -1,4 +1,4 @@
-// source: 2cd2f1a59b69bece
+// source: a62cc7d207af0788
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1644,6 +1644,15 @@ var de_default = {
     "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
   "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
   "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
+  "picture-name": "Bild {letter}",
+  "picture-line": "Linie {n}: von ({x1}|{y1}) nach ({x2}|{y2})",
+  "picture-chosen": "{name} gewählt.",
+  "picture-legend": "Welches Bild malt Kiko?",
+  "picture-describe": "Beschreibung: {count} Linien",
+  "help-predict-picture":
+    "Unter der Fläche stehen mehrere Bilder. Nur eines malt Kiko mit diesem Programm. Wähl es aus. Jedes Bild hat eine Beschreibung, Linie für Linie.",
+  "help-map-turtle-predict":
+    "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1915,6 +1924,15 @@ var en_default = {
     "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
   "solved-predict": "Well predicted! Kiko does exactly what you said.",
   "solved-predict-all": "Well predicted, in all {count} puzzles!",
+  "picture-name": "Picture {letter}",
+  "picture-line": "Line {n}: from ({x1}, {y1}) to ({x2}, {y2})",
+  "picture-chosen": "{name} chosen.",
+  "picture-legend": "Which picture does Kiko draw?",
+  "picture-describe": "Description: {count} lines",
+  "help-predict-picture":
+    "Below the sheet there are several pictures. Kiko draws only one of them with this program. Choose it. Each picture has a description, line by line.",
+  "help-map-turtle-predict":
+    "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";

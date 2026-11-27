@@ -234,5 +234,12 @@
   "help-predict-run": "„Start“ lässt Kiko das Programm ausführen. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, bei welchem Schritt sie abweicht. Dann änderst du sie und probierst es noch einmal.",
   "tests-explain-predict": "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
   "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
-  "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!"
+  "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
+  "picture-name": "Bild {letter}",
+  "picture-line": "Linie {n}: von ({x1}|{y1}) nach ({x2}|{y2})",
+  "picture-chosen": "{name} gewählt.",
+  "picture-legend": "Welches Bild malt Kiko?",
+  "picture-describe": "Beschreibung: {count} Linien",
+  "help-predict-picture": "Unter der Fläche stehen mehrere Bilder. Nur eines malt Kiko mit diesem Programm. Wähl es aus. Jedes Bild hat eine Beschreibung, Linie für Linie.",
+  "help-map-turtle-predict": "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben."
 }

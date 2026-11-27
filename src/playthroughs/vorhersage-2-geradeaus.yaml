@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein typischer Fehler im zweiten Rätsel: Das Kind lässt Kiko geradeaus weitergehen, obwohl rechts frei ist. Das erste
+# Rätsel stimmt; die Rückmeldung nennt das zweite und den ersten Schritt, der abweicht.
+seed: 1
+route: vorhersage-2
+steps:
+  - inputs:
+      [
+        { kind: action, name: feld, value: "2,1" },
+        { kind: action, name: feld, value: "3,1" },
+        { kind: action, name: feld, value: "4,1" },
+        { kind: action, name: feld, value: "5,1" },
+        { kind: action, name: feld, value: "6,1" },
+        { kind: action, name: feld, value: "6,2" },
+        { kind: action, name: feld, value: "6,3" },
+        { kind: action, name: feld, value: "6,4" },
+        { kind: action, name: feld, value: "5,4" },
+        { kind: action, name: feld, value: "4,4" },
+        { kind: action, name: feld, value: "3,4" },
+        { kind: action, name: feld, value: "2,4" },
+        { kind: action, name: feld, value: "1,4" },
+        { kind: action, name: testfall, value: 2 },
+        { kind: action, name: feld, value: "2,1" },
+        { kind: action, name: feld, value: "3,1" },
+        { kind: action, name: feld, value: "4,1" },
+        { kind: action, name: feld, value: "5,1" },
+        { kind: action, name: feld, value: "6,1" },
+        { kind: action, name: start },
+      ]
+    ticks: 600
+    state:
+      phase: done
+      solved: false
+      attempts: 1
+      results: [ok, fail]
+      verdict:
+        { ok: false, test: 2, why: { key: fail-predict-step, params: { ok: 2, step: 3, x: 4, y: 3, px: 5, py: 2 } } }
+    announce: "Rätsel 2: Bis Schritt 2 stimmt deine Vorhersage. In Schritt 3 geht Kiko auf Feld (4|3), du hast Feld (5|2) gesetzt."

@@ -12,6 +12,8 @@ import t1 from "./challenges/turtle-1.json" with { type: "json" };
 import t2 from "./challenges/turtle-2.json" with { type: "json" };
 import t3 from "./challenges/turtle-3.json" with { type: "json" };
 import v1 from "./challenges/vorhersage-1.json" with { type: "json" };
+import v2 from "./challenges/vorhersage-2.json" with { type: "json" };
+import v3 from "./challenges/vorhersage-3.json" with { type: "json" };
 import s1 from "./solutions/labyrinth-1.json" with { type: "json" };
 import s2 from "./solutions/labyrinth-2.json" with { type: "json" };
 import s3 from "./solutions/labyrinth-3.json" with { type: "json" };
@@ -21,9 +23,11 @@ import u1 from "./solutions/turtle-1.json" with { type: "json" };
 import u2 from "./solutions/turtle-2.json" with { type: "json" };
 import u3 from "./solutions/turtle-3.json" with { type: "json" };
 import p1 from "./solutions/vorhersage-1.json" with { type: "json" };
+import p2 from "./solutions/vorhersage-2.json" with { type: "json" };
+import p3 from "./solutions/vorhersage-3.json" with { type: "json" };
 
 /** In the order of the routes: sequence, count loop, conditional loop, selection, both, then predictions. */
-const list = [l1, t1, l2, t2, t3, l3, l4, l5, v1] as unknown as Challenge[];
+const list = [l1, t1, l2, t2, t3, l3, l4, l5, v1, v2, v3] as unknown as Challenge[];
 
 export const ROUTES: readonly string[] = list.map((c) => c.id);
 export const BUILT_IN: Readonly<Record<string, Challenge>> = Object.fromEntries(list.map((c) => [c.id, c]));
@@ -40,4 +44,6 @@ export const SOLUTIONS: Readonly<Record<string, Program>> = {
 /** The model prediction per test case of each prediction challenge (its program is given; a solution is a prediction). */
 export const PREDICTIONS: Readonly<Record<string, Prediction[]>> = {
   "vorhersage-1": p1,
+  "vorhersage-2": p2,
+  "vorhersage-3": p3,
 };

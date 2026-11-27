@@ -1,0 +1,202 @@
+{
+  "format": 1,
+  "id": "vorhersage-3",
+  "title": {
+    "de": "Welches Bild malt Kiko?",
+    "en": "Which picture does Kiko draw?"
+  },
+  "task": {
+    "de": "Lies das Programm. Welches der vier Bilder malt Kiko damit? Wähl es aus, dann drück „Start“ und vergleich.",
+    "en": "Read the program. Which of the four pictures does Kiko draw with it? Choose it, then press “Run” and compare."
+  },
+  "world": {
+    "type": "turtle",
+    "version": 1,
+    "config": {
+      "ziel": {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 3
+            },
+            "body": [
+              {
+                "s": "cmd",
+                "name": "gehe",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-rechts-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 120
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "toolbox": ["gehe", "drehe-links-um", "drehe-rechts-um", "wiederhole"],
+  "start": {
+    "main": [
+      {
+        "s": "repeat",
+        "times": {
+          "e": "num",
+          "value": 3
+        },
+        "body": [
+          {
+            "s": "cmd",
+            "name": "gehe",
+            "args": [
+              {
+                "e": "num",
+                "value": 60
+              }
+            ]
+          },
+          {
+            "s": "cmd",
+            "name": "drehe-rechts-um",
+            "args": [
+              {
+                "e": "num",
+                "value": 120
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "limits": {},
+  "tests": [],
+  "checks": ["vorhersage"],
+  "hints": [
+    {
+      "de": "Zähl, wie oft Kiko eine Linie zeichnet: so oft, wie „wiederhole“ sagt.",
+      "en": "Count how often Kiko draws a line: as often as “repeat” says."
+    },
+    {
+      "de": "Nach jeder Linie dreht sich Kiko um 120 Grad nach rechts. Eine ganze Drehung sind 360 Grad. Wohin zeigt dann die zweite Linie?",
+      "en": "After each line Kiko turns right by 120 degrees. A whole turn is 360 degrees. Where does the second line point then?"
+    }
+  ],
+  "view": "bloecke",
+  "vorhersage": {
+    "bilder": [
+      {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 3
+            },
+            "body": [
+              {
+                "s": "cmd",
+                "name": "gehe",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-links-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 120
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 3
+            },
+            "body": [
+              {
+                "s": "cmd",
+                "name": "gehe",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-rechts-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 90
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "main": [
+          {
+            "s": "repeat",
+            "times": {
+              "e": "num",
+              "value": 3
+            },
+            "body": [
+              {
+                "s": "cmd",
+                "name": "gehe",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "s": "cmd",
+                "name": "drehe-rechts-um",
+                "args": [
+                  {
+                    "e": "num",
+                    "value": 60
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
