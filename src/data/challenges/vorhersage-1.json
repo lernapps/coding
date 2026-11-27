@@ -83,8 +83,8 @@
       "en": "Go through the program block by block. “repeat 4 times” with “move forward” means 4 squares, not up to the wall."
     },
     {
-      "de": "„rechts“ gilt aus Kikos Sicht. Schaut Kiko nach unten, dann ist sein Rechts auf der Karte links.",
-      "en": "“right” is from Kiko's point of view. When Kiko looks down, its right is left on the map."
+      "de": "„rechts“ gilt aus Kikos Sicht, vom Dreieck aus. Dreh dich in Gedanken mit Kiko, wenn er nach unten schaut.",
+      "en": "“right” is from Kiko's point of view, from the triangle. Turn with Kiko in your mind when it looks down."
     }
   ],
   "view": "bloecke"

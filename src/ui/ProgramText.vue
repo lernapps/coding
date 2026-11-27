@@ -5,7 +5,7 @@ import { computed, h, type VNode } from "vue";
 import type { Expr, Program, Stmt } from "../core/ir.ts";
 import { texts, type Key } from "./texts.ts";
 
-const props = defineProps<{ program: Program; lang: string }>();
+const props = defineProps<{ program: Program; lang: string; highlight?: string | null }>();
 const { t } = texts(props.lang);
 const block = (id: string, value = ""): string => t(`block-${id}` as Key).replace("%1", value);
 
@@ -30,16 +30,22 @@ function list(body: readonly Stmt[]): VNode {
   );
 }
 
+/** A line; the one whose block ran last is marked (as in the editor). */
+function item(s: Stmt, children: (VNode | string)[]): VNode {
+  const now = s.id !== undefined && s.id === props.highlight;
+  return h("li", now ? { class: "current", "aria-current": "step" } : {}, children);
+}
+
 function line(s: Stmt): VNode {
   switch (s.s) {
     case "cmd":
-      return h("li", block(s.name, expr(s.args[0])));
+      return item(s, [block(s.name, expr(s.args[0]))]);
     case "repeat":
-      return h("li", [block("wiederhole", expr(s.times)), list(s.body)]);
+      return item(s, [block("wiederhole", expr(s.times)), list(s.body)]);
     case "while":
-      return h("li", [block("solange", expr(s.cond)), list(s.body)]);
+      return item(s, [block("solange", expr(s.cond)), list(s.body)]);
     case "if":
-      return h("li", [
+      return item(s, [
         block("wenn", expr(s.cond)),
         list(s.then),
         ...(s.else === undefined ? [] : [h("span", t("block-sonst")), list(s.else)]),
@@ -62,6 +68,11 @@ const Tree = computed(() => () => list(props.program.main));
 <style scoped>
 .program-text > :deep(ol) {
   padding-left: 0.5rem;
+}
+.program-text :deep(li.current) {
+  outline: 3px solid #111827;
+  outline-offset: 1px;
+  background: #fff7d6;
 }
 .program-text h3 {
   margin: 0.5rem 0 0.25rem;

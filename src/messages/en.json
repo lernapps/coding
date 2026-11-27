@@ -227,11 +227,11 @@
   "predict-back": "Last square removed. {n} squares left.",
   "predict-cleared": "Prediction cleared.",
   "program-text": "The program as text",
-  "phase-predict": "Read the program and set Kiko's way. Then press “Run”: Kiko sets off, and you see whether you were right.",
-  "phase-predict-picture": "Read the program and choose the picture Kiko draws. Then press “Run”.",
-  "help-predict-read": "The program is ready. You can read it but not change it. Below the blocks it is written as text, too.",
+  "phase-predict": "Set Kiko's way, then press “Run”.",
+  "phase-predict-picture": "Choose a picture, then press “Run”.",
+  "help-predict-read": "The program is ready. You can read it but not change it. It is also written as text: “The program as text”.",
   "help-predict-way": "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks. A step is a new square; turning is not a step.",
-  "help-predict-run": "“Run” lets Kiko carry out the program. Then you see whether your prediction is right, and if not, at which step it differs. Then you change it and try again.",
+  "help-predict-run": "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command. Then you see whether your prediction is right, and if not, where it differs.",
   "tests-explain-predict": "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
   "solved-predict": "Well predicted! Kiko does exactly what you said.",
   "solved-predict-all": "Well predicted, in all {count} puzzles!",
@@ -241,5 +241,11 @@
   "picture-legend": "Which picture does Kiko draw?",
   "picture-describe": "Description: {count} lines",
   "help-predict-picture": "Below the sheet there are several pictures. Kiko draws only one of them with this program. Choose it. Each picture has a description, line by line.",
-  "help-map-turtle-predict": "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up."
+  "help-map-turtle-predict": "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up.",
+  "step-command": "One command",
+  "phase-running-predict": "Kiko carries out the program.",
+  "phase-paused-predict": "Paused after {commands} commands. The marked block was the last to run.",
+  "predict-not-next": "This square does not work: Kiko only ever goes to a square next to the last one.",
+  "predict-not-wall": "This square does not work: there is a wall.",
+  "help-predict-marks": "After the run, Kiko's way is orange. The square where your prediction differs has a red frame."
 }

@@ -14,6 +14,8 @@ const props = defineProps<{
   still: boolean;
   /** The predicted way, as "x,y" from 0; undefined without a prediction. */
   predicted?: readonly string[] | undefined;
+  /** After a run that parted from the prediction: the predicted field where it parted. */
+  wrong?: string | null;
 }>();
 const emit = defineEmits<{ field: [key: string] }>();
 const CELL = 40;
@@ -37,6 +39,13 @@ const numbers = computed(() => {
   (props.predicted ?? []).forEach((key, i) => out.set(key, [...(out.get(key) ?? []), i + 1]));
   return [...out].map(([key, steps]) => ({ key, at: centre(key), text: steps.join(", ") }));
 });
+/** Kiko's way so far, as a line on top of the prediction (with a prediction only). */
+const went = computed(() =>
+  props.predicted === undefined || props.state.trail.length < 2
+    ? ""
+    : props.state.trail.map((k) => centre(k).join(",")).join(" "),
+);
+const wrongAt = computed(() => (props.wrong ? centre(props.wrong) : null));
 const path = computed(() => {
   const way = props.predicted ?? [];
   const startKey = props.config.map.flatMap((row, y) => (row.includes("S") ? [`${row.indexOf("S")},${y}`] : []))[0];
@@ -75,6 +84,15 @@ const path = computed(() => {
       <circle :cx="n.at[0]" :cy="n.at[1]" r="11" />
       <text :x="n.at[0]" :y="n.at[1] + 4">{{ n.text }}</text>
     </g>
+    <polyline v-if="went !== ''" :points="went" class="went" />
+    <rect
+      v-if="wrongAt !== null"
+      :x="wrongAt[0] - CELL / 2 + 3"
+      :y="wrongAt[1] - CELL / 2 + 3"
+      :width="CELL - 6"
+      :height="CELL - 6"
+      class="wrong"
+    />
     <g
       class="robot"
       :class="{ still }"
@@ -126,6 +144,21 @@ const path = computed(() => {
   stroke: #1f5fbf;
   stroke-width: 3;
   stroke-dasharray: 6 4;
+  pointer-events: none;
+}
+.went {
+  fill: none;
+  stroke: #b8460a;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+  pointer-events: none;
+}
+.wrong {
+  fill: none;
+  stroke: #c0182c;
+  stroke-width: 4;
   pointer-events: none;
 }
 .step {

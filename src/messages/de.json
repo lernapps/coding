@@ -227,11 +227,11 @@
   "predict-back": "Letztes Feld weg. Noch {n} Felder.",
   "predict-cleared": "Vorhersage gelöscht.",
   "program-text": "Das Programm als Text",
-  "phase-predict": "Lies das Programm und setz den Weg von Kiko. Dann drück „Start“: Kiko geht los, und du siehst, ob es stimmt.",
-  "phase-predict-picture": "Lies das Programm und wähl das Bild, das Kiko malt. Dann drück „Start“.",
-  "help-predict-read": "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Unter den Blöcken steht es auch als Text.",
+  "phase-predict": "Setz den Weg von Kiko, dann drück „Start“.",
+  "phase-predict-picture": "Wähl ein Bild, dann drück „Start“.",
+  "help-predict-read": "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Es steht auch als Text da: „Das Programm als Text“.",
   "help-predict-way": "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick. Ein Schritt ist ein neues Feld; Drehen ist kein Schritt.",
-  "help-predict-run": "„Start“ lässt Kiko das Programm ausführen. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, bei welchem Schritt sie abweicht. Dann änderst du sie und probierst es noch einmal.",
+  "help-predict-run": "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, wo sie abweicht.",
   "tests-explain-predict": "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
   "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
   "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
@@ -241,5 +241,11 @@
   "picture-legend": "Welches Bild malt Kiko?",
   "picture-describe": "Beschreibung: {count} Linien",
   "help-predict-picture": "Unter der Fläche stehen mehrere Bilder. Nur eines malt Kiko mit diesem Programm. Wähl es aus. Jedes Bild hat eine Beschreibung, Linie für Linie.",
-  "help-map-turtle-predict": "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben."
+  "help-map-turtle-predict": "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben.",
+  "step-command": "Ein Befehl",
+  "phase-running-predict": "Kiko führt das Programm aus.",
+  "phase-paused-predict": "Angehalten nach {commands} Befehlen. Der markierte Block war gerade dran.",
+  "predict-not-next": "Dieses Feld geht nicht: Kiko geht immer nur auf ein Feld neben dem letzten.",
+  "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
+  "help-predict-marks": "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet."
 }

@@ -76,6 +76,12 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   jedem Rätsel ohne Fehler bis zum Ende laufen (der Validator prüft es). Modellvorhersage statt Musterlösung:
   `src/data/solutions/<id>.json` ist eine Liste je Rätsel (Labyrinth: Felder als "x,y" ab 0; Turtle: Nummer des Bildes
   bei Seed 1), eingetragen in `PREDICTIONS` von `src/data/index.ts`.
+- Vorhersage-Seite (nach dem Lernenden-Check): Hilfe offen, „Blöcke in dieser Aufgabe“ fehlt (die Erklärungen sprechen
+  vom Ändern der Zahlen). „Das Programm als Text“ steht über der Karte (bei 360 px direkt über ihr); während eines Laufs
+  ist der Block, der dran war, im Editor und in der Textfassung markiert (der Kern nummeriert das Programm, `b1` …).
+  Der Knopf heißt „Ein Befehl“ statt „Ein Schritt“, weil „Schritt“ hier ein Feldwechsel ist. Während eines Laufs (auch
+  angehalten) lässt sich die Vorhersage nicht ändern. Ein Klick auf ein Feld, das nicht geht, sagt warum. Nach dem Lauf:
+  Kikos Weg als orange Linie, das abweichende Feld rot umrandet.
 
 ## Terminology
 

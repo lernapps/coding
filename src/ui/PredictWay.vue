@@ -7,7 +7,14 @@ import { announce } from "@lernapps/tooling/a11y";
 import type { LabyrinthConfig } from "../core/worlds/labyrinth.ts";
 import { texts, type Key } from "./texts.ts";
 
-const props = defineProps<{ config: LabyrinthConfig; predicted: readonly string[]; lang: string; busy: boolean }>();
+const props = defineProps<{
+  config: LabyrinthConfig;
+  predicted: readonly string[];
+  lang: string;
+  busy: boolean;
+  /** Why the last click on the map set no field. */
+  note?: string;
+}>();
 const emit = defineEmits<{ act: [name: string, value?: string] }>();
 const { t } = texts(props.lang);
 
@@ -78,6 +85,7 @@ function clear(): void {
         <small>{{ m.ok ? m.field : t("predict-wall") }}</small>
       </button>
     </div>
+    <p v-if="note" class="note">{{ note }}</p>
     <ol v-if="predicted.length > 0" class="way-list">
       <li v-for="(key, i) in predicted" :key="i">{{ name(...parse(key)) }}</li>
     </ol>
@@ -143,6 +151,11 @@ button[aria-disabled="true"] {
 }
 .dir-left {
   grid-area: left;
+}
+.note {
+  margin: 0.5rem 0 0;
+  color: #8a2a00;
+  font-weight: 600;
 }
 .way-list {
   margin: 0.5rem 0;

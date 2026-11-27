@@ -51,7 +51,7 @@ onMounted(() => {
     toolboxPosition: "start",
     sounds: false,
     media: new URL("../blockly-media/", import.meta.url).href,
-    zoom: { controls: true, startScale: narrow ? 0.75 : 0.9 },
+    zoom: { controls: true, startScale: narrow || readOnly ? 0.75 : 0.9 },
     move: { scrollbars: true, drag: true, wheel: false },
   });
   // Loading fires no change events: the core already has the start program, and a late event would overwrite a

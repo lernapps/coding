@@ -218,6 +218,7 @@ type Serial = {
   next?: { block: Serial };
   movable?: boolean;
   deletable?: boolean;
+  id?: string;
 };
 
 function serialExpr(e: Expr): Serial | null {
@@ -269,6 +270,8 @@ function serialChain(stmts: readonly Stmt[]): Serial | null {
     }
     if (Object.keys(inputs).length > 0) block.inputs = inputs;
     if (next !== null) block.next = { block: next };
+    // The ids of the IR (a prediction numbers its program), so that the block that ran can be highlighted.
+    if (s.id !== undefined) block.id = s.id;
     if (s.locked === true) {
       // A locked block of the start program and the questions in it stay where they are.
       block.movable = false;

@@ -33,6 +33,12 @@ Lauf auseinandergehen.
 
 ## Key decisions
 
+- Lernenden-Check der Musterseite `vorhersage-1` (Klasse 7): „Schritt“ doppelt belegt → Knopf „Ein Befehl“; kein
+  markierter Block → Programm nummeriert, Markierung in Editor und Text; Hilfe zu → offen, Block-Erklärungen
+  (Zahl ändern) ausgeblendet; Weg nach dem Lauf kaum sichtbar → orange Linie, abweichendes Feld rot; stumme Klicks →
+  Hinweis; Änderung im angehaltenen Lauf → gesperrt; 360 px Programm weit weg → Text über der Karte; Hinweis 2
+  entschärft. Nicht geändert: Rückmeldung nennt das Feld, nicht den Block (guess: Feld ist für 7. Klasse greifbarer);
+  „Ein Befehl“ am Ziel braucht einen Klick mehr (Verhalten der ganzen Werkstatt).
 - Branch heißt `increment/vorhersagen` (nicht `increment/02-vorhersagen`), wie der Orchestrator ihn vorgibt.
 - `lernapps update` (tooling 0.20.2, app-templates 0.24.0) gleich zu Beginn, auf Ansage des Orchestrators.
   `arc42 diff --staged` meldete Prosa ohne Block in `06-runtime-view` (Szenario „pages“, Sprachwechsel trägt Suche und

@@ -19,6 +19,7 @@ import {
   isPrediction,
   judgePrediction,
   missingPrediction,
+  numbered,
   picturesOf,
   withField,
   type Prediction,
@@ -68,7 +69,9 @@ export const TEMPO_TICKS = [0, 40, 25, 15, 8, 3] as const;
 export const DEFAULT_TEMPO = 3;
 
 function fresh(seed: number, source: State["source"], challenge: Challenge | null, problems: Problem[] = []): State {
-  const program = challenge?.start ?? EMPTY;
+  // A prediction numbers its program, so the block that ran can be highlighted (a start program has no ids).
+  const given = challenge?.start ?? EMPTY;
+  const program = challenge !== null && isPrediction(challenge) ? numbered(given) : given;
   return {
     seed,
     source,
@@ -204,7 +207,8 @@ function launch(state: State, c: Challenge, phase: Phase): State {
 
 /** A change of the prediction of the shown test case; it takes back the last run, as a new program does. */
 function predict(state: State, c: Challenge, name: string, value: Json | undefined): State {
-  if (!isPrediction(c) || state.phase === "running") return state;
+  // While a run goes on or is paused, the prediction stays: changing it would end the run without a word.
+  if (!isPrediction(c) || state.phase === "running" || state.phase === "paused") return state;
   const n = state.test;
   const now = state.predictions[n - 1] ?? null;
   const way = Array.isArray(now) ? now : [];

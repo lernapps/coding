@@ -6,7 +6,7 @@
 import { configAt, testCount, type Challenge, type TestResult } from "./challenge.ts";
 import { fitProblems } from "./fits.ts";
 import { runToEnd, type Run } from "./interpreter.ts";
-import { blocksOf, programProblems, type Program } from "./ir.ts";
+import { blocksOf, programProblems, type Program, type Stmt } from "./ir.ts";
 import { isObject, type Json, type Msg, type Problem } from "./json.ts";
 import { worldOf } from "./worlds/index.ts";
 import type { LabyrinthConfig, LabyrinthState } from "./worlds/labyrinth.ts";
@@ -33,6 +33,25 @@ const field = (key: string): { x: number; y: number } => {
   return { x: (x ?? 0) + 1, y: (y ?? 0) + 1 };
 };
 const point = (v: number): number => Math.round(v);
+
+/** The program with an id on every statement ("b1", "b2", … in reading order), so the block that ran can be shown. */
+export function numbered(program: Program): Program {
+  let n = 0;
+  const walk = (body: readonly Stmt[]): Stmt[] =>
+    body.map((s) => {
+      const id = `b${++n}`;
+      switch (s.s) {
+        case "repeat":
+        case "while":
+          return { ...s, id, body: walk(s.body) };
+        case "if":
+          return { ...s, id, then: walk(s.then), ...(s.else === undefined ? {} : { else: walk(s.else) }) };
+        default:
+          return { ...s, id };
+      }
+    });
+  return { ...program, main: walk(program.main) };
+}
 
 /** The run of the challenge's program on test case `n`. */
 export function runOf(c: Challenge, n: number, program: Program | null = c.start): Run | null {

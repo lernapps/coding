@@ -1,4 +1,4 @@
-// source: a62cc7d207af0788
+// source: 73eac4e334b16e04
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1631,15 +1631,14 @@ var de_default = {
   "predict-back": "Letztes Feld weg. Noch {n} Felder.",
   "predict-cleared": "Vorhersage gelöscht.",
   "program-text": "Das Programm als Text",
-  "phase-predict":
-    "Lies das Programm und setz den Weg von Kiko. Dann drück „Start“: Kiko geht los, und du siehst, ob es stimmt.",
-  "phase-predict-picture": "Lies das Programm und wähl das Bild, das Kiko malt. Dann drück „Start“.",
+  "phase-predict": "Setz den Weg von Kiko, dann drück „Start“.",
+  "phase-predict-picture": "Wähl ein Bild, dann drück „Start“.",
   "help-predict-read":
-    "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Unter den Blöcken steht es auch als Text.",
+    "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Es steht auch als Text da: „Das Programm als Text“.",
   "help-predict-way":
     "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick. Ein Schritt ist ein neues Feld; Drehen ist kein Schritt.",
   "help-predict-run":
-    "„Start“ lässt Kiko das Programm ausführen. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, bei welchem Schritt sie abweicht. Dann änderst du sie und probierst es noch einmal.",
+    "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, wo sie abweicht.",
   "tests-explain-predict":
     "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
   "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
@@ -1653,6 +1652,13 @@ var de_default = {
     "Unter der Fläche stehen mehrere Bilder. Nur eines malt Kiko mit diesem Programm. Wähl es aus. Jedes Bild hat eine Beschreibung, Linie für Linie.",
   "help-map-turtle-predict":
     "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben.",
+  "step-command": "Ein Befehl",
+  "phase-running-predict": "Kiko führt das Programm aus.",
+  "phase-paused-predict": "Angehalten nach {commands} Befehlen. Der markierte Block war gerade dran.",
+  "predict-not-next": "Dieses Feld geht nicht: Kiko geht immer nur auf ein Feld neben dem letzten.",
+  "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
+  "help-predict-marks":
+    "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1911,15 +1917,14 @@ var en_default = {
   "predict-back": "Last square removed. {n} squares left.",
   "predict-cleared": "Prediction cleared.",
   "program-text": "The program as text",
-  "phase-predict":
-    "Read the program and set Kiko's way. Then press “Run”: Kiko sets off, and you see whether you were right.",
-  "phase-predict-picture": "Read the program and choose the picture Kiko draws. Then press “Run”.",
+  "phase-predict": "Set Kiko's way, then press “Run”.",
+  "phase-predict-picture": "Choose a picture, then press “Run”.",
   "help-predict-read":
-    "The program is ready. You can read it but not change it. Below the blocks it is written as text, too.",
+    "The program is ready. You can read it but not change it. It is also written as text: “The program as text”.",
   "help-predict-way":
     "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks. A step is a new square; turning is not a step.",
   "help-predict-run":
-    "“Run” lets Kiko carry out the program. Then you see whether your prediction is right, and if not, at which step it differs. Then you change it and try again.",
+    "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command. Then you see whether your prediction is right, and if not, where it differs.",
   "tests-explain-predict":
     "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
   "solved-predict": "Well predicted! Kiko does exactly what you said.",
@@ -1933,6 +1938,13 @@ var en_default = {
     "Below the sheet there are several pictures. Kiko draws only one of them with this program. Choose it. Each picture has a description, line by line.",
   "help-map-turtle-predict":
     "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up.",
+  "step-command": "One command",
+  "phase-running-predict": "Kiko carries out the program.",
+  "phase-paused-predict": "Paused after {commands} commands. The marked block was the last to run.",
+  "predict-not-next": "This square does not work: Kiko only ever goes to a square next to the last one.",
+  "predict-not-wall": "This square does not work: there is a wall.",
+  "help-predict-marks":
+    "After the run, Kiko's way is orange. The square where your prediction differs has a red frame.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
