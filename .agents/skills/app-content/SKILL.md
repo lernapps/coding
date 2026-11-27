@@ -42,7 +42,7 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Content structure
 
-- Routen (`src/app.yaml`): sechs eingebaute Aufgaben und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
+- Routen (`src/app.yaml`): elf eingebaute Aufgaben (acht zum Bauen, drei Vorhersagen) und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
   kopieren). Mit `?c=` in der Adresse zeigt die Werkstatt die Challenge aus dem Link (Weg A); sie gilt für den ganzen
   Besuch, ein Klick auf eine Route der Liste startet einen neuen Besuch ohne `c`.
 - „Start“ spielt alle Rätsel nacheinander (animiert) und hält beim ersten, das scheitert; ein Start ist ein Versuch.

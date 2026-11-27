@@ -4,7 +4,7 @@
 # Archetype, as in the app's first plan. Allowed values: explainer, interactive, quiz.
 archetype: interactive
 # Current phase. Allowed values: explore, plan, code, commit.
-phase: code
+phase: commit
 # prePushFailures: failed pre-push runs of this increment, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
@@ -180,12 +180,13 @@ Interpreter der App.
 - [x] Aufgabe vorhersage-2 (Labyrinth, solange und wenn, zwei Rätsel) mit Playthroughs (allein)
 - [x] Turtle-Bildwahl in der Oberfläche und Aufgabe vorhersage-3 (vier Bilder) mit Playthroughs (allein)
 <!-- tasks: slices (4 added): one per competency, as written in Plan -->
-- [ ] **Checkpoint:** the pattern page, after the first slice. A slice in a pattern the app already has: show it to
+- [x] **Checkpoint:** the pattern page, after the first slice. A slice in a pattern the app already has: show it to
       the creator and go on. A new pattern: load skill `lernapps-learner-check`, do its learner check, fix what it
       finds, then ask the creator whether the others may follow it, and wait.
-- [ ] Update the content guide so that it describes the app as it is now (`app-content-matches`).
-- [ ] Run `npx --no -- lernapps check` until it passes.
-- [ ] Look at every changed screen, at 360 px and on a desktop, as "Look at the app" of skill `lernapps-cli` says.
+      Creator: Orchestrator: Ja, die übrigen Seiten dürfen nach diesem Muster bleiben. Jede Vorhersage muss auch ohne Klick auf die Karte gehen und bei 360 px ohne seitliches Scrollen (geprüft: vorhersage-1 bis -3 nur mit Tastatur gelöst, 360 und 1280 px).
+- [x] Update the content guide so that it describes the app as it is now (`app-content-matches`).
+- [x] Run `npx --no -- lernapps check` until it passes.
+- [x] Look at every changed screen, at 360 px and on a desktop, as "Look at the app" of skill `lernapps-cli` says.
 
 ## Commit
 
@@ -196,7 +197,7 @@ Interpreter der App.
 
 ### Tasks
 
-- [ ] Load skill `lernapps-github`. Push the branch, open the preview pull request and see its checks to green, as it
+- [x] Load skill `lernapps-github`. Push the branch, open the preview pull request and see its checks to green, as it
       says.
 - [ ] **Checkpoint:** publish. Show what the increment adds and the preview link. Ask whether it may go online. Stop
       and wait for the yes.
