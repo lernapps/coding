@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Ein typischer Fehler: Kiko schaut nach unten, und das Kind nimmt „rechts“ als rechts auf der Karte. Die Rückmeldung
+# nennt den ersten Schritt, der abweicht. Ein Start ohne Vorhersage zählt keinen Versuch; ein Feld an der Wand nimmt die
+# Werkstatt nicht an.
+seed: 1
+route: vorhersage-1
+steps:
+  - inputs: [{ kind: action, name: start }]
+    state: { phase: done, attempts: 0, verdict: { ok: false, test: 1, why: { key: fail-predict-no-way } } }
+    announce: "Setz zuerst den Weg von Kiko: Feld für Feld, so wie Kiko geht."
+  - inputs:
+      [
+        { kind: action, name: feld, value: "2,1" },
+        { kind: action, name: feld, value: "3,1" },
+        { kind: action, name: feld, value: "3,0" },
+        { kind: action, name: feld, value: "4,1" },
+        { kind: action, name: feld, value: "5,1" },
+        { kind: action, name: feld, value: "5,2" },
+        { kind: action, name: feld, value: "5,3" },
+        { kind: action, name: feld, value: "6,3" },
+      ]
+    state: { phase: edit, verdict: null, predictions: [["2,1", "3,1", "4,1", "5,1", "5,2", "5,3", "6,3"]] }
+  - inputs: [{ kind: action, name: start }]
+    ticks: 300
+    state:
+      phase: done
+      solved: false
+      attempts: 1
+      run: { world: { x: 4, y: 3 } }
+      verdict:
+        { ok: false, test: 1, why: { key: fail-predict-step, params: { ok: 6, step: 7, x: 5, y: 4, px: 7, py: 4 } } }
+    announce: "Bis Schritt 6 stimmt deine Vorhersage. In Schritt 7 geht Kiko auf Feld (5|4), du hast Feld (7|4) gesetzt."

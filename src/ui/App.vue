@@ -10,6 +10,8 @@ import type { State } from "../core/index.ts";
 import { currentBlock } from "../core/interpreter.ts";
 import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
+import { isPrediction, picturesOf, withField } from "../core/prediction.ts";
+import type { LabyrinthConfig } from "../core/worlds/labyrinth.ts";
 import { worldOf } from "../core/worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
 import { progress, type Progress } from "./progress.ts";
@@ -17,6 +19,9 @@ import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
 import Authoring from "./Authoring.vue";
+import PredictPicture from "./PredictPicture.vue";
+import PredictWay from "./PredictWay.vue";
+import ProgramText from "./ProgramText.vue";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
@@ -86,6 +91,50 @@ const worldState = computed(() => {
   if (props.state.run !== null) return props.state.run.world;
   return world.value !== undefined && config.value !== null ? world.value.start(config.value) : null;
 });
+/** The program is given; the learner predicts the run (check "vorhersage"). */
+const predicting = computed(() => isPrediction(c.value));
+/** The way predicted on the puzzle shown (labyrinth). */
+const predictedWay = computed(() => {
+  const p = props.state.predictions[props.state.test - 1];
+  return Array.isArray(p) ? p : [];
+});
+/** A click on the map that cannot be the next field: why, next to the way. */
+const fieldNote = ref("");
+function onField(key: string): void {
+  const cfg = c.value;
+  if (cfg === null || props.state.phase === "running" || props.state.phase === "paused") return;
+  if (withField(cfg, props.state.test, predictedWay.value, key) === null) {
+    const [x, y] = key.split(",").map(Number);
+    const wall = (config.value as unknown as LabyrinthConfig).map[y ?? 0]?.[x ?? 0] === "#";
+    fieldNote.value = t(wall ? "predict-not-wall" : "predict-not-next");
+    announce(fieldNote.value);
+    return;
+  }
+  onPredict("feld", key);
+}
+function onPredict(name: string, value?: string): void {
+  fieldNote.value = "";
+  act(name, value);
+}
+/** After a run that parted from the prediction: the predicted field where it parted (labyrinth). */
+const wrongField = computed(() => {
+  const why = props.state.verdict?.why;
+  if (why === undefined || props.state.verdict?.test !== props.state.test || !why.key.startsWith("fail-predict-"))
+    return null;
+  const px = why.params?.["px"];
+  const py = why.params?.["py"];
+  return typeof px === "number" && typeof py === "number" ? `${px - 1},${py - 1}` : null;
+});
+/** The pictures to choose from on the puzzle shown, and the one chosen (turtle). */
+const pictures = computed(() =>
+  predicting.value && c.value !== null && c.value.world.type === "turtle"
+    ? picturesOf(c.value, props.state.test, props.state.seed)
+    : [],
+);
+const chosenPicture = computed(() => {
+  const p = props.state.predictions[props.state.test - 1];
+  return typeof p === "number" ? p : null;
+});
 const view = computed(() => (c.value === null ? undefined : VIEWS[c.value.world.type]));
 const tests = computed(() => (c.value === null ? 0 : testCount(c.value)));
 const description = computed(() => {
@@ -94,7 +143,7 @@ const description = computed(() => {
   const goal =
     msg.params?.["goal"] === "yes"
       ? ` ${t("describe-labyrinth-goal")}`
-      : msg.key === "describe-turtle"
+      : msg.key === "describe-turtle" && !predicting.value
         ? ` ${t("describe-turtle-target")}`
         : "";
   return say(msg) + goal + around();
@@ -126,6 +175,12 @@ const highlight = computed(() =>
 const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
+  if (v.ok && predicting.value)
+    return tests.value > 1
+      ? tests.value === 2
+        ? t("solved-predict-both")
+        : t("solved-predict-all", { count: tests.value })
+      : t(c.value?.world.type === "turtle" ? "solved-predict-picture" : "solved-predict");
   if (v.ok)
     return tests.value === 2
       ? t("solved-both")
@@ -137,7 +192,9 @@ const verdictText = computed(() => {
 });
 /** Explanations of the blocks of this task that are more than a command. */
 const explained = computed(() =>
-  (c.value?.toolbox ?? []).filter((b) => `explain-${b}` in de).map((b) => t(`explain-${b}` as Key)),
+  (c.value?.toolbox ?? [])
+    .filter((b) => `explain-${b}` in de)
+    .map((b) => t((predicting.value && `explain-predict-${b}` in de ? `explain-predict-${b}` : `explain-${b}`) as Key)),
 );
 /** The last task of the collection, solved. */
 const lastOfCollection = computed(
@@ -161,9 +218,14 @@ const statusText = computed(() => {
   const s = props.state;
   if (s.verdict !== null) return "";
   if (s.phase === "running")
-    return tests.value > 1 ? t("running-test", { n: s.test, count: tests.value }) : t("phase-running");
-  if (s.phase === "paused") return t("phase-paused", { commands: s.run?.commands ?? 0 });
-  return s.phase === "edit" ? t("phase-edit") : "";
+    return tests.value > 1
+      ? t("running-test", { n: s.test, count: tests.value })
+      : t(predicting.value ? "phase-running-predict" : "phase-running");
+  if (s.phase === "paused")
+    return t(predicting.value ? "phase-paused-predict" : "phase-paused", { commands: s.run?.commands ?? 0 });
+  if (s.phase !== "edit") return "";
+  if (predicting.value) return t(c.value?.world.type === "turtle" ? "phase-predict-picture" : "phase-predict");
+  return t("phase-edit");
 });
 // Every new verdict is announced, also the same text again (a second press of Start with the same mistake).
 watch(
@@ -249,11 +311,13 @@ watch(
   },
 );
 /** The program the editor starts with: the one saved for this task, else the challenge's own. */
-const editorStart = computed(() =>
-  saved.value !== null && saved.value.key === taskKey.value && saved.value.program !== undefined
-    ? saved.value.program
-    : (c.value?.start ?? null),
-);
+const editorStart = computed(() => {
+  if (predicting.value) return props.state.program;
+  const own = saved.value;
+  return own !== null && own.key === taskKey.value && own.program !== undefined
+    ? own.program
+    : (c.value?.start ?? null);
+});
 const solvedBefore = computed(() => saved.value !== null && saved.value.key === taskKey.value && saved.value.solved);
 </script>
 
@@ -282,7 +346,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           {{ text(c.title) }} <span v-if="solvedBefore" class="solved-before">✓ {{ t("solved-before") }}</span>
         </h2>
         <p>{{ text(c.task) }}</p>
-        <p class="meta">
+        <p v-if="!predicting" class="meta">
           <span>{{
             c.limits.blocks === undefined
               ? t("blocks-count-free", { used: state.blocks })
@@ -290,10 +354,18 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           }}</span>
           <span v-if="tests > 1"> · {{ t("test-shown", { count: tests }) }}</span>
         </p>
-        <p v-if="tests > 1">{{ t("tests-explain", { count: tests }) }}</p>
-        <details class="help" :open="firstOfWorld">
+        <p v-if="tests > 1">{{ t(predicting ? "tests-explain-predict" : "tests-explain", { count: tests }) }}</p>
+        <details class="help" :open="firstOfWorld || predicting">
           <summary>{{ t("help") }}</summary>
-          <ul>
+          <ul v-if="predicting">
+            <li>{{ t("help-predict-read") }}</li>
+            <li>{{ t("help-robot") }}</li>
+            <li>{{ t(c.world.type === "turtle" ? "help-map-turtle-predict" : "help-map-labyrinth") }}</li>
+            <li>{{ t(c.world.type === "labyrinth" ? "help-predict-way" : "help-predict-picture") }}</li>
+            <li>{{ t("help-predict-run") }}</li>
+            <li v-if="c.world.type === 'labyrinth'">{{ t("help-predict-marks") }}</li>
+          </ul>
+          <ul v-else>
             <li>{{ t("help-blocks") }}</li>
             <li>{{ t("help-robot") }}</li>
             <li>{{ t(`help-map-${c.world.type}` as Key) }}</li>
@@ -334,6 +406,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               >
             </button>
           </div>
+          <ProgramText v-if="predicting" :program="state.program" :highlight="highlight" :lang="lang" />
           <div
             id="raetsel-panel"
             :role="tests > 1 ? 'tabpanel' : undefined"
@@ -347,13 +420,35 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               :crashed="state.run?.status === 'crashed'"
               :label="description"
               :still="still"
+              :predicted="predicting && c.world.type === 'labyrinth' ? predictedWay : undefined"
+              :hide-target="predicting"
+              :wrong="wrongField"
+              @field="onField"
             />
           </div>
+          <PredictWay
+            v-if="predicting && c.world.type === 'labyrinth' && config !== null"
+            :config="config as unknown as LabyrinthConfig"
+            :predicted="predictedWay"
+            :lang="lang"
+            :busy="state.phase === 'running' || state.phase === 'paused'"
+            :note="fieldNote"
+            @act="onPredict"
+          />
+          <PredictPicture
+            v-if="pictures.length > 0"
+            :pictures="pictures"
+            :chosen="chosenPicture"
+            :lang="lang"
+            :busy="state.phase === 'running' || state.phase === 'paused'"
+            :test="state.test"
+            @act="(name: string, value: number) => act(name, value)"
+          />
           <div class="controls">
             <button type="button" class="primary" :aria-disabled="state.phase === 'running'" @click="act('start')">
               {{ state.phase === "paused" ? t("continue") : t("run") }}
             </button>
-            <button type="button" @click="act('schritt')">{{ t("step") }}</button>
+            <button type="button" @click="act('schritt')">{{ predicting ? t("step-command") : t("step") }}</button>
             <button type="button" :aria-disabled="state.phase !== 'running'" @click="act('stopp')">
               {{ t("stop") }}
             </button>
@@ -390,7 +485,9 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             <p v-if="next !== null">
               <a :href="next.href">{{ t("next", { title: next.title }) }} →</a>
             </p>
-            <p v-else-if="lastOfCollection">{{ t("all-done") }}</p>
+            <p v-else-if="lastOfCollection">
+              {{ t("all-done") }} <a href="#autoren">{{ t("all-done-more") }} →</a>
+            </p>
           </div>
           <div v-if="c.hints.length > 0" class="hints">
             <ol v-if="state.hints > 0" ref="hintList" tabindex="-1" :aria-label="t('hints')">
@@ -401,15 +498,16 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             </button>
           </div>
         </div>
-        <p class="scroll-hint">{{ t("scroll-hint") }}</p>
+        <p v-if="!predicting" class="scroll-hint">{{ t("scroll-hint") }}</p>
         <div class="workbench">
           <Editor
             :key="`${state.source}:${c.id}:${saved?.key ?? ''}`"
             :lang="lang"
             :toolbox="c.toolbox"
             :start="editorStart"
-            :restored="editorStart !== c.start"
+            :restored="!predicting && editorStart !== c.start"
             :highlight="highlight"
+            :read-only="predicting"
             @program="onProgram"
           />
         </div>

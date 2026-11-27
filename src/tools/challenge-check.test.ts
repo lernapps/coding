@@ -20,8 +20,10 @@ describe("check script", () => {
   for (const [id, challenge] of Object.entries(BUILT_IN))
     it(`accepts ${id} with its model solution`, () => {
       writeFileSync(join(dir, `${id}.json`), JSON.stringify(challenge));
-      writeFileSync(join(dir, `${id}-loesung.json`), JSON.stringify(SOLUTIONS[id]));
-      const result = run(join(dir, `${id}.json`), join(dir, `${id}-loesung.json`));
+      // A prediction has no model program: its program is given.
+      const solution = SOLUTIONS[id];
+      if (solution !== undefined) writeFileSync(join(dir, `${id}-loesung.json`), JSON.stringify(solution));
+      const result = run(join(dir, `${id}.json`), ...(solution === undefined ? [] : [join(dir, `${id}-loesung.json`)]));
       expect(result.status, result.stdout).toBe(0);
       expect(result.stdout).toContain("https://lernapps.net/coding/app/?c=");
     });

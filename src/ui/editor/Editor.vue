@@ -14,6 +14,8 @@ const props = defineProps<{
   highlight: string | null;
   /** The start is a program saved on the device: its blocks get new ids, so the editor sends it once after loading. */
   restored?: boolean;
+  /** Only to read (a prediction): no toolbox, nothing to move or change. */
+  readOnly?: boolean;
 }>();
 const emit = defineEmits<{ program: [program: Program] }>();
 const host = useTemplateRef<HTMLDivElement>("host");
@@ -97,15 +99,15 @@ onMounted(() => {
   const narrow = root.clientWidth < 600;
   // Narrow: the blocks in a row above the work area, which stays free. Wide: categories when there are many blocks.
   const categories = !narrow && props.toolbox.length > 6;
+  const readOnly = props.readOnly === true;
   workspace = Blockly.inject(root, {
-    toolbox: toolboxOf(props.toolbox, lang, categories),
+    ...(readOnly ? { readOnly: true } : { toolbox: toolboxOf(props.toolbox, lang, categories), trashcan: true }),
     renderer: "zelos",
     horizontalLayout: narrow,
     toolboxPosition: "start",
     sounds: false,
     media: new URL("../blockly-media/", import.meta.url).href,
-    trashcan: true,
-    zoom: { controls: true, startScale: narrow ? 0.75 : 0.9 },
+    zoom: { controls: true, startScale: narrow || readOnly ? 0.75 : 0.9 },
     move: { scrollbars: true, drag: true, wheel: false },
   });
   // Loading fires no change events: the core already has the start program, and a late event would overwrite a

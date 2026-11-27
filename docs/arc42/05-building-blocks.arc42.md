@@ -1,6 +1,6 @@
 # Building Blocks
 
-<!-- From @lernapps/app-templates 0.21.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
+<!-- From @lernapps/app-templates 0.24.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
 
 The generic part has three roots that every app shares, whatever its archetype: the shared runtime of
 `@lernapps/app-templates`, the tooling helpers of `@lernapps/tooling` and the skills the app commits. Each archetype's extension adds the rest of
@@ -517,7 +517,8 @@ protocol: HTML pages over HTTPS (query and hash)
 Built. `startInteractive(core, root)` mounts the root component on the app page and holds the core's state; it takes
 the seed from `?seed=<n>` (else a random one), the route from the hash (else the first route) and the other
 parameters of the address once (`dec-address-params`), starts the core again on a new route with the same seed and
-parameters, calls `tick(state, 20)` every 20 ms when the core has `tick`, and routes typed inputs to `step`
+parameters, gives the links of the language switch the search and the hash of the address (so that the other
+language opens the same round, `dec-address-params`), calls `tick(state, 20)` every 20 ms when the core has `tick`, and routes typed inputs to `step`
 (`dec-typed-input`): every key typed on the page as a key input, except on links, buttons and form fields or with
 Ctrl, Alt or Meta, and every input the root component emits as `input` (an action, or a key it stands for). When the
 end-to-end tests' clock is on the page (`if-test-clock`), it starts no interval and steps the ticks the tests ask for.
@@ -743,12 +744,15 @@ flowchart LR
         bb-interpreter["Interpreter"]
         bb-challenge["Challenge"]
         bb-worlds["Worlds"]
+        bb-prediction["Prediction"]
         bb-check-script["Check script"]
     end
     bb-interpreter -->|"if-program"| bb-program
     bb-interpreter -->|"if-world"| bb-worlds
     bb-challenge -->|"if-interpreter"| bb-interpreter
     bb-challenge -->|"if-world"| bb-worlds
+    bb-challenge -->|"if-prediction"| bb-prediction
+    bb-prediction -->|"if-interpreter"| bb-interpreter
     bb-check-script -->|"if-challenge"| bb-challenge
 ```
 
@@ -808,7 +812,7 @@ path: src/core/interpreter.ts
 
 ### Challenge
 
-A challenge of format 1: its validator (the rules of the published schema; programs from outside must fit the world, with numbers in the editor's ranges, `fits.ts`), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
+A challenge of format 1: its validator (the rules of the published schema; programs from outside must fit the world, with numbers in the editor's ranges, `fits.ts`), its test cases, the checks of the program (block limit, blocks used) and of each run, a prediction through `bb-prediction`. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
 
 ```arc42
 :::building-block
@@ -817,7 +821,7 @@ title: Challenge
 parent: bb-interactive-core
 technology: TypeScript (validator, raw-DEFLATE reader)
 path: src/core/challenge.ts
-requires: if-interpreter, if-world
+requires: if-interpreter, if-world, if-prediction
 implements: concept-workshop-challenges, concept-workshop-address-visit
 :::
 ```
@@ -833,6 +837,41 @@ title: challengeProblems, configAt, firstFailure, judgeRun
 provider: bb-challenge
 protocol: TypeScript functions
 path: src/core/challenge.ts
+:::
+```
+
+### Prediction
+
+The check `vorhersage`: the program of the challenge is fixed, the learner predicts the run (labyrinth: the fields in
+order; turtle: one of several pictures, the wrong ones programs of the author, shuffled by the seed), and the run
+stops at the first step or line where it parts from the prediction, which the verdict names (the rest of the way stays
+hidden). Its validator refuses a prediction it could not judge: a
+run that does not end, a wrong picture that is the right one.
+
+```arc42
+:::building-block
+id: bb-prediction
+title: Prediction
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/prediction.ts
+requires: if-interpreter
+implements: concept-workshop-challenges
+:::
+```
+
+#### Prediction interface
+
+Adds a field to a way, gives the pictures in the order shown, names a missing prediction, judges a run against a
+prediction, and checks the part of a challenge that belongs to it.
+
+```arc42
+:::interface
+id: if-prediction
+title: withField, picturesOf, missingPrediction, judgePrediction, predictionProblems
+provider: bb-prediction
+protocol: TypeScript functions
+path: src/core/prediction.ts
 :::
 ```
 
@@ -936,7 +975,7 @@ protocol: Vue props and events
 
 Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last. A block dropped below the program, or put down by keyboard without a chosen place, goes to the end of the program; a block left loose gets a warning and is counted below the work area (#495).
 
-The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed):
+The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed). With a prediction it adds `PredictWay.vue` (the predicted way as a list, buttons for the next field up, right, down or left: the keyboard way), `PredictPicture.vue` (the pictures as radio buttons, each described line by line) and `ProgramText.vue` (the program as text, in the words of the blocks):
 
 ```arc42
 :::diagram
@@ -959,7 +998,7 @@ flowchart LR
 id: bb-editor
 title: Block editor
 parent: bb-interactive-ui
-technology: Vue, Blockly 13.4 (keyboard navigation built in)
+technology: Vue, Blockly 13.4 (keyboard navigation built in; read-only for a prediction)
 path: src/ui/editor
 requires: if-program
 implements: concept-workshop-ir
@@ -968,12 +1007,12 @@ implements: concept-workshop-ir
 
 #### Block editor interface
 
-The root component mounts it per challenge and sends each program it emits to the core; a program with a block it attached after a drop comes as any other.
+The root component mounts it per challenge and sends each program it emits to the core; a program with a block it attached after a drop comes as any other. With a prediction it is only to read, without a toolbox.
 
 ```arc42
 :::interface
 id: if-editor
-title: Editor component (lang, toolbox, start, highlight; emits program; attaches dropped blocks)
+title: Editor component (lang, toolbox, start, highlight, readOnly; emits program; attaches dropped blocks)
 provider: bb-editor
 protocol: Vue props and events
 path: src/ui/editor/Editor.vue
@@ -996,12 +1035,12 @@ path: src/ui/worlds
 
 #### World views interface
 
-The root component picks the view by the world's type; the label is the world's text for screen readers.
+The root component picks the view by the world's type; the label is the world's text for screen readers. The labyrinth shows a predicted way and takes a click on a field; the turtle hides its target picture with a prediction.
 
 ```arc42
 :::interface
 id: if-world-view
-title: World view component (config, state, crashed, label, still)
+title: World view component (config, state, crashed, label, still, predicted, hideTarget; emits field)
 provider: bb-world-views
 protocol: Vue props
 path: src/ui/worlds/index.ts
@@ -1085,7 +1124,7 @@ path: src/data/challenges
 
 ### Model solutions
 
-The IR of a solution per built-in challenge, for the playthroughs and the unit tests; never sent to a learner.
+The IR of a solution per built-in challenge, for the playthroughs and the unit tests; never sent to a learner. A prediction challenge has a model prediction per test case instead (`PREDICTIONS`).
 
 ```arc42
 :::building-block
@@ -1099,12 +1138,12 @@ path: src/data/solutions
 
 #### Model solutions interface
 
-The unit tests run each on every test case of its challenge.
+The unit tests run each on every test case of its challenge, or judge each model prediction against the run.
 
 ```arc42
 :::interface
 id: if-solutions
-title: SOLUTIONS (src/data/index.ts)
+title: SOLUTIONS and PREDICTIONS (src/data/index.ts)
 provider: bb-solutions
 protocol: JSON module import
 path: src/data/solutions

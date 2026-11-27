@@ -1,7 +1,7 @@
 // The core of the workshop (contract of @lernapps/app-templates/interactive): the challenge, the learner's program as
 // IR, and the run of it on the test case shown. Pure TypeScript, the state plain JSON. Blockly is only the input: the
 // UI sends the program as the action "programm".
-import type { Input, Params } from "@lernapps/app-templates/interactive";
+import type { Input, Json, Params } from "@lernapps/app-templates/interactive";
 import { unpack } from "./inflate.ts";
 import {
   challengeProblems,
@@ -15,6 +15,16 @@ import {
 import { advance, begin, type Run } from "./interpreter.ts";
 import { blocksOf, EMPTY, programProblems, type Program } from "./ir.ts";
 import type { Msg, Problem } from "./json.ts";
+import {
+  isPrediction,
+  judgePrediction,
+  missingPrediction,
+  numbered,
+  partedEarly,
+  picturesOf,
+  withField,
+  type Prediction,
+} from "./prediction.ts";
 import { worldOf } from "./worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
 
@@ -47,6 +57,8 @@ export interface State {
   /** Starts with a verdict: a start runs every test case in turn and counts once. */
   attempts: number;
   solved: boolean;
+  /** With the check "vorhersage": the learner's prediction per test case (fields or the picture chosen). */
+  predictions: Prediction[];
   hints: number;
   /** 1 (slow) to 5 (fast). */
   tempo: number;
@@ -58,7 +70,9 @@ export const TEMPO_TICKS = [0, 40, 25, 15, 8, 3] as const;
 export const DEFAULT_TEMPO = 3;
 
 function fresh(seed: number, source: State["source"], challenge: Challenge | null, problems: Problem[] = []): State {
-  const program = challenge?.start ?? EMPTY;
+  // A prediction numbers its program, so the block that ran can be highlighted (a start program has no ids).
+  const given = challenge?.start ?? EMPTY;
+  const program = challenge !== null && isPrediction(challenge) ? numbered(given) : given;
   return {
     seed,
     source,
@@ -74,6 +88,7 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
     results: [],
     attempts: 0,
     solved: false,
+    predictions: [],
     hints: 0,
     tempo: DEFAULT_TEMPO,
     clock: 0,
@@ -138,8 +153,17 @@ function begun(state: State, c: Challenge): State {
 function settle(state: State, c: Challenge): State {
   const run = state.run;
   const world = worldFor(c);
-  if (run === null || world === undefined || run.status === "running") return state;
-  const result = judgeRun(c, world, state.test, run);
+  if (run === null || world === undefined) return state;
+  const prediction = state.predictions[state.test - 1] ?? null;
+  // A prediction stops the run at the first step where it parted from it (the rest of the way stays hidden).
+  const early =
+    run.status === "running" && isPrediction(c) ? partedEarly(c, state.test, run, prediction, state.seed) : null;
+  if (run.status === "running" && early === null) return state;
+  const result =
+    early ??
+    (isPrediction(c)
+      ? judgePrediction(c, state.test, run, prediction, state.seed)
+      : judgeRun(c, world, state.test, run));
   const results = Array.from({ length: testCount(c) }, (_, i) => state.results[i] ?? null);
   results[state.test - 1] = result.ok ? "ok" : "fail";
   if (!result.ok) {
@@ -172,6 +196,10 @@ function stepRun(state: State, c: Challenge): State {
 
 /** Starts a run: the program's own checks first (block limit), then the shown test case. */
 function launch(state: State, c: Challenge, phase: Phase): State {
+  // A prediction is missing: no attempt yet, the verdict shows the puzzle that lacks it.
+  const missing = isPrediction(c) ? missingPrediction(c, state.predictions) : null;
+  if (missing !== null)
+    return { ...state, test: missing.test, run: null, phase: "done", verdict: { ok: false, ...missing } };
   const pre = programVerdict(c, state.program);
   if (pre !== null)
     return {
@@ -183,6 +211,27 @@ function launch(state: State, c: Challenge, phase: Phase): State {
     };
   // Every start begins with the first test case.
   return { ...begun({ ...state, verdict: null, test: 1, results: [] }, c), phase };
+}
+
+/** A change of the prediction of the shown test case; it takes back the last run, as a new program does. */
+function predict(state: State, c: Challenge, name: string, value: Json | undefined): State {
+  // While a run goes on or is paused, the prediction stays: changing it would end the run without a word.
+  if (!isPrediction(c) || state.phase === "running" || state.phase === "paused") return state;
+  const n = state.test;
+  const now = state.predictions[n - 1] ?? null;
+  const way = Array.isArray(now) ? now : [];
+  let next: Prediction | undefined;
+  if (name === "feld" && typeof value === "string") next = withField(c, n, way, value) ?? undefined;
+  else if (name === "zurueck" && way.length > 0) next = way.slice(0, -1);
+  else if (name === "leeren" && now !== null) next = null;
+  else if (name === "bild") {
+    const i = Number(value);
+    if (Number.isInteger(i) && i >= 0 && i < picturesOf(c, n, state.seed).length && i !== now) next = i;
+  }
+  if (next === undefined) return state;
+  const predictions = Array.from({ length: testCount(c) }, (_, i) => state.predictions[i] ?? null);
+  predictions[n - 1] = next;
+  return { ...state, predictions, run: null, phase: "edit", verdict: null, results: [] };
 }
 
 export function step(state: State, input: Input): State {
@@ -205,7 +254,8 @@ export function step(state: State, input: Input): State {
         ? state
         : { ...fresh(state.seed, "route", null), draft: state.draft, problems: draftProblems(state.draft) };
     case "programm": {
-      if (c === null || programProblems(input.value).length > 0) return state;
+      // A prediction keeps the program of the challenge.
+      if (c === null || isPrediction(c) || programProblems(input.value).length > 0) return state;
       const program = input.value as unknown as Program;
       return {
         ...state,
@@ -233,6 +283,11 @@ export function step(state: State, input: Input): State {
   }
   if (c === null) return state;
   switch (input.name) {
+    case "feld":
+    case "zurueck":
+    case "leeren":
+    case "bild":
+      return predict(state, c, input.name, input.value);
     case "start":
       if (state.phase === "paused") return { ...state, phase: "running" };
       return state.phase === "running" ? state : launch(state, c, "running");

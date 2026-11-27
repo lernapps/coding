@@ -1,6 +1,6 @@
 # Deployment View
 
-<!-- From @lernapps/app-templates 0.21.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
+<!-- From @lernapps/app-templates 0.24.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
 
 ## Deployment overview
 
@@ -196,7 +196,7 @@ hosts: bb-shell, bb-interactive-core, bb-interactive-ui, bb-interactive-data, bb
 <!-- app: begin -->
 ## Workshop in the browser
 
-The workshop's own blocks run on the app page; the block editor is a second bundle, loaded once the page runs.
+The workshop's own blocks (prediction included) run on the app page; the block editor is a second bundle, loaded once the page runs.
 
 ```arc42
 :::deployment-node
@@ -204,13 +204,13 @@ id: dn-workshop-page
 title: Workshop app page
 type: container
 parent: dn-interactive-app-page
-hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-editor, bb-world-views, bb-collection
+hosts: bb-program, bb-interpreter, bb-challenge, bb-prediction, bb-worlds, bb-editor, bb-world-views, bb-collection
 :::
 ```
 
 ## Workshop build
 
-The build plays the playthroughs, the unit tests run every model solution on every test case, and the check script is built here (`npm run build:check-script`) and checked against its sources.
+The build plays the playthroughs, the unit tests run every model solution and every prediction check on every test case, and the check script is built here (`npm run build:check-script`) and checked against its sources.
 
 ```arc42
 :::deployment-node
@@ -218,7 +218,7 @@ id: dn-workshop-build
 title: Workshop build
 type: container
 parent: dn-interactive-build
-hosts: bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-collection, bb-solutions, bb-check-script
+hosts: bb-program, bb-interpreter, bb-challenge, bb-prediction, bb-worlds, bb-collection, bb-solutions, bb-check-script
 :::
 ```
 <!-- app: end -->

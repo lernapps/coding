@@ -1,0 +1,85 @@
+{
+  "format": 1,
+  "id": "vorhersage-2",
+  "title": {
+    "de": "Wohin führt das Programm?",
+    "en": "Where does the program lead?"
+  },
+  "task": {
+    "de": "Lies das Programm. Es läuft in zwei Rätseln mit verschiedenen Karten. Setz in jedem Rätsel die Felder, durch die Kiko geht. Dreht Kiko sich nur, bleibt er auf seinem Feld: Das ist kein Schritt. Dann drück „Start“.",
+    "en": "Read the program. It runs in two puzzles with different maps. In each puzzle, set the squares Kiko goes through. When Kiko only turns, it stays on its square: that is not a step. Then press “Run”."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["########", "#S.....#", "######.#", "######.#", "#Z.....#", "########"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "rechts", "solange", "wenn-sonst", "nicht", "am-ziel", "wand-rechts"],
+  "start": {
+    "main": [
+      {
+        "s": "while",
+        "cond": {
+          "e": "not",
+          "a": {
+            "e": "sense",
+            "name": "am-ziel",
+            "args": []
+          }
+        },
+        "body": [
+          {
+            "s": "if",
+            "cond": {
+              "e": "sense",
+              "name": "wand-rechts",
+              "args": []
+            },
+            "then": [
+              {
+                "s": "cmd",
+                "name": "vorwaerts",
+                "args": []
+              }
+            ],
+            "else": [
+              {
+                "s": "cmd",
+                "name": "rechts",
+                "args": []
+              },
+              {
+                "s": "cmd",
+                "name": "vorwaerts",
+                "args": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "limits": {},
+  "tests": [
+    {
+      "config": {
+        "map": ["########", "#S.....#", "###.####", "###.####", "#Z.....#", "########"]
+      }
+    }
+  ],
+  "checks": ["vorhersage"],
+  "hints": [
+    {
+      "de": "Jede Runde von „solange“ fragt zuerst: Ist Kiko noch nicht am Ziel? Dann fragt „wenn“: Ist rechts von Kiko eine Wand? Rechts gilt aus Kikos Sicht, vom Dreieck aus.",
+      "en": "Each round of “while” first asks: is Kiko not at the goal yet? Then “if” asks: is there a wall on Kiko's right? Right is from Kiko's point of view, from the triangle."
+    },
+    {
+      "de": "Ist rechts frei, dreht sich Kiko und geht dorthin, auch wenn es geradeaus weitergeht.",
+      "en": "If the right is free, Kiko turns and goes there, even if the way also goes on straight ahead."
+    }
+  ],
+  "view": "bloecke"
+}

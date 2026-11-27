@@ -17,7 +17,7 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 - Reihenfolge der Routen (`src/app.yaml`, `src/data/index.ts`): labyrinth-1, turtle-1 (Sequenz) → labyrinth-2, turtle-2,
   turtle-3 (Zählschleife) → labyrinth-3 (bedingte Wiederholung allein) → labyrinth-4 (einfache Verzweigung) →
-  labyrinth-5 (beides zusammen).
+  labyrinth-5 (beides zusammen) → vorhersage-1 … (Programme lesen und voraussagen).
 - Kapitel Labyrinth (Routen `labyrinth-1` … `labyrinth-5`, Daten `src/data/challenges/labyrinth-*.json`):
   - `sequenz` – Ich kann Anweisungen in der richtigen Reihenfolge zu einer Sequenz anordnen. → `labyrinth-1`
   - `wiederholung-feste-anzahl` – Ich kann mit einer Wiederholung mit fester Anzahl Anweisungen mehrmals ausführen lassen. → `labyrinth-2`
@@ -29,10 +29,20 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   (Quadrat, höchstens 8 Blöcke), `wiederholung-feste-anzahl` → `turtle-2` (Quadrat, höchstens 3 Blöcke), `turtle-3`
   (Spirograph, verschachtelte Schleifen, höchstens 7 Blöcke).
 - `visuelle-programmierung` – in jeder Challenge.
+- Kapitel Vorhersage (Routen `vorhersage-1` …, Daten `src/data/challenges/vorhersage-*.json`): `algorithmus-ausfuehren` –
+  „Ich kann einen Algorithmus Schritt für Schritt von Hand ausführen und so sein Ergebnis ermitteln.“ (Karte: Band
+  9-10, setzt `wiederholung-mit-bedingung` voraus; die Aufgaben nutzen nur Blöcke der Kapitel davor).
+  - `vorhersage-1` – Labyrinth, Zählschleifen und zwei Rechtsdrehungen; der Gang geht weiter als die Zählschleife (Fehler
+    „bis zur Wand“), Kiko schaut nach unten, wenn er rechts abbiegt (Fehler „rechts auf der Karte“).
+  - `vorhersage-2` – Labyrinth, „solange nicht am Ziel?“ mit „wenn Wand rechts? dann vorwärts sonst rechts, vorwärts“,
+    zwei Rätsel: ein Gang um zwei Ecken, und ein Gang mit Abzweig nach rechts (Fehler „geradeaus weiter“).
+  - `vorhersage-3` – Turtle, „wiederhole 3 mal: gehe 60, drehe rechts 120“ (Dreieck); falsche Bilder: links statt
+    rechts, 90 statt 120 Grad, 60 statt 120 Grad (Außen- mit Innenwinkel verwechselt). Start bei (80|120), damit jedes Bild auf der Fläche bleibt. Im Vorhersage-Turtle zeigt die Fläche kein graues Zielbild (es wäre
+    die Antwort); `world.config.ziel` ist dort das Startprogramm.
 
 ## Content structure
 
-- Routen (`src/app.yaml`): sechs eingebaute Aufgaben und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
+- Routen (`src/app.yaml`): elf eingebaute Aufgaben (acht zum Bauen, drei Vorhersagen) und `autoren` (Autorenseite: JSON prüfen, ausprobieren, Link
   kopieren). Mit `?c=` in der Adresse zeigt die Werkstatt die Challenge aus dem Link (Weg A); sie gilt für den ganzen
   Besuch, ein Klick auf eine Route der Liste startet einen neuen Besuch ohne `c`.
 - „Start“ spielt alle Rätsel nacheinander (animiert) und hält beim ersten, das scheitert; ein Start ist ein Versuch.
@@ -56,6 +66,24 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
   zählt nicht); die Rückmeldung nennt die Stelle (x|y), an der das Bild abweicht. Fläche 200 × 200 Pixel, Start ohne
   Angabe in der Mitte, Blick nach oben. Zielbild nur mit Zahlen im Bereich der Blöcke, höchstens 200 Linien.
 
+- **Vorhersage** (Prüfung `vorhersage`, allein in `checks`): Das Startprogramm ist fest und nur zu lesen (Editor
+  `readOnly`, darunter „Das Programm als Text“). Labyrinth: Lernende setzen den Weg Feld für Feld (nur Nachbarfelder
+  des letzten, keine Wand; ein Schritt ist ein Feldwechsel, Drehen zählt nicht), per Klick auf die Karte oder mit den
+  Knöpfen „nach oben/rechts/unten/links“ (Richtung auf der Karte, nicht Kikos Blick). Turtle: ein Bild unter 3–4;
+  die falschen schreibt der Autor in `vorhersage.bilder` (2–3 Programme mit typischen Fehlern), die Reihenfolge kommt
+  aus dem Seed. „Start“ ohne Vorhersage zählt keinen Versuch. Die Rückmeldung nennt den ersten Schritt (Labyrinth)
+  bzw. die erste Linie (Turtle), an dem Vorhersage und Lauf auseinandergehen (`fail-predict-*`). Das Programm muss in
+  jedem Rätsel ohne Fehler bis zum Ende laufen (der Validator prüft es). Modellvorhersage statt Musterlösung:
+  `src/data/solutions/<id>.json` ist eine Liste je Rätsel (Labyrinth: Felder als "x,y" ab 0; Turtle: Nummer des Bildes
+  bei Seed 1), eingetragen in `PREDICTIONS` von `src/data/index.ts`.
+- Vorhersage-Seite (nach dem Lernenden-Check): Hilfe offen, „Blöcke in dieser Aufgabe“ mit `explain-predict-<block>`, wo
+  `explain-<block>` vom Ändern der Zahlen spricht. „Das Programm als Text“ steht über der Karte (bei 360 px direkt über ihr); während eines Laufs
+  ist der Block, der dran war, im Editor und in der Textfassung markiert (der Kern nummeriert das Programm, `b1` …).
+  Der Knopf heißt „Ein Befehl“ statt „Ein Schritt“, weil „Schritt“ hier ein Feldwechsel ist. Während eines Laufs (auch
+  angehalten) lässt sich die Vorhersage nicht ändern. Ein Klick auf ein Feld, das nicht geht, sagt warum. Der Lauf hält am
+  ersten abweichenden Schritt (bzw. an der ersten abweichenden Linie): Der Rest der richtigen Antwort bleibt verborgen,
+  der markierte Block zeigt, wo im Programm es war. Kikos Weg als orange Linie, das abweichende Feld rot umrandet.
+
 ## Terminology
 
 - Lernende mit „du“ / „you“, einfache Sprache (ISO 24495), Plain English.
@@ -65,6 +93,7 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 - Koordinaten: de „Feld (4|2)“ bzw. „(50|100)“, en „square (4, 2)“ bzw. „(50, 100)“.
 - Blocktexte: `gehe vorwärts`, `drehe dich nach links`, `drehe dich nach rechts`, `wiederhole … mal`, `solange … tue`, `wenn … dann … sonst`, `Wand voraus?`; en: `move forward`, `turn left`, `turn right`, `repeat … times`, `while … do`, `if … then … else`, `wall ahead?`.
 - Felder heißen nach Spalte und Zeile: „Feld (3|2)“, Zählung ab 1 von links oben.
+- Vorhersage: „Deine Vorhersage“ (en „Your prediction“), „Schritt“ = ein neues Feld (en „step“), „Linie“ (en „line“).
 - Himmelsrichtungen nur in Rückmeldungen zur Drehung, sonst „vorne / links / rechts aus Sicht des Roboters“.
 
 ## Exercise patterns
@@ -75,6 +104,10 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 - Rückmeldung bei Fehlschlag nennt Testfall, Feld und was passiert ist („Testfall 2: Der Roboter stößt in Feld (4|2) an
   die Wand.“). Texte in `src/messages/<lang>.json`, Schlüssel `fail-*`.
 - Hinweise (`hints`) gehen vom Allgemeinen zum Konkreten, höchstens drei.
+- **Vorhersage-Muster**: Programm fest, Lernende sagen den Lauf voraus (siehe Content structure). Die Kompetenz steckt im
+  Programm: Zählschleife, die vor der Wand endet; Drehung, nachdem Kiko sich schon gedreht hat; „solange“ und „wenn“,
+  deren Ausgang von der Karte abhängt. Beispiel `src/data/challenges/vorhersage-1.json`, Playthroughs
+  `vorhersage-1-geloest.yaml` und `vorhersage-1-falsch-abgebogen.yaml`.
 
 ## Figures
 
@@ -98,8 +131,8 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 ## Adding a chapter or round
 
-- Neue Challenge: `src/data/challenges/<id>.json` nach Schema, `src/data/solutions/<id>.json`, beide in
-  `src/data/index.ts` eintragen, Route in `src/app.yaml` (de und en), zwei Playthroughs (gelöst, typischer Fehler),
+- Neue Challenge: `src/data/challenges/<id>.json` nach Schema, `src/data/solutions/<id>.json` (bei einer Vorhersage die
+  Modellvorhersage, in `PREDICTIONS`), beide in `src/data/index.ts` eintragen, Route in `src/app.yaml` (de und en), zwei Playthroughs (gelöst, typischer Fehler),
   `lernapps check`, Commit. Neue Blöcke brauchen `block-<id>` und `explain-<id>` in beiden Message-Dateien.
 - Neue Welt: Kern `src/core/worlds/<id>.ts` (Schnittstelle `World` in `src/core/worlds/types.ts`), Ansicht und Blöcke
   in `src/ui/worlds/<id>/` (Zahlenfelder der Befehle in `ARGS` von `src/ui/editor/blocks.ts`), `$defs` und

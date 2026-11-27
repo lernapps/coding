@@ -1,6 +1,6 @@
 # Runtime View
 
-<!-- From @lernapps/app-templates 0.21.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
+<!-- From @lernapps/app-templates 0.24.0 (the generic part and the interactive extension): lernapps update replaces this file except the app sections, between <!-- app: begin … --> and <!-- app: end … -->, which hold the app's own architecture. -->
 
 Six scenarios every app shares: opening its pages, learning in the browser, an error path of the device storage,
 the assistant working with the skills, building with the checks, and the end-to-end tests before a push and in CI. Each extension adds its archetype's own
@@ -11,7 +11,8 @@ scenarios (the explainer's include asking the tutor).
 A learner, teacher or parent opens `lernapps.net/<app>/`. The host serves static pages the build rendered from what
 the creator wrote; what a page shows without JavaScript depends on the archetype and is in its extension (an
 interactive app's app page shows only a `<noscript>` note). The language switch and the alternates are plain links to
-the same page in the other language tree; an address the app does not have gets the 404 page, which leads to the
+the same page in the other language tree (an interactive app's shell adds the search and the hash of the address to
+the switch on its app page); an address the app does not have gets the 404 page, which leads to the
 start page.
 
 ```arc42
@@ -111,7 +112,8 @@ route from the hash (else the first route) and the other parameters of the addre
 `step` as a key input, except keys on links, buttons and form fields or with Ctrl, Alt or Meta, and steps every input
 the root component emits as `input`; a key that changes the state loses its default. When the core
 has `tick`, the shell calls it every 20 ms. A new route in the hash starts the core again with the same seed and parameters and marks
-the current route link. The components only show the state, take their texts through the translator and announce
+the current route link. The language switch carries the search and the hash of the address, so the other language
+opens the same round. The components only show the state, take their texts through the translator and announce
 changes through the live region.
 
 ```arc42
@@ -145,7 +147,8 @@ involves: bb-build, bb-validation, bb-component-rules, bb-interactive-descriptio
 playthrough at `app/?seed=<seed>&<params>#<route>` on the test clock, gives its inputs (keys pressed on the keyboard,
 actions emitted by the root component) and its ticks, and compares, after each step, the state read from
 `lernappsState` and the announcement of the polite live region. In an app with routes it also goes to another route and
-back and expects the state it started with: the core starts again with the same seed and parameters.
+back and expects the state it started with: the core starts again with the same seed and parameters. In an app with
+more languages it follows the switch to each other language and expects the same state there.
 
 ```arc42
 :::runtime-scenario
@@ -169,6 +172,21 @@ id: scenario-workshop-run
 title: Running a program in the workshop
 trigger: The learner presses Run or One step (both begin with the first puzzle)
 involves: bb-editor, bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-world-views, bb-collection, bb-solutions
+:::
+```
+
+## Predicting a run
+
+In a challenge with the check `vorhersage` the editor only shows the program. The learner sets a way field by field or
+chooses a picture for every puzzle; Run first asks for a missing prediction (no attempt), then runs the program on every
+puzzle as above and compares each step with the prediction: the run stops at the first step that parts from it.
+
+```arc42
+:::runtime-scenario
+id: scenario-workshop-prediction
+title: Predicting a run
+trigger: The learner sets fields or chooses a picture, then presses Run
+involves: bb-world-views, bb-prediction, bb-interpreter, bb-challenge, bb-worlds
 :::
 ```
 

@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../../node_modules/@lernapps/app-templates/runtime/interactive/playthrough.v1.schema.json
+# Die richtige Vorhersage: Das Kind setzt die acht Felder, durch die Kiko geht; „Start“ vergleicht, Kiko geht genau so.
+seed: 1
+route: vorhersage-1
+steps:
+  - inputs:
+      [
+        { kind: action, name: feld, value: "2,1" },
+        { kind: action, name: feld, value: "3,1" },
+        { kind: action, name: feld, value: "4,1" },
+        { kind: action, name: feld, value: "5,1" },
+        { kind: action, name: feld, value: "5,2" },
+        { kind: action, name: feld, value: "5,3" },
+        { kind: action, name: feld, value: "4,3" },
+        { kind: action, name: feld, value: "3,3" },
+      ]
+    state: { phase: edit, predictions: [["2,1", "3,1", "4,1", "5,1", "5,2", "5,3", "4,3", "3,3"]] }
+  - inputs: [{ kind: action, name: start }]
+    ticks: 300
+    state: { phase: done, solved: true, attempts: 1, verdict: { ok: true }, run: { world: { x: 3, y: 3 } } }
+    announce: "Richtig vorhergesagt! Kiko geht genau die Felder, die du gesetzt hast."

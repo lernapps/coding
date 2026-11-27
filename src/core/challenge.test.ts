@@ -1,17 +1,29 @@
 import { describe, expect, it } from "vite-plus/test";
-import { BUILT_IN, SOLUTIONS } from "../data/index.ts";
-import { challengeProblems, firstFailure } from "./challenge.ts";
+import { BUILT_IN, PREDICTIONS, SOLUTIONS } from "../data/index.ts";
+import { challengeProblems, firstFailure, testCount } from "./challenge.ts";
+import { isPrediction, judgePrediction, runOf } from "./prediction.ts";
 import { runToEnd } from "./interpreter.ts";
 import { labyrinth } from "./worlds/labyrinth.ts";
 
 describe("built-in challenges", () => {
   for (const [id, challenge] of Object.entries(BUILT_IN)) {
     it(`${id} is valid`, () => expect(challengeProblems(challenge)).toEqual([]));
-    it(`${id}: the model solution passes every test case`, () => {
-      const solution = SOLUTIONS[id];
-      expect(solution).toBeDefined();
-      if (solution !== undefined) expect(firstFailure(challenge, solution)).toBeNull();
-    });
+    if (isPrediction(challenge))
+      it(`${id}: the model prediction passes every test case`, () => {
+        const model = PREDICTIONS[id];
+        expect(model).toHaveLength(testCount(challenge));
+        for (let n = 1; n <= testCount(challenge); n++) {
+          const run = runOf(challenge, n);
+          expect(run).not.toBeNull();
+          if (run !== null) expect(judgePrediction(challenge, n, run, model?.[n - 1] ?? null, 1)).toEqual({ ok: true });
+        }
+      });
+    else
+      it(`${id}: the model solution passes every test case`, () => {
+        const solution = SOLUTIONS[id];
+        expect(solution).toBeDefined();
+        if (solution !== undefined) expect(firstFailure(challenge, solution)).toBeNull();
+      });
   }
 });
 
