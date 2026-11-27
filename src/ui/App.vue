@@ -22,6 +22,7 @@ import Authoring from "./Authoring.vue";
 import PredictPicture from "./PredictPicture.vue";
 import PredictWay from "./PredictWay.vue";
 import ProgramText from "./ProgramText.vue";
+import HtmlWorkbench from "./worlds/html/Workbench.vue";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
@@ -346,7 +347,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           {{ text(c.title) }} <span v-if="solvedBefore" class="solved-before">✓ {{ t("solved-before") }}</span>
         </h2>
         <p>{{ text(c.task) }}</p>
-        <p v-if="!predicting" class="meta">
+        <p v-if="!predicting && c.world.type !== 'html'" class="meta">
           <span>{{
             c.limits.blocks === undefined
               ? t("blocks-count-free", { used: state.blocks })
@@ -355,7 +356,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           <span v-if="tests > 1"> · {{ t("test-shown", { count: tests }) }}</span>
         </p>
         <p v-if="tests > 1">{{ t(predicting ? "tests-explain-predict" : "tests-explain", { count: tests }) }}</p>
-        <details class="help" :open="firstOfWorld || predicting">
+        <details v-if="c.world.type !== 'html'" class="help" :open="firstOfWorld || predicting">
           <summary>{{ t("help") }}</summary>
           <ul v-if="predicting">
             <li>{{ t("help-predict-read") }}</li>
@@ -380,7 +381,27 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           </ul>
         </details>
       </header>
-      <div class="columns">
+      <div v-if="c.world.type === 'html' && state.code !== null" class="html-task">
+        <HtmlWorkbench
+          :code="state.code"
+          :start="{ html: (c.world.config as any).html, css: (c.world.config as any).css }"
+          :lang="lang"
+          @code="(code) => act('code', code)"
+          @check="(dom) => act('pruefen', dom as unknown as Json)"
+        />
+        <div v-if="state.verdict !== null" class="verdict" :class="state.verdict.ok ? 'ok' : 'fail'">
+          <p>{{ verdictText }}</p>
+        </div>
+        <div v-if="c.hints.length > 0" class="hints">
+          <ol v-if="state.hints > 0" :aria-label="t('hints')">
+            <li v-for="(hint, i) in c.hints.slice(0, state.hints)" :key="i">{{ text(hint) }}</li>
+          </ol>
+          <button v-if="state.hints < c.hints.length" type="button" @click="nextHint">
+            {{ t("hint-show", { n: state.hints + 1, count: c.hints.length }) }}
+          </button>
+        </div>
+      </div>
+      <div v-else class="columns">
         <div class="stage">
           <div v-if="tests > 1" class="tabs" role="tablist" :aria-label="t('tests-label')" @keydown="onTabKey">
             <button

@@ -22,7 +22,8 @@ export interface Challenge {
   tests: { config: Json }[];
   checks: string[];
   hints: Text[];
-  view: "bloecke";
+  /** "bloecke" for the worlds of commands; "text" for the world html, which learners write as code. */
+  view: "bloecke" | "text";
   back?: { url: string | Text; label: Text };
   /** With the check "vorhersage" in a turtle world: the programs of the wrong pictures to choose from. */
   vorhersage?: { bilder: Program[] };
@@ -148,7 +149,9 @@ export function challengeProblems(value: unknown): Problem[] {
   const hints = value["hints"];
   if (!Array.isArray(hints) || hints.length > 3) p.push({ path: "hints", key: "problem-hints" });
   else hints.forEach((h: unknown, i: number) => p.push(...textProblems(h, `hints[${i}]`, 200)));
-  if (value["view"] !== "bloecke") p.push({ path: "view", key: "problem-view" });
+  const textWorld = isObject(w) && w["type"] === "html";
+  if (value["view"] !== (textWorld ? "text" : "bloecke")) p.push({ path: "view", key: "problem-view" });
+  if (textWorld && value["start"] !== null) p.push({ path: "start", key: "problem-html-start" });
   const back = value["back"];
   if (back !== undefined) {
     const url = isObject(back) ? back["url"] : undefined;

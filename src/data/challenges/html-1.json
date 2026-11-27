@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "id": "html-1",
+  "title": {
+    "de": "Deine erste Webseite",
+    "en": "Your first web page"
+  },
+  "task": {
+    "de": "Färbe die Überschrift blau. Schreib unter den Absatz einen zweiten Absatz mit <p> und gib ihm die Klasse „wichtig“. Mach alles mit der Klasse „wichtig“ fett. Dann drück „Prüfen“.",
+    "en": "Colour the heading blue. Below the paragraph, write a second paragraph with <p> and give it the class “wichtig”. Make everything with the class “wichtig” bold. Then press “Check”."
+  },
+  "world": {
+    "type": "html",
+    "version": 1,
+    "config": {
+      "html": "<h1>Mein Lieblingstier</h1>\n<p>Katzen schlafen viel.</p>\n",
+      "css": "h1 {\n  color: black;\n}\n",
+      "erwartet": [
+        {
+          "selektor": "h1",
+          "stil": {
+            "color": "blue"
+          }
+        },
+        {
+          "selektor": "p",
+          "anzahl": 2
+        },
+        {
+          "selektor": "p.wichtig",
+          "stil": {
+            "font-weight": "bold"
+          }
+        }
+      ]
+    }
+  },
+  "toolbox": ["h1", "p", "color", "font-weight"],
+  "start": null,
+  "limits": {},
+  "tests": [],
+  "checks": ["dom-passt"],
+  "hints": [
+    {
+      "de": "Eine Farbe setzt du in CSS so: color: blue;",
+      "en": "In CSS you set a colour like this: color: blue;"
+    },
+    {
+      "de": "Ein Absatz mit Klasse: <p class=\"wichtig\">…</p>. In CSS wählst du ihn mit .wichtig { … } aus.",
+      "en": "A paragraph with a class: <p class=\"wichtig\">…</p>. In CSS you select it with .wichtig { … }."
+    }
+  ],
+  "view": "text"
+}

@@ -26,6 +26,7 @@ import {
   type Prediction,
 } from "./prediction.ts";
 import { worldOf } from "./worlds/index.ts";
+import { check as checkDom, MAX_CODE, type HtmlConfig, type Node } from "./worlds/html.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
 
 export type Phase = "edit" | "running" | "paused" | "done";
@@ -59,6 +60,8 @@ export interface State {
   solved: boolean;
   /** With the check "vorhersage": the learner's prediction per test case (fields or the picture chosen). */
   predictions: Prediction[];
+  /** World html: the learner's code. */
+  code: { html: string; css: string } | null;
   hints: number;
   /** 1 (slow) to 5 (fast). */
   tempo: number;
@@ -89,6 +92,13 @@ function fresh(seed: number, source: State["source"], challenge: Challenge | nul
     attempts: 0,
     solved: false,
     predictions: [],
+    code:
+      challenge?.world.type === "html"
+        ? {
+            html: (challenge.world.config as unknown as HtmlConfig).html,
+            css: (challenge.world.config as unknown as HtmlConfig).css,
+          }
+        : null,
     hints: 0,
     tempo: DEFAULT_TEMPO,
     clock: 0,
@@ -213,6 +223,50 @@ function launch(state: State, c: Challenge, phase: Phase): State {
   return { ...begun({ ...state, verdict: null, test: 1, results: [] }, c), phase };
 }
 
+/** A snapshot of the preview from the UI: a tree of elements; null when it is not one. */
+function domOf(value: Json | undefined, depth = 0): Node | null {
+  if (depth > 40 || typeof value !== "object" || value === null || Array.isArray(value)) return null;
+  const v = value as Record<string, Json>;
+  const str = (x: Json | undefined): x is string => typeof x === "string";
+  const record = (x: Json | undefined): Record<string, string> | null =>
+    typeof x === "object" && x !== null && !Array.isArray(x) && Object.values(x).every(str)
+      ? (x as Record<string, string>)
+      : null;
+  const attrs = record(v["attrs"]);
+  const style = record(v["style"]);
+  if (!str(v["tag"]) || !str(v["text"]) || attrs === null || style === null || !Array.isArray(v["children"]))
+    return null;
+  const children = v["children"].map((ch) => domOf(ch, depth + 1));
+  if (children.some((ch) => ch === null)) return null;
+  return { tag: v["tag"], text: v["text"], attrs, style, children: children as Node[] };
+}
+
+/** World html: the learner changes the code, or checks the preview (the UI sends its DOM). */
+function stepHtml(state: State, c: Challenge, name: string, value: Json | undefined): State {
+  if (name === "code") {
+    const v = value as Record<string, Json> | undefined;
+    const html = v?.["html"];
+    const css = v?.["css"];
+    if (typeof html !== "string" || typeof css !== "string" || html.length > MAX_CODE || css.length > MAX_CODE)
+      return state;
+    return { ...state, code: { html, css }, verdict: null, phase: "edit" };
+  }
+  if (name === "pruefen") {
+    const dom = domOf(value);
+    if (dom === null) return state;
+    const verdict = checkDom(dom, (c.world.config as unknown as HtmlConfig).erwartet);
+    const why = verdict.ok ? {} : { why: verdict.why };
+    return {
+      ...state,
+      attempts: state.attempts + 1,
+      phase: "done",
+      verdict: { ok: verdict.ok, test: 1, ...why },
+      solved: state.solved || verdict.ok,
+    };
+  }
+  return state;
+}
+
 /** A change of the prediction of the shown test case; it takes back the last run, as a new program does. */
 function predict(state: State, c: Challenge, name: string, value: Json | undefined): State {
   // While a run goes on or is paused, the prediction stays: changing it would end the run without a word.
@@ -282,6 +336,7 @@ export function step(state: State, input: Input): State {
       break;
   }
   if (c === null) return state;
+  if (state.code !== null) return stepHtml(state, c, input.name, input.value);
   switch (input.name) {
     case "feld":
     case "zurueck":

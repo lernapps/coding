@@ -11,6 +11,7 @@ import l5 from "./challenges/labyrinth-5.json" with { type: "json" };
 import t1 from "./challenges/turtle-1.json" with { type: "json" };
 import t2 from "./challenges/turtle-2.json" with { type: "json" };
 import t3 from "./challenges/turtle-3.json" with { type: "json" };
+import h1 from "./challenges/html-1.json" with { type: "json" };
 import v1 from "./challenges/vorhersage-1.json" with { type: "json" };
 import v2 from "./challenges/vorhersage-2.json" with { type: "json" };
 import v3 from "./challenges/vorhersage-3.json" with { type: "json" };
@@ -27,7 +28,7 @@ import p2 from "./solutions/vorhersage-2.json" with { type: "json" };
 import p3 from "./solutions/vorhersage-3.json" with { type: "json" };
 
 /** In the order of the routes: sequence, count loop, conditional loop, selection, both, then predictions. */
-const list = [l1, t1, l2, t2, t3, l3, l4, l5, v1, v2, v3] as unknown as Challenge[];
+const list = [l1, t1, l2, t2, t3, l3, l4, l5, v1, v2, v3, h1] as unknown as Challenge[];
 
 export const ROUTES: readonly string[] = list.map((c) => c.id);
 export const BUILT_IN: Readonly<Record<string, Challenge>> = Object.fromEntries(list.map((c) => [c.id, c]));

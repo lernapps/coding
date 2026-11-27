@@ -51,6 +51,8 @@ routes:
     title: { de: "Vorhersage 2: Wohin führt das Programm?", en: "Prediction 2: Where does the program lead?" }
   - id: vorhersage-3
     title: { de: "Vorhersage 3: Welches Bild malt Kiko?", en: "Prediction 3: Which picture does Kiko draw?" }
+  - id: html-1
+    title: { de: "Webseite 1: Deine erste Webseite (Test)", en: "Web page 1: Your first web page (test)" }
   - id: autoren
     title: { de: "Eigene Aufgabe bauen", en: "Build your own task" }
     description:

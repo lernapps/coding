@@ -877,7 +877,7 @@ path: src/core/prediction.ts
 
 ### Worlds
 
-The kinds of task, each a pure module by type and version (labyrinth 1, turtle 1; the turtle compares pictures on a grid with a tolerance of 2 units, its target pictures at most 200 lines). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
+The kinds of task, each a pure module by type and version (labyrinth 1, turtle 1, html 1 as a spike: learners write HTML and CSS, the UI sends a snapshot of the preview's DOM and the world checks it by selectors and computed styles; the turtle compares pictures on a grid with a tolerance of 2 units, its target pictures at most 200 lines). Old versions stay so that old links keep working; the views are in the UI (`dec-world-view-apart`).
 
 ```arc42
 :::building-block
@@ -1021,14 +1021,14 @@ path: src/ui/editor/Editor.vue
 
 ### World views
 
-One SVG view per world (the labyrinth with column and row numbers) and Kiko, the robot.
+One SVG view per world (the labyrinth with column and row numbers) and Kiko, the robot. The world html has a workbench instead (`html/Workbench.vue`): text fields for HTML and CSS and a preview in an iframe with `sandbox="allow-same-origin"` (no scripts) and a Content-Security-Policy in its srcdoc (no requests); it reads the preview's DOM for the check.
 
 ```arc42
 :::building-block
 id: bb-world-views
 title: World views
 parent: bb-interactive-ui
-technology: Vue, SVG
+technology: Vue, SVG; for html a sandboxed iframe
 path: src/ui/worlds
 :::
 ```

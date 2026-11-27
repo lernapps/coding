@@ -8,6 +8,7 @@ import { labyrinth } from "./worlds/labyrinth.ts";
 describe("built-in challenges", () => {
   for (const [id, challenge] of Object.entries(BUILT_IN)) {
     it(`${id} is valid`, () => expect(challengeProblems(challenge)).toEqual([]));
+    if (challenge.world.type === "html") continue;
     if (isPrediction(challenge))
       it(`${id}: the model prediction passes every test case`, () => {
         const model = PREDICTIONS[id];

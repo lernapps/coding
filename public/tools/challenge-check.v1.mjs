@@ -1,4 +1,4 @@
-// source: c703dd3da960e0c9
+// source: 31ff58dc084efa3a
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -533,6 +533,242 @@ function runToEnd(program, world, config, limit) {
   while (run.status === "running") run = advance(run, program, world, config, limit);
   return run;
 }
+// src/core/worlds/html.ts
+/** The computed styles the UI reads: what tasks of grades 7-8 ask for. */
+var STYLES = [
+  "color",
+  "background-color",
+  "font-size",
+  "font-weight",
+  "font-style",
+  "text-align",
+  "text-decoration-line",
+  "display",
+  "border-top-style",
+  "border-top-width",
+  "border-top-color",
+  "width",
+  "margin-top",
+  "padding-top",
+];
+var MAX_CODE = 4e3;
+/** Colours by name (CSS basic and a few more learners use), as rgb. */
+var NAMES = {
+  black: "0,0,0",
+  white: "255,255,255",
+  red: "255,0,0",
+  green: "0,128,0",
+  lime: "0,255,0",
+  blue: "0,0,255",
+  yellow: "255,255,0",
+  orange: "255,165,0",
+  purple: "128,0,128",
+  pink: "255,192,203",
+  gray: "128,128,128",
+  grey: "128,128,128",
+  brown: "165,42,42",
+  navy: "0,0,128",
+  teal: "0,128,128",
+  silver: "192,192,192",
+  maroon: "128,0,0",
+  olive: "128,128,0",
+  aqua: "0,255,255",
+  fuchsia: "255,0,255",
+};
+/** A colour as "r,g,b", from a name, #rgb, #rrggbb or rgb()/rgba(); else the value as it is. */
+function normal(value) {
+  const v = value.trim().toLowerCase();
+  if (v in NAMES) return NAMES[v] ?? v;
+  if (v === "bold") return "700";
+  if (v === "normal") return "400";
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/.exec(v)?.[1];
+  if (hex !== void 0) {
+    const full = hex.length === 3 ? [...hex].map((c) => c + c).join("") : hex;
+    return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16)).join(",");
+  }
+  const rgb = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)/.exec(v);
+  if (rgb !== null) return `${rgb[1]},${rgb[2]},${rgb[3]}`;
+  return v.replace(/\s+/g, " ");
+}
+var COMPOUND = /^([a-z][a-z0-9]*|\*)?((?:[#.][a-z_-][a-z0-9_-]*)*)$/i;
+/** A selector of compounds joined by spaces (descendant); null when it uses anything else. */
+function parse(selector) {
+  const parts = selector.trim().split(/\s+/);
+  const out = [];
+  for (const part of parts) {
+    const m = COMPOUND.exec(part);
+    if (m === null || part === "") return null;
+    const rest = m[2] ?? "";
+    const id = /#([a-z_-][a-z0-9_-]*)/i.exec(rest)?.[1];
+    const classes = [...rest.matchAll(/\.([a-z_-][a-z0-9_-]*)/gi)].map((c) => c[1] ?? "");
+    out.push({
+      ...(m[1] && m[1] !== "*" ? { tag: m[1].toLowerCase() } : {}),
+      ...(id ? { id } : {}),
+      classes,
+    });
+  }
+  return out;
+}
+var fits = (n, c) =>
+  (c.tag === void 0 || n.tag === c.tag) &&
+  (c.id === void 0 || n.attrs["id"] === c.id) &&
+  c.classes.every((k) => (n.attrs["class"] ?? "").split(/\s+/).includes(k));
+/** The elements of the tree a selector finds, in document order. */
+function select(root, selector) {
+  const compounds = parse(selector);
+  if (compounds === null || compounds.length === 0) return [];
+  const found = [];
+  const walk = (n, path) => {
+    const last = compounds[compounds.length - 1];
+    if (last !== void 0 && fits(n, last)) {
+      let i = compounds.length - 2;
+      for (let a = path.length - 1; a >= 0 && i >= 0; a--) {
+        const c = compounds[i];
+        const anc = path[a];
+        if (c !== void 0 && anc !== void 0 && fits(anc, c)) i--;
+      }
+      if (i < 0) found.push(n);
+    }
+    for (const child of n.children) walk(child, [...path, n]);
+  };
+  for (const child of root.children) walk(child, []);
+  return found;
+}
+/** The first expectation the DOM does not meet, as a message for the learner. */
+function check(dom, erwartet) {
+  for (const e of erwartet) {
+    const nodes = select(dom, e.selektor);
+    const want = e.anzahl ?? 1;
+    if (want === 0) {
+      if (nodes.length > 0)
+        return {
+          ok: false,
+          why: {
+            key: "fail-html-none",
+            params: { selektor: e.selektor },
+          },
+        };
+      continue;
+    }
+    if (nodes.length < want)
+      return {
+        ok: false,
+        why: {
+          key: "fail-html-count",
+          params: {
+            selektor: e.selektor,
+            want,
+            found: nodes.length,
+          },
+        },
+      };
+    for (const n of nodes) {
+      if (e.text !== void 0 && n.text.trim() !== e.text.trim())
+        return {
+          ok: false,
+          why: {
+            key: "fail-html-text",
+            params: {
+              selektor: e.selektor,
+              text: e.text,
+            },
+          },
+        };
+      for (const [name, value] of Object.entries(e.attribut ?? {}))
+        if (n.attrs[name] !== value)
+          return {
+            ok: false,
+            why: {
+              key: "fail-html-attr",
+              params: {
+                selektor: e.selektor,
+                name,
+                value,
+              },
+            },
+          };
+      for (const [prop, value] of Object.entries(e.stil ?? {}))
+        if (normal(n.style[prop] ?? "") !== normal(value))
+          return {
+            ok: false,
+            why: {
+              key: "fail-html-style",
+              params: {
+                selektor: e.selektor,
+                prop,
+                value,
+                found: n.style[prop] ?? "",
+              },
+            },
+          };
+    }
+  }
+  return { ok: true };
+}
+/** The vocabulary of a challenge's toolbox: elements and properties it names (a reference, not blocks). */
+var ELEMENTS = ["h1", "h2", "h3", "p", "strong", "em", "ul", "ol", "li", "a", "img", "div", "span"];
+var PROPERTIES = STYLES.map((s) => s.replace(/-top/, "")).filter((v, i, a) => a.indexOf(v) === i);
+var html = {
+  id: "html",
+  version: 1,
+  configProblems(config, path) {
+    if (!isObject(config))
+      return [
+        {
+          path,
+          key: "problem-config",
+        },
+      ];
+    const p = [];
+    for (const key of Object.keys(config))
+      if (!["html", "css", "erwartet"].includes(key))
+        p.push({
+          path: `${path}.${key}`,
+          key: "problem-unknown-field",
+        });
+    for (const key of ["html", "css"])
+      if (typeof config[key] !== "string" || config[key].length > 4e3)
+        p.push({
+          path: `${path}.${key}`,
+          key: "problem-html-code",
+          params: { max: MAX_CODE },
+        });
+    const erwartet = config["erwartet"];
+    if (!Array.isArray(erwartet) || erwartet.length < 1 || erwartet.length > 20)
+      p.push({
+        path: `${path}.erwartet`,
+        key: "problem-html-expect",
+      });
+    else
+      erwartet.forEach((e, i) => {
+        if (!isObject(e) || typeof e["selektor"] !== "string" || parse(e["selektor"]) === null)
+          p.push({
+            path: `${path}.erwartet[${i}].selektor`,
+            key: "problem-html-selector",
+          });
+      });
+    return p;
+  },
+  commands: Object.fromEntries([...ELEMENTS, ...PROPERTIES].map((w) => [w, 0])),
+  sensors: {},
+  checks: {
+    "dom-passt": (s, c) =>
+      s.dom === null
+        ? {
+            ok: false,
+            why: { key: "fail-html-unchecked" },
+          }
+        : check(s.dom, c.erwartet),
+  },
+  start: () => ({ dom: null }),
+  command: (s) => s,
+  sense: () => false,
+  describe: (s) => ({
+    key: "describe-html",
+    params: { elements: s.dom === null ? 0 : count(s.dom) - 1 },
+  }),
+};
+var count = (n) => 1 + n.children.reduce((sum, c) => sum + count(c), 0);
 // src/core/worlds/labyrinth.ts
 var FACINGS = ["north", "east", "south", "west"];
 var DELTA = {
@@ -911,6 +1147,7 @@ var as = (world) => world;
 var WORLDS = {
   labyrinth: { 1: as(labyrinth) },
   turtle: { 1: as(turtle) },
+  html: { 1: as(html) },
 };
 function worldOf(type, version) {
   return WORLDS[type]?.[version];
@@ -1268,10 +1505,16 @@ function challengeProblems(value) {
       key: "problem-hints",
     });
   else hints.forEach((h, i) => p.push(...textProblems(h, `hints[${i}]`, 200)));
-  if (value["view"] !== "bloecke")
+  const textWorld = isObject(w) && w["type"] === "html";
+  if (value["view"] !== (textWorld ? "text" : "bloecke"))
     p.push({
       path: "view",
       key: "problem-view",
+    });
+  if (textWorld && value["start"] !== null)
+    p.push({
+      path: "start",
+      key: "problem-html-start",
     });
   const back = value["back"];
   if (back !== void 0) {
@@ -1450,7 +1693,7 @@ var de_default = {
   "problem-checks": "Es braucht mindestens eine Prüfung.",
   "problem-check": "Die Prüfung „{name}“ gibt es nicht.",
   "problem-hints": "Höchstens 3 Hinweise.",
-  "problem-view": "Die Ansicht ist „bloecke“.",
+  "problem-view": "Die Ansicht ist „bloecke“, in der Welt html „text“.",
   "problem-back-url": "Der Rückweg ist ein Pfad auf lernapps.net, z. B. /informatik/schleifen/.",
   world: "Welt",
   editor: "Programm",
@@ -1669,6 +1912,25 @@ var de_default = {
   "explain-predict-wiederhole":
     "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Ein Block, der andere Blöcke wiederholt, heißt Schleife.",
   "explain-predict-gehe": "„gehe … Pixel“: Kiko geht so viele Pixel nach vorn und zeichnet dabei eine Linie.",
+  "problem-html-start": "In der Welt html steht der Startcode in world.config (html, css); „start“ ist null.",
+  "problem-html-code": "html und css sind Text, höchstens {max} Zeichen.",
+  "problem-html-expect": "„erwartet“ ist eine Liste von 1 bis 20 Erwartungen.",
+  "problem-html-selector": "Der Selektor kennt nur Element, #id, .klasse und Leerzeichen (darin).",
+  "fail-html-none": "„{selektor}“ darf es nicht geben.",
+  "fail-html-count": "Es braucht mindestens {want}× „{selektor}“. Gefunden: {found}.",
+  "fail-html-text": "In „{selektor}“ soll stehen: {text}",
+  "fail-html-attr": '„{selektor}“ braucht {name}="{value}".',
+  "fail-html-style": "„{selektor}“: {prop} soll {value} sein. Jetzt: {found}.",
+  "fail-html-unchecked": "Drück „Prüfen“.",
+  "describe-html": "Vorschau mit {elements} Elementen.",
+  "html-code": "HTML",
+  "css-code": "CSS",
+  "html-preview": "Vorschau",
+  "html-check": "Prüfen",
+  "solved-html": "Geschafft! Deine Seite passt.",
+  "html-help":
+    "Schreib HTML und CSS in die Felder. Die Vorschau zeigt sofort, wie die Seite aussieht. „Prüfen“ schaut nach, ob alles da ist und wie es aussieht, nicht, ob der Code Buchstabe für Buchstabe gleich ist.",
+  "html-reset": "Code zurücksetzen",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1747,7 +2009,7 @@ var en_default = {
   "problem-checks": "At least one check is needed.",
   "problem-check": "There is no check “{name}”.",
   "problem-hints": "At most 3 hints.",
-  "problem-view": "The view is “bloecke”.",
+  "problem-view": "The view is “bloecke”, in the world html “text”.",
   "problem-back-url": "The way back is a path on lernapps.net, e.g. /informatik/schleifen/.",
   world: "World",
   editor: "Program",
@@ -1965,6 +2227,25 @@ var en_default = {
   "explain-predict-wiederhole":
     "“repeat … times”: the blocks inside run as often as the number says. A block that repeats other blocks is called a loop.",
   "explain-predict-gehe": "“move … pixels”: Kiko moves forward that many pixels and draws a line.",
+  "problem-html-start": "In the world html the start code is in world.config (html, css); “start” is null.",
+  "problem-html-code": "html and css are text, at most {max} characters.",
+  "problem-html-expect": "“erwartet” is a list of 1 to 20 expectations.",
+  "problem-html-selector": "The selector knows only element, #id, .class and spaces (inside).",
+  "fail-html-none": "There must be no “{selektor}”.",
+  "fail-html-count": "It needs at least {want}× “{selektor}”. Found: {found}.",
+  "fail-html-text": "“{selektor}” should say: {text}",
+  "fail-html-attr": '“{selektor}” needs {name}="{value}".',
+  "fail-html-style": "“{selektor}”: {prop} should be {value}. Now: {found}.",
+  "fail-html-unchecked": "Press “Check”.",
+  "describe-html": "Preview with {elements} elements.",
+  "html-code": "HTML",
+  "css-code": "CSS",
+  "html-preview": "Preview",
+  "html-check": "Check",
+  "solved-html": "Done! Your page fits.",
+  "html-help":
+    "Write HTML and CSS in the fields. The preview shows at once what the page looks like. “Check” looks at what is there and how it looks, not whether the code is the same letter by letter.",
+  "html-reset": "Reset code",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
