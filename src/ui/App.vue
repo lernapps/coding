@@ -163,7 +163,9 @@ const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
   if (v.ok && predicting.value)
-    return tests.value > 1 ? t("solved-predict-all", { count: tests.value }) : t("solved-predict");
+    return tests.value > 1
+      ? t("solved-predict-all", { count: tests.value })
+      : t(c.value?.world.type === "turtle" ? "solved-predict-picture" : "solved-predict");
   if (v.ok)
     return tests.value === 2
       ? t("solved-both")

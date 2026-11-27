@@ -45,6 +45,11 @@
             ]
           }
         ]
+      },
+      "start": {
+        "x": 80,
+        "y": 120,
+        "winkel": 0
       }
     }
   },
@@ -87,8 +92,8 @@
   "checks": ["vorhersage"],
   "hints": [
     {
-      "de": "Zähl, wie oft Kiko eine Linie zeichnet: so oft, wie „wiederhole“ sagt.",
-      "en": "Count how often Kiko draws a line: as often as “repeat” says."
+      "de": "Alle Bilder haben drei Linien. Schau auf die Drehung: „nach rechts“ heißt im Uhrzeigersinn, aus Kikos Sicht.",
+      "en": "All pictures have three lines. Look at the turn: “right” means clockwise, from Kiko's point of view."
     },
     {
       "de": "Nach jeder Linie dreht sich Kiko um 120 Grad nach rechts. Eine ganze Drehung sind 360 Grad. Wohin zeigt dann die zweite Linie?",

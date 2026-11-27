@@ -14,6 +14,6 @@ steps:
         {
           ok: false,
           test: 1,
-          why: { key: fail-predict-line, params: { ok: 1, line: 2, x1: 100, y1: 40, x2: 152, y2: 70, px: 48, py: 70 } },
+          why: { key: fail-predict-line, params: { ok: 1, line: 2, x1: 80, y1: 60, x2: 132, y2: 90, px: 28, py: 90 } },
         }
-    announce: "Bis Linie 1 stimmt dein Bild. Linie 2 zeichnet Kiko von (100|40) nach (152|70), in deinem Bild geht sie nach (48|70)."
+    announce: "Bis Linie 1 stimmt dein Bild. Linie 2 zeichnet Kiko von (80|60) nach (132|90), in deinem Bild geht sie nach (28|90)."

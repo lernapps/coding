@@ -203,7 +203,7 @@
   "fail-predict-line": "Your picture is right up to line {ok}. Kiko draws line {line} from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
   "fail-predict-line-first": "Line 1 is already different: Kiko draws it from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
   "fail-predict-line-more": "Your picture is right up to line {ok}. Then Kiko draws line {line} as well: from ({x1}, {y1}) to ({x2}, {y2}).",
-  "fail-predict-line-less": "Kiko draws only {lines} lines. Your picture has more.",
+  "fail-predict-line-less": "Your picture is right up to line {ok}. Then Kiko stops: its picture has {lines} lines, yours has more.",
   "problem-predict-field": "“vorhersage” exists only with the check “vorhersage”, and only in the world turtle.",
   "problem-predict-checks": "With “vorhersage” it is the only check.",
   "problem-predict-start": "A prediction needs a start program with blocks: it is the program learners read.",
@@ -233,7 +233,7 @@
   "help-predict-way": "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks. A step is a new square; turning is not a step.",
   "help-predict-run": "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command. Then you see whether your prediction is right, and if not, where it differs.",
   "tests-explain-predict": "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
-  "solved-predict": "Well predicted! Kiko does exactly what you said.",
+  "solved-predict": "Well predicted! Kiko goes exactly through the squares you set.",
   "solved-predict-all": "Well predicted, in all {count} puzzles!",
   "picture-name": "Picture {letter}",
   "picture-line": "Line {n}: from ({x1}, {y1}) to ({x2}, {y2})",
@@ -244,8 +244,10 @@
   "help-map-turtle-predict": "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up.",
   "step-command": "One command",
   "phase-running-predict": "Kiko carries out the program.",
-  "phase-paused-predict": "Paused after {commands} commands. The marked block was the last to run.",
+  "phase-paused-predict": "Paused. Commands carried out: {commands}. The marked block was the last to run.",
   "predict-not-next": "This square does not work: Kiko only ever goes to a square next to the last one.",
   "predict-not-wall": "This square does not work: there is a wall.",
-  "help-predict-marks": "After the run, Kiko's way is orange. The square where your prediction differs has a red frame."
+  "help-predict-marks": "After the run, Kiko's way is orange. The square where your prediction differs has a red frame.",
+  "fail-predict-less-none": "Kiko stays on its start square ({x}, {y}). You set square ({px}, {py}).",
+  "solved-predict-picture": "Well predicted! Kiko draws exactly this picture."
 }

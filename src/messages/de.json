@@ -203,7 +203,7 @@
   "fail-predict-line": "Bis Linie {ok} stimmt dein Bild. Linie {line} zeichnet Kiko von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
   "fail-predict-line-first": "Schon Linie 1 ist anders: Kiko zeichnet sie von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
   "fail-predict-line-more": "Bis Linie {ok} stimmt dein Bild. Dann zeichnet Kiko noch Linie {line}: von ({x1}|{y1}) nach ({x2}|{y2}).",
-  "fail-predict-line-less": "Kiko zeichnet nur {lines} Linien. Dein Bild hat mehr.",
+  "fail-predict-line-less": "Bis Linie {ok} stimmt dein Bild. Dann hört Kiko auf: Sein Bild hat {lines} Linien, deins hat mehr.",
   "problem-predict-field": "„vorhersage“ gibt es nur mit der Prüfung „vorhersage“, und nur in der Welt Turtle.",
   "problem-predict-checks": "Mit „vorhersage“ ist sie die einzige Prüfung.",
   "problem-predict-start": "Eine Vorhersage braucht ein Startprogramm mit Blöcken: Das ist das Programm, das Lernende lesen.",
@@ -233,7 +233,7 @@
   "help-predict-way": "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick. Ein Schritt ist ein neues Feld; Drehen ist kein Schritt.",
   "help-predict-run": "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, wo sie abweicht.",
   "tests-explain-predict": "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
-  "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
+  "solved-predict": "Richtig vorhergesagt! Kiko geht genau die Felder, die du gesetzt hast.",
   "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
   "picture-name": "Bild {letter}",
   "picture-line": "Linie {n}: von ({x1}|{y1}) nach ({x2}|{y2})",
@@ -244,8 +244,10 @@
   "help-map-turtle-predict": "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben.",
   "step-command": "Ein Befehl",
   "phase-running-predict": "Kiko führt das Programm aus.",
-  "phase-paused-predict": "Angehalten nach {commands} Befehlen. Der markierte Block war gerade dran.",
+  "phase-paused-predict": "Angehalten. Ausgeführte Befehle: {commands}. Der markierte Block war gerade dran.",
   "predict-not-next": "Dieses Feld geht nicht: Kiko geht immer nur auf ein Feld neben dem letzten.",
   "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
-  "help-predict-marks": "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet."
+  "help-predict-marks": "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
+  "fail-predict-less-none": "Kiko bleibt auf seinem Startfeld ({x}|{y}). Du hast Feld ({px}|{py}) gesetzt.",
+  "solved-predict-picture": "Richtig vorhergesagt! Kiko malt genau dieses Bild."
 }

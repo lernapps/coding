@@ -121,7 +121,9 @@ function compareWay(run: Run, predicted: readonly string[]): TestResult {
     return { ok: false, why: { key: "fail-predict-more", params: { ...ok, step: at + 1, ...field(kiko) } } };
   const end = field(went.at(-1) ?? (run.world as unknown as LabyrinthState).trail[0] ?? "0,0");
   const next = field(yours ?? "0,0");
-  return { ok: false, why: { key: "fail-predict-less", params: { ...ok, ...end, px: next.x, py: next.y } } };
+  // A run without any step: Kiko stays where it started.
+  const key = went.length === 0 ? "fail-predict-less-none" : "fail-predict-less";
+  return { ok: false, why: { key, params: { ...ok, ...end, px: next.x, py: next.y } } };
 }
 
 const near = (a: Line, b: Line): boolean =>

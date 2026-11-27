@@ -18,4 +18,4 @@ steps:
   - inputs: [{ kind: action, name: start }]
     ticks: 300
     state: { phase: done, solved: true, attempts: 1, verdict: { ok: true }, run: { world: { x: 3, y: 3 } } }
-    announce: "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast."
+    announce: "Richtig vorhergesagt! Kiko geht genau die Felder, die du gesetzt hast."

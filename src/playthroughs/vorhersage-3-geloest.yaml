@@ -10,4 +10,4 @@ steps:
   - inputs: [{ kind: action, name: bild, value: 0 }, { kind: action, name: start }]
     ticks: 200
     state: { phase: done, solved: true, attempts: 1, predictions: [0], verdict: { ok: true } }
-    announce: "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast."
+    announce: "Richtig vorhergesagt! Kiko malt genau dieses Bild."

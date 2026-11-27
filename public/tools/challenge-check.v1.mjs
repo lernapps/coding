@@ -1,4 +1,4 @@
-// source: 73eac4e334b16e04
+// source: 2bbde3dcc84f78a0
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1604,7 +1604,8 @@ var de_default = {
     "Schon Linie 1 ist anders: Kiko zeichnet sie von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
   "fail-predict-line-more":
     "Bis Linie {ok} stimmt dein Bild. Dann zeichnet Kiko noch Linie {line}: von ({x1}|{y1}) nach ({x2}|{y2}).",
-  "fail-predict-line-less": "Kiko zeichnet nur {lines} Linien. Dein Bild hat mehr.",
+  "fail-predict-line-less":
+    "Bis Linie {ok} stimmt dein Bild. Dann hört Kiko auf: Sein Bild hat {lines} Linien, deins hat mehr.",
   "problem-predict-field": "„vorhersage“ gibt es nur mit der Prüfung „vorhersage“, und nur in der Welt Turtle.",
   "problem-predict-checks": "Mit „vorhersage“ ist sie die einzige Prüfung.",
   "problem-predict-start":
@@ -1641,7 +1642,7 @@ var de_default = {
     "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, wo sie abweicht.",
   "tests-explain-predict":
     "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
-  "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
+  "solved-predict": "Richtig vorhergesagt! Kiko geht genau die Felder, die du gesetzt hast.",
   "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
   "picture-name": "Bild {letter}",
   "picture-line": "Linie {n}: von ({x1}|{y1}) nach ({x2}|{y2})",
@@ -1654,11 +1655,13 @@ var de_default = {
     "Beim Zeichnen geht Kiko nicht über Felder: Er zeichnet auf einer Fläche von 200 × 200 Pixeln. Die Zahlen am Rand helfen dir, Stellen zu finden: (50|100) heißt 50 nach rechts, 100 nach unten. Zu Beginn steht Kiko in der Mitte und schaut nach oben.",
   "step-command": "Ein Befehl",
   "phase-running-predict": "Kiko führt das Programm aus.",
-  "phase-paused-predict": "Angehalten nach {commands} Befehlen. Der markierte Block war gerade dran.",
+  "phase-paused-predict": "Angehalten. Ausgeführte Befehle: {commands}. Der markierte Block war gerade dran.",
   "predict-not-next": "Dieses Feld geht nicht: Kiko geht immer nur auf ein Feld neben dem letzten.",
   "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
   "help-predict-marks":
     "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
+  "fail-predict-less-none": "Kiko bleibt auf seinem Startfeld ({x}|{y}). Du hast Feld ({px}|{py}) gesetzt.",
+  "solved-predict-picture": "Richtig vorhergesagt! Kiko malt genau dieses Bild.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1891,7 +1894,8 @@ var en_default = {
     "Line 1 is already different: Kiko draws it from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
   "fail-predict-line-more":
     "Your picture is right up to line {ok}. Then Kiko draws line {line} as well: from ({x1}, {y1}) to ({x2}, {y2}).",
-  "fail-predict-line-less": "Kiko draws only {lines} lines. Your picture has more.",
+  "fail-predict-line-less":
+    "Your picture is right up to line {ok}. Then Kiko stops: its picture has {lines} lines, yours has more.",
   "problem-predict-field": "“vorhersage” exists only with the check “vorhersage”, and only in the world turtle.",
   "problem-predict-checks": "With “vorhersage” it is the only check.",
   "problem-predict-start": "A prediction needs a start program with blocks: it is the program learners read.",
@@ -1927,7 +1931,7 @@ var en_default = {
     "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command. Then you see whether your prediction is right, and if not, where it differs.",
   "tests-explain-predict":
     "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
-  "solved-predict": "Well predicted! Kiko does exactly what you said.",
+  "solved-predict": "Well predicted! Kiko goes exactly through the squares you set.",
   "solved-predict-all": "Well predicted, in all {count} puzzles!",
   "picture-name": "Picture {letter}",
   "picture-line": "Line {n}: from ({x1}, {y1}) to ({x2}, {y2})",
@@ -1940,11 +1944,13 @@ var en_default = {
     "When drawing, Kiko does not move over squares: it draws on a sheet of 200 × 200 pixels. The numbers at the edge help you find places: (50, 100) means 50 to the right, 100 down. At the start Kiko stands in the middle and looks up.",
   "step-command": "One command",
   "phase-running-predict": "Kiko carries out the program.",
-  "phase-paused-predict": "Paused after {commands} commands. The marked block was the last to run.",
+  "phase-paused-predict": "Paused. Commands carried out: {commands}. The marked block was the last to run.",
   "predict-not-next": "This square does not work: Kiko only ever goes to a square next to the last one.",
   "predict-not-wall": "This square does not work: there is a wall.",
   "help-predict-marks":
     "After the run, Kiko's way is orange. The square where your prediction differs has a red frame.",
+  "fail-predict-less-none": "Kiko stays on its start square ({x}, {y}). You set square ({px}, {py}).",
+  "solved-predict-picture": "Well predicted! Kiko draws exactly this picture.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -2032,3 +2038,4 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
+export {};
