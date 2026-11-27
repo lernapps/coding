@@ -50,6 +50,11 @@ const broken: [string, Record<string, unknown>][] = [
       world: { type: "turtle", version: 1, config: { ziel: { main: [] }, start: { x: 300, y: 0, winkel: 0 } } },
     },
   ],
+  ["one wrong picture", { ...turtleBase, checks: ["vorhersage"], vorhersage: { bilder: [{ main: [] }] } }],
+  [
+    "prediction pictures with an unknown field",
+    { ...turtleBase, checks: ["vorhersage"], vorhersage: { bilder: [], farbe: 1 } },
+  ],
 ];
 
 describe("schema and validator", () => {

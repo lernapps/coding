@@ -1,4 +1,4 @@
-// source: 097c59b780097bcd
+// source: f1e9a990916c90b2
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -699,7 +699,7 @@ var labyrinth = {
     },
   }),
 };
-var TOLERANCE = 2;
+var TOLERANCE$1 = 2;
 var MAX_LINES = 1e3;
 /** The grid of the comparison: one cell per unit, a margin of 50 around the sheet. */
 var MARGIN = 50;
@@ -736,8 +736,8 @@ function widen(grid) {
   for (let y = 0; y < GRID; y++)
     for (let x = 0; x < GRID; x++) {
       if (grid[y * GRID + x] !== 1) continue;
-      for (let dy = -2; dy <= TOLERANCE; dy++)
-        for (let dx = -2; dx <= TOLERANCE; dx++) {
+      for (let dy = -2; dy <= TOLERANCE$1; dy++)
+        for (let dx = -2; dx <= TOLERANCE$1; dx++) {
           const yy = y + dy;
           const xx = x + dx;
           if (yy >= 0 && yy < GRID && xx >= 0 && xx < GRID) out[yy * GRID + xx] = 1;
@@ -916,6 +916,155 @@ function worldOf(type, version) {
   return WORLDS[type]?.[version];
 }
 var newestVersion = (type) => Math.max(0, ...Object.keys(WORLDS[type] ?? {}).map(Number));
+/** Points of a line closer than this are the same (as the check "bild-gleich"). */
+var TOLERANCE = 2;
+/** The lines of a picture, without lines of length 0. */
+var linesOf = (run) => (run.world.lines ?? []).filter((l) => l[0] !== l[2] || l[1] !== l[3]);
+var point = (v) => Math.round(v);
+/** The run of the challenge's program on test case `n`. */
+function runOf(c, n, program = c.start) {
+  const world = worldOf(c.world.type, c.world.version);
+  if (world === void 0 || program === null) return null;
+  return runToEnd(program, world, configAt(c, n), c.limits.steps ?? 1e3);
+}
+var near = (a, b) =>
+  Math.hypot(a[0] - b[0], a[1] - b[1]) <= TOLERANCE && Math.hypot(a[2] - b[2], a[3] - b[3]) <= TOLERANCE;
+/** Compares the lines Kiko drew with the lines of the picture chosen. */
+function comparePicture(run, chosen) {
+  const drawn = linesOf(run);
+  const i = drawn.findIndex((l, k) => chosen[k] === void 0 || !near(l, chosen[k]));
+  const at = i < 0 ? (chosen.length > drawn.length ? drawn.length : -1) : i;
+  if (at < 0) return { ok: true };
+  const kiko = drawn[at];
+  const yours = chosen[at];
+  const ends = (l) => ({
+    x1: point(l[0]),
+    y1: point(l[1]),
+    x2: point(l[2]),
+    y2: point(l[3]),
+  });
+  if (kiko !== void 0 && yours !== void 0)
+    return {
+      ok: false,
+      why: {
+        key: at === 0 ? "fail-predict-line-first" : "fail-predict-line",
+        params: {
+          ok: at,
+          line: at + 1,
+          ...ends(kiko),
+          px: point(yours[2]),
+          py: point(yours[3]),
+        },
+      },
+    };
+  if (kiko !== void 0)
+    return {
+      ok: false,
+      why: {
+        key: "fail-predict-line-more",
+        params: {
+          ok: at,
+          line: at + 1,
+          ...ends(kiko),
+        },
+      },
+    };
+  return {
+    ok: false,
+    why: {
+      key: "fail-predict-line-less",
+      params: {
+        ok: at,
+        lines: drawn.length,
+      },
+    },
+  };
+}
+/** Problems of a challenge with the check "vorhersage" (after the general checks found none in its parts). */
+function predictionProblems(value, world, valid) {
+  const checks = Array.isArray(value["checks"]) ? value["checks"] : [];
+  const field = value["vorhersage"];
+  if (!checks.includes("vorhersage"))
+    return field === void 0
+      ? []
+      : [
+          {
+            path: "vorhersage",
+            key: "problem-predict-field",
+          },
+        ];
+  const p = [];
+  if (checks.length !== 1)
+    p.push({
+      path: "checks",
+      key: "problem-predict-checks",
+    });
+  const start = value["start"];
+  if (start === null || start === void 0 || programProblems(start).length > 0 || blocksOf(start).length === 0)
+    return [
+      ...p,
+      {
+        path: "start",
+        key: "problem-predict-start",
+      },
+    ];
+  if (world === void 0) return p;
+  if (world.id === "turtle") {
+    const bilder = isObject(field) ? field["bilder"] : void 0;
+    if (
+      !isObject(field) ||
+      Object.keys(field).some((k) => k !== "bilder") ||
+      !Array.isArray(bilder) ||
+      bilder.length < 2 ||
+      bilder.length > 3
+    )
+      return [
+        ...p,
+        {
+          path: "vorhersage",
+          key: "problem-predict-pictures",
+        },
+      ];
+    bilder.forEach((b, i) => {
+      const syntax = programProblems(b, `vorhersage.bilder[${i}]`);
+      p.push(...(syntax.length > 0 ? syntax : fitProblems(b, world, `vorhersage.bilder[${i}]`)));
+    });
+  } else if (field !== void 0)
+    p.push({
+      path: "vorhersage",
+      key: "problem-predict-field",
+    });
+  if (p.length > 0 || !valid) return p;
+  const c = value;
+  for (let n = 1; n <= testCount(c); n++) {
+    const run = runOf(c, n);
+    if (run === null || run.status !== "done") {
+      p.push({
+        path: "start",
+        key: "problem-predict-run",
+        params: { n },
+      });
+      continue;
+    }
+    if (world.id !== "turtle") continue;
+    (c.vorhersage?.bilder ?? []).forEach((b, i) => {
+      const wrong = runOf(c, n, b);
+      if (wrong === null || wrong.status !== "done" || linesOf(wrong).length > 200)
+        p.push({
+          path: `vorhersage.bilder[${i}]`,
+          key: "problem-target-lines",
+          params: { max: 200 },
+        });
+      else if (comparePicture(run, linesOf(wrong)).ok)
+        p.push({
+          path: `vorhersage.bilder[${i}]`,
+          key: "problem-predict-same",
+          params: { n },
+        });
+    });
+  }
+  return p;
+}
 // src/core/challenge.ts
 var LANGUAGES = ["de", "en"];
 var MAX_LINK = 2e3;
@@ -938,8 +1087,9 @@ var KEYS = [
   "hints",
   "view",
   "back",
+  "vorhersage",
 ];
-var WORKSHOP_CHECKS = ["hoechstens-bloecke"];
+var WORKSHOP_CHECKS = ["hoechstens-bloecke", "vorhersage"];
 function textProblems(value, path, max) {
   if (!isObject(value))
     return [
@@ -1141,6 +1291,7 @@ function challengeProblems(value) {
       });
     else p.push(...textProblems(back["label"], "back.label", 60));
   }
+  p.push(...predictionProblems(value, world, p.length === 0));
   return p;
 }
 /** Checks a finished run of test case `n` against the challenge's world checks. */
@@ -1437,6 +1588,32 @@ var de_default = {
   "word-weg-frei": "Weg frei?",
   "authoring-beginners":
     'Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit "locked": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben).',
+  "fail-predict-no-way": "Setz zuerst den Weg von Kiko: Feld für Feld, so wie Kiko geht.",
+  "fail-predict-no-picture": "Wähl zuerst das Bild, das Kiko malt.",
+  "fail-predict-step":
+    "Bis Schritt {ok} stimmt deine Vorhersage. In Schritt {step} geht Kiko auf Feld ({x}|{y}), du hast Feld ({px}|{py}) gesetzt.",
+  "fail-predict-step-first":
+    "Schon Schritt 1 ist anders: Kiko geht auf Feld ({x}|{y}), du hast Feld ({px}|{py}) gesetzt.",
+  "fail-predict-more":
+    "Bis Schritt {ok} stimmt deine Vorhersage. Dann geht Kiko weiter: In Schritt {step} geht er auf Feld ({x}|{y}).",
+  "fail-predict-less":
+    "Bis Schritt {ok} stimmt deine Vorhersage. Dann bleibt Kiko in Feld ({x}|{y}) stehen. Du hast danach noch Feld ({px}|{py}) gesetzt.",
+  "fail-predict-line":
+    "Bis Linie {ok} stimmt dein Bild. Linie {line} zeichnet Kiko von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
+  "fail-predict-line-first":
+    "Schon Linie 1 ist anders: Kiko zeichnet sie von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
+  "fail-predict-line-more":
+    "Bis Linie {ok} stimmt dein Bild. Dann zeichnet Kiko noch Linie {line}: von ({x1}|{y1}) nach ({x2}|{y2}).",
+  "fail-predict-line-less": "Kiko zeichnet nur {lines} Linien. Dein Bild hat mehr.",
+  "problem-predict-field": "„vorhersage“ gibt es nur mit der Prüfung „vorhersage“, und nur in der Welt Turtle.",
+  "problem-predict-checks": "Mit „vorhersage“ ist sie die einzige Prüfung.",
+  "problem-predict-start":
+    "Eine Vorhersage braucht ein Startprogramm mit Blöcken: Das ist das Programm, das Lernende lesen.",
+  "problem-predict-pictures":
+    'Turtle: „vorhersage“ ist { "bilder": [ … ] } mit 2 oder 3 Programmen für die falschen Bilder.',
+  "problem-predict-run":
+    "Rätsel {n}: Das Startprogramm läuft nicht bis zum Ende. Eine Vorhersage braucht einen Lauf ohne Fehler.",
+  "problem-predict-same": "Rätsel {n}: Dieses falsche Bild ist dasselbe wie das richtige.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1653,6 +1830,31 @@ var en_default = {
   "word-weg-frei": "way ahead clear?",
   "authoring-beginners":
     'For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with "locked": true in the start program is fixed: learners only fill its gaps (gap tasks).',
+  "fail-predict-no-way": "First set Kiko's way: square by square, as Kiko goes.",
+  "fail-predict-no-picture": "First choose the picture Kiko draws.",
+  "fail-predict-step":
+    "Your prediction is right up to step {ok}. In step {step} Kiko goes to square ({x}, {y}), you set square ({px}, {py}).",
+  "fail-predict-step-first":
+    "Step 1 is already different: Kiko goes to square ({x}, {y}), you set square ({px}, {py}).",
+  "fail-predict-more":
+    "Your prediction is right up to step {ok}. Then Kiko goes on: in step {step} it goes to square ({x}, {y}).",
+  "fail-predict-less":
+    "Your prediction is right up to step {ok}. Then Kiko stops at square ({x}, {y}). After that you set square ({px}, {py}).",
+  "fail-predict-line":
+    "Your picture is right up to line {ok}. Kiko draws line {line} from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
+  "fail-predict-line-first":
+    "Line 1 is already different: Kiko draws it from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
+  "fail-predict-line-more":
+    "Your picture is right up to line {ok}. Then Kiko draws line {line} as well: from ({x1}, {y1}) to ({x2}, {y2}).",
+  "fail-predict-line-less": "Kiko draws only {lines} lines. Your picture has more.",
+  "problem-predict-field": "“vorhersage” exists only with the check “vorhersage”, and only in the world turtle.",
+  "problem-predict-checks": "With “vorhersage” it is the only check.",
+  "problem-predict-start": "A prediction needs a start program with blocks: it is the program learners read.",
+  "problem-predict-pictures":
+    'Turtle: “vorhersage” is { "bilder": [ … ] } with 2 or 3 programs for the wrong pictures.',
+  "problem-predict-run":
+    "Puzzle {n}: the start program does not run to its end. A prediction needs a run without errors.",
+  "problem-predict-same": "Puzzle {n}: this wrong picture is the same as the right one.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -1740,4 +1942,3 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
-export {};

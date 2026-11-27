@@ -5,6 +5,7 @@ import { fitProblems } from "./fits.ts";
 import { blocksOf, emptySlot, programProblems, type Program } from "./ir.ts";
 import { runToEnd, type Run } from "./interpreter.ts";
 import { isInt, isObject, type Json, type Msg, type Problem } from "./json.ts";
+import { predictionProblems } from "./prediction.ts";
 import { newestVersion, worldOf, WORLDS } from "./worlds/index.ts";
 import type { World } from "./worlds/types.ts";
 
@@ -23,6 +24,8 @@ export interface Challenge {
   hints: Text[];
   view: "bloecke";
   back?: { url: string | Text; label: Text };
+  /** With the check "vorhersage" in a turtle world: the programs of the wrong pictures to choose from. */
+  vorhersage?: { bilder: Program[] };
 }
 
 export const LANGUAGES = ["de", "en"] as const;
@@ -47,8 +50,9 @@ const KEYS = [
   "hints",
   "view",
   "back",
+  "vorhersage",
 ];
-const WORKSHOP_CHECKS = ["hoechstens-bloecke"];
+const WORKSHOP_CHECKS = ["hoechstens-bloecke", "vorhersage"];
 
 function textProblems(value: unknown, path: string, max: number): Problem[] {
   if (!isObject(value)) return [{ path, key: "problem-text" }];
@@ -160,6 +164,7 @@ export function challengeProblems(value: unknown): Problem[] {
       p.push({ path: "back.url", key: "problem-back-url" });
     else p.push(...textProblems(back["label"], "back.label", 60));
   }
+  p.push(...predictionProblems(value, world, p.length === 0));
   return p;
 }
 

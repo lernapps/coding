@@ -744,12 +744,15 @@ flowchart LR
         bb-interpreter["Interpreter"]
         bb-challenge["Challenge"]
         bb-worlds["Worlds"]
+        bb-prediction["Prediction"]
         bb-check-script["Check script"]
     end
     bb-interpreter -->|"if-program"| bb-program
     bb-interpreter -->|"if-world"| bb-worlds
     bb-challenge -->|"if-interpreter"| bb-interpreter
     bb-challenge -->|"if-world"| bb-worlds
+    bb-challenge -->|"if-prediction"| bb-prediction
+    bb-prediction -->|"if-interpreter"| bb-interpreter
     bb-check-script -->|"if-challenge"| bb-challenge
 ```
 
@@ -809,7 +812,7 @@ path: src/core/interpreter.ts
 
 ### Challenge
 
-A challenge of format 1: its validator (the rules of the published schema; programs from outside must fit the world, with numbers in the editor's ranges, `fits.ts`), its test cases, the checks of the program (block limit, blocks used) and of each run. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
+A challenge of format 1: its validator (the rules of the published schema; programs from outside must fit the world, with numbers in the editor's ranges, `fits.ts`), its test cases, the checks of the program (block limit, blocks used) and of each run, a prediction through `bb-prediction`. `start(seed, route, params)` reads a challenge from the address parameter `c` with its own raw-DEFLATE reader (`inflate.ts`, `dec-own-inflate`), because the runtime starts the core synchronously; that challenge holds for the whole visit (`concept-workshop-address-visit`).
 
 ```arc42
 :::building-block
@@ -818,7 +821,7 @@ title: Challenge
 parent: bb-interactive-core
 technology: TypeScript (validator, raw-DEFLATE reader)
 path: src/core/challenge.ts
-requires: if-interpreter, if-world
+requires: if-interpreter, if-world, if-prediction
 implements: concept-workshop-challenges, concept-workshop-address-visit
 :::
 ```
@@ -834,6 +837,40 @@ title: challengeProblems, configAt, firstFailure, judgeRun
 provider: bb-challenge
 protocol: TypeScript functions
 path: src/core/challenge.ts
+:::
+```
+
+### Prediction
+
+The check `vorhersage`: the program of the challenge is fixed, the learner predicts the run (labyrinth: the fields in
+order; turtle: one of several pictures, the wrong ones programs of the author, shuffled by the seed), and the verdict
+names the first step or line where prediction and run part. Its validator refuses a prediction it could not judge: a
+run that does not end, a wrong picture that is the right one.
+
+```arc42
+:::building-block
+id: bb-prediction
+title: Prediction
+parent: bb-interactive-core
+technology: TypeScript
+path: src/core/prediction.ts
+requires: if-interpreter
+implements: concept-workshop-challenges
+:::
+```
+
+#### Prediction interface
+
+Adds a field to a way, gives the pictures in the order shown, names a missing prediction, judges a run against a
+prediction, and checks the part of a challenge that belongs to it.
+
+```arc42
+:::interface
+id: if-prediction
+title: withField, picturesOf, missingPrediction, judgePrediction, predictionProblems
+provider: bb-prediction
+protocol: TypeScript functions
+path: src/core/prediction.ts
 :::
 ```
 

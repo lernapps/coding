@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: failed pre-push runs of this increment, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { checks-pass: 1 }
+failedChecks: { checks-pass: 2 }
 ---
 
 # Increment: vorhersagen
@@ -165,8 +165,8 @@ Interpreter der App.
 - [x] `git switch -c increment/<NN>-<short name>` from `main`. Commit this plan on it.
 - [x] Load skill `lernapps-cli`. Update the app as its section "Update" says. Commit the update alone and fix its
       findings before any content. The update replaces the `lernapps-*` skills: read again those you use.
-- [ ] Load skill `lernapps-interactive` and the content guide.
-- [ ] Kern und Schema: Prüfung vorhersage, Feld vorhersage (Turtle: bilder), Aktionen zum Setzen und Vergleichen, erster abweichender Schritt, Rückmeldungen de/en, Tests, Prüfskript neu bauen (allein, kein Sub-Agent)
+- [x] Load skill `lernapps-interactive` and the content guide.
+- [x] Kern und Schema: Prüfung vorhersage, Feld vorhersage (Turtle: bilder), Aktionen zum Setzen und Vergleichen, erster abweichender Schritt, Rückmeldungen de/en, Tests, Prüfskript neu bauen (allein, kein Sub-Agent)
 - [ ] Labyrinth-Vorhersage in der Oberfläche (Felder setzen mit Maus und Tastatur, Weg als Liste) und Aufgabe vorhersage-1 mit Musterlösung und zwei Playthroughs (allein)
 - [ ] Aufgabe vorhersage-2 (Labyrinth, solange und wenn, zwei Rätsel) mit Playthroughs (allein)
 - [ ] Turtle-Bildwahl in der Oberfläche und Aufgabe vorhersage-3 (vier Bilder) mit Playthroughs (allein)

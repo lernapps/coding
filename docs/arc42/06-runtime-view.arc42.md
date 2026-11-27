@@ -175,6 +175,21 @@ involves: bb-editor, bb-program, bb-interpreter, bb-challenge, bb-worlds, bb-wor
 :::
 ```
 
+## Predicting a run
+
+In a challenge with the check `vorhersage` the editor only shows the program. The learner sets a way field by field or
+chooses a picture for every puzzle; Run first asks for a missing prediction (no attempt), then runs the program on every
+puzzle as above and compares each run with its prediction.
+
+```arc42
+:::runtime-scenario
+id: scenario-workshop-prediction
+title: Predicting a run
+trigger: The learner sets fields or chooses a picture, then presses Run
+involves: bb-world-views, bb-prediction, bb-interpreter, bb-challenge, bb-worlds
+:::
+```
+
 ## An app checks its challenge
 
 An app that sends the workshop a challenge runs the check script in its build: the script checks the challenge as the

@@ -193,5 +193,21 @@
   "block-weg-frei": "Weg frei?",
   "explain-weg-frei": "„Weg frei?“ fragt: Kann Kiko vorwärts gehen, ohne an eine Wand zu stoßen?",
   "word-weg-frei": "Weg frei?",
-  "authoring-beginners": "Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit \"locked\": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben)."
+  "authoring-beginners": "Für Einsteiger: „Weg frei?“ ist „Wand voraus?“ umgedreht und kommt ohne „nicht“ aus. Ein Befehl mit \"locked\": true im Startprogramm ist fest: Lernende füllen nur seine Lücken (Lückenaufgaben).",
+  "fail-predict-no-way": "Setz zuerst den Weg von Kiko: Feld für Feld, so wie Kiko geht.",
+  "fail-predict-no-picture": "Wähl zuerst das Bild, das Kiko malt.",
+  "fail-predict-step": "Bis Schritt {ok} stimmt deine Vorhersage. In Schritt {step} geht Kiko auf Feld ({x}|{y}), du hast Feld ({px}|{py}) gesetzt.",
+  "fail-predict-step-first": "Schon Schritt 1 ist anders: Kiko geht auf Feld ({x}|{y}), du hast Feld ({px}|{py}) gesetzt.",
+  "fail-predict-more": "Bis Schritt {ok} stimmt deine Vorhersage. Dann geht Kiko weiter: In Schritt {step} geht er auf Feld ({x}|{y}).",
+  "fail-predict-less": "Bis Schritt {ok} stimmt deine Vorhersage. Dann bleibt Kiko in Feld ({x}|{y}) stehen. Du hast danach noch Feld ({px}|{py}) gesetzt.",
+  "fail-predict-line": "Bis Linie {ok} stimmt dein Bild. Linie {line} zeichnet Kiko von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
+  "fail-predict-line-first": "Schon Linie 1 ist anders: Kiko zeichnet sie von ({x1}|{y1}) nach ({x2}|{y2}), in deinem Bild geht sie nach ({px}|{py}).",
+  "fail-predict-line-more": "Bis Linie {ok} stimmt dein Bild. Dann zeichnet Kiko noch Linie {line}: von ({x1}|{y1}) nach ({x2}|{y2}).",
+  "fail-predict-line-less": "Kiko zeichnet nur {lines} Linien. Dein Bild hat mehr.",
+  "problem-predict-field": "„vorhersage“ gibt es nur mit der Prüfung „vorhersage“, und nur in der Welt Turtle.",
+  "problem-predict-checks": "Mit „vorhersage“ ist sie die einzige Prüfung.",
+  "problem-predict-start": "Eine Vorhersage braucht ein Startprogramm mit Blöcken: Das ist das Programm, das Lernende lesen.",
+  "problem-predict-pictures": "Turtle: „vorhersage“ ist { \"bilder\": [ … ] } mit 2 oder 3 Programmen für die falschen Bilder.",
+  "problem-predict-run": "Rätsel {n}: Das Startprogramm läuft nicht bis zum Ende. Eine Vorhersage braucht einen Lauf ohne Fehler.",
+  "problem-predict-same": "Rätsel {n}: Dieses falsche Bild ist dasselbe wie das richtige."
 }

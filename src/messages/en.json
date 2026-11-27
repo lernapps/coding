@@ -193,5 +193,21 @@
   "block-weg-frei": "way ahead clear?",
   "explain-weg-frei": "“way ahead clear?” asks: can Kiko move forward without bumping into a wall?",
   "word-weg-frei": "way ahead clear?",
-  "authoring-beginners": "For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with \"locked\": true in the start program is fixed: learners only fill its gaps (gap tasks)."
+  "authoring-beginners": "For beginners: “way ahead clear?” is “wall ahead?” turned round and needs no “not”. A command with \"locked\": true in the start program is fixed: learners only fill its gaps (gap tasks).",
+  "fail-predict-no-way": "First set Kiko's way: square by square, as Kiko goes.",
+  "fail-predict-no-picture": "First choose the picture Kiko draws.",
+  "fail-predict-step": "Your prediction is right up to step {ok}. In step {step} Kiko goes to square ({x}, {y}), you set square ({px}, {py}).",
+  "fail-predict-step-first": "Step 1 is already different: Kiko goes to square ({x}, {y}), you set square ({px}, {py}).",
+  "fail-predict-more": "Your prediction is right up to step {ok}. Then Kiko goes on: in step {step} it goes to square ({x}, {y}).",
+  "fail-predict-less": "Your prediction is right up to step {ok}. Then Kiko stops at square ({x}, {y}). After that you set square ({px}, {py}).",
+  "fail-predict-line": "Your picture is right up to line {ok}. Kiko draws line {line} from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
+  "fail-predict-line-first": "Line 1 is already different: Kiko draws it from ({x1}, {y1}) to ({x2}, {y2}), in your picture it goes to ({px}, {py}).",
+  "fail-predict-line-more": "Your picture is right up to line {ok}. Then Kiko draws line {line} as well: from ({x1}, {y1}) to ({x2}, {y2}).",
+  "fail-predict-line-less": "Kiko draws only {lines} lines. Your picture has more.",
+  "problem-predict-field": "“vorhersage” exists only with the check “vorhersage”, and only in the world turtle.",
+  "problem-predict-checks": "With “vorhersage” it is the only check.",
+  "problem-predict-start": "A prediction needs a start program with blocks: it is the program learners read.",
+  "problem-predict-pictures": "Turtle: “vorhersage” is { \"bilder\": [ … ] } with 2 or 3 programs for the wrong pictures.",
+  "problem-predict-run": "Puzzle {n}: the start program does not run to its end. A prediction needs a run without errors.",
+  "problem-predict-same": "Puzzle {n}: this wrong picture is the same as the right one."
 }

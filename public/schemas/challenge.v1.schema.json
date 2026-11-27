@@ -151,10 +151,10 @@
     "checks": {
       "type": "array",
       "minItems": 1,
-      "description": "Prüfungen: der Welt (Labyrinth: ziel-erreicht; Turtle: bild-gleich) und der Werkstatt (hoechstens-bloecke, benutzt-block:<block>). limits.blocks gilt immer.",
+      "description": "Prüfungen: der Welt (Labyrinth: ziel-erreicht; Turtle: bild-gleich) und der Werkstatt (hoechstens-bloecke, benutzt-block:<block>). limits.blocks gilt immer. „vorhersage“ (allein): Lernende lesen das Startprogramm (fest) und sagen voraus, was Kiko tut, im Labyrinth den Weg Feld für Feld, bei Turtle das Bild unter mehreren; dann läuft das Programm zum Vergleich.",
       "items": {
         "type": "string",
-        "pattern": "^(ziel-erreicht|bild-gleich|hoechstens-bloecke|benutzt-block:[a-z-]+)$"
+        "pattern": "^(ziel-erreicht|bild-gleich|hoechstens-bloecke|vorhersage|benutzt-block:[a-z-]+)$"
       }
     },
     "hints": {
@@ -201,6 +201,22 @@
         },
         "label": {
           "$ref": "#/$defs/text60"
+        }
+      }
+    },
+    "vorhersage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bilder"],
+      "description": "Nur mit der Prüfung „vorhersage“ in der Welt Turtle: die Programme der falschen Bilder (2 oder 3, typische Fehler). Das richtige Bild ist der Lauf des Startprogramms; die Werkstatt mischt die Bilder.",
+      "properties": {
+        "bilder": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/program"
+          }
         }
       }
     }

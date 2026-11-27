@@ -1,0 +1,190 @@
+// Predictions: the core takes a way or a picture, compares it with the run and names the first step where they part;
+// the validator refuses a prediction challenge it cannot judge.
+import { describe, expect, it } from "vite-plus/test";
+import { challengeProblems, type Challenge } from "./challenge.ts";
+import { start, step, type State } from "./index.ts";
+import type { Program, Stmt } from "./ir.ts";
+import type { Json } from "./json.ts";
+import { orderOf, picturesOf, runOf } from "./prediction.ts";
+
+const cmd = (name: string, ...args: number[]): Stmt => ({
+  s: "cmd",
+  name,
+  args: args.map((value) => ({ e: "num", value })),
+});
+const repeat = (times: number, body: Stmt[]): Stmt => ({ s: "repeat", times: { e: "num", value: times }, body });
+
+/** Kiko goes east two fields, turns right and goes down one: (2|2) → (3|2) → (4|2) → (4|3). */
+const way: Challenge = {
+  format: 1,
+  id: "vorhersage-test",
+  title: { de: "Test" },
+  task: { de: "Sag voraus, wohin Kiko geht." },
+  world: {
+    type: "labyrinth",
+    version: 1,
+    config: { map: ["#####", "#S..#", "###.#", "###Z#", "#####"], facing: "east" },
+  },
+  toolbox: ["vorwaerts", "rechts", "wiederhole"],
+  start: { main: [repeat(2, [cmd("vorwaerts")]), cmd("rechts"), cmd("vorwaerts")] },
+  limits: {},
+  tests: [],
+  checks: ["vorhersage"],
+  hints: [],
+  view: "bloecke",
+};
+const square = (side: number, turn: string, times = 4): Program => ({
+  main: [repeat(times, [cmd("gehe", side), cmd(turn, 90)])],
+});
+const picture: Challenge = {
+  ...way,
+  id: "vorhersage-bild",
+  world: { type: "turtle", version: 1, config: { ziel: square(50, "drehe-rechts-um") } as unknown as Json },
+  toolbox: ["gehe", "drehe-rechts-um", "drehe-links-um", "wiederhole"],
+  start: square(50, "drehe-rechts-um"),
+  vorhersage: { bilder: [square(50, "drehe-links-um"), square(50, "drehe-rechts-um", 3)] },
+};
+
+const act = (s: State, name: string, value?: string | number): State =>
+  step(s, value === undefined ? { kind: "action", name } : { kind: "action", name, value });
+const run = (s: State): State => {
+  let now = act(s, "start");
+  for (let i = 0; i < 10_000 && (now.phase === "running" || now.phase === "paused"); i++) now = act(now, "schritt");
+  return now;
+};
+const withChallenge = (c: Challenge): State => ({
+  ...start(1, "labyrinth-1"),
+  challenge: c,
+  program: c.start ?? { main: [] },
+});
+const setWay = (s: State, fields: string[]): State => fields.reduce((acc, f) => act(acc, "feld", f), s);
+
+describe("prediction of a way", () => {
+  it("accepts the challenge", () => expect(challengeProblems(way)).toEqual([]));
+
+  it("passes the right way", () => {
+    const done = run(setWay(withChallenge(way), ["2,1", "3,1", "3,2"]));
+    expect(done.verdict).toEqual({ ok: true, test: 1 });
+    expect(done.solved).toBe(true);
+    expect(done.attempts).toBe(1);
+  });
+
+  it("names the step Kiko goes on after a way that is too short", () => {
+    const done = run(setWay(withChallenge(way), ["2,1"]));
+    expect(done.verdict?.why).toEqual({ key: "fail-predict-more", params: { ok: 1, step: 2, x: 4, y: 2 } });
+  });
+
+  it("takes back the last field and refuses a wall", () => {
+    const s = setWay(withChallenge(way), ["2,1", "3,1", "4,1"]);
+    expect(s.predictions[0]).toEqual(["2,1", "3,1"]);
+    expect(act(s, "zurueck").predictions[0]).toEqual(["2,1"]);
+    expect(act(s, "leeren").predictions[0]).toBeNull();
+  });
+
+  it("names the step where the way parts", () => {
+    const fork: Challenge = {
+      ...way,
+      world: { ...way.world, config: { map: ["#####", "#S..#", "#.#.#", "#.#Z#", "#####"], facing: "east" } },
+    };
+    const done = run(setWay(withChallenge(fork), ["2,1", "3,1", "3,2", "3,3"]));
+    expect(done.verdict?.why).toEqual({ key: "fail-predict-less", params: { ok: 3, x: 4, y: 3, px: 4, py: 4 } });
+    const wrong = run(setWay(withChallenge(fork), ["1,2"]));
+    expect(wrong.verdict?.why).toEqual({
+      key: "fail-predict-step-first",
+      params: { ok: 0, step: 1, x: 3, y: 2, px: 2, py: 3 },
+    });
+  });
+
+  it("refuses a field that is not next to the last one, a wall, or outside", () => {
+    const s = withChallenge(way);
+    expect(act(s, "feld", "3,1")).toBe(s);
+    expect(act(s, "feld", "1,0")).toBe(s);
+    expect(act(s, "feld", "9,9")).toBe(s);
+    expect(act(s, "feld", "x")).toBe(s);
+  });
+
+  it("asks for a prediction before the run, without counting an attempt", () => {
+    const done = act(withChallenge(way), "start");
+    expect(done.verdict).toEqual({ ok: false, test: 1, why: { key: "fail-predict-no-way" } });
+    expect(done.attempts).toBe(0);
+  });
+
+  it("keeps the program", () => {
+    const s = withChallenge(way);
+    expect(step(s, { kind: "action", name: "programm", value: { main: [] } })).toBe(s);
+  });
+});
+
+describe("prediction of a picture", () => {
+  it("accepts the challenge", () => expect(challengeProblems(picture)).toEqual([]));
+
+  it("shows the pictures in an order from the seed", () => {
+    expect(orderOf(3, 1, 1).sort((a, b) => a - b)).toEqual([0, 1, 2]);
+    expect(picturesOf(picture, 1, 1)).toHaveLength(3);
+    expect(picturesOf(picture, 1, 1)).toEqual(picturesOf(picture, 1, 1));
+  });
+
+  it("passes the right picture and names the first line of a wrong one", () => {
+    const s = withChallenge(picture);
+    const pictures = picturesOf(picture, 1, s.seed);
+    const right = runOf(picture, 1);
+    const lines = (right!.world as { lines: number[][] }).lines;
+    const index = pictures.findIndex((p) => JSON.stringify(p) === JSON.stringify(lines));
+    expect(run(act(s, "bild", index)).verdict?.ok).toBe(true);
+    const fewer = pictures.findIndex((p) => p.length === 3);
+    expect(run(act(s, "bild", fewer)).verdict?.why).toEqual({
+      key: "fail-predict-line-more",
+      params: { ok: 3, line: 4, x1: 150, y1: 100, x2: 100, y2: 100 },
+    });
+    const left = pictures.findIndex((p, i) => i !== index && p.length === 4);
+    expect(run(act(s, "bild", left)).verdict?.why).toEqual({
+      key: "fail-predict-line",
+      params: { ok: 1, line: 2, x1: 100, y1: 50, x2: 150, y2: 50, px: 50, py: 50 },
+    });
+  });
+
+  it("refuses a picture that is not there", () => {
+    const s = withChallenge(picture);
+    expect(act(s, "bild", 3)).toBe(s);
+  });
+});
+
+describe("validator of predictions", () => {
+  it("refuses a prediction without a start program", () =>
+    expect(challengeProblems({ ...way, start: null })).toContainEqual({ path: "start", key: "problem-predict-start" }));
+  it("refuses a second check", () =>
+    expect(challengeProblems({ ...way, checks: ["vorhersage", "ziel-erreicht"] })).toContainEqual({
+      path: "checks",
+      key: "problem-predict-checks",
+    }));
+  it("refuses a run that bumps into a wall", () =>
+    expect(
+      challengeProblems({ ...way, start: { main: [cmd("vorwaerts"), cmd("vorwaerts"), cmd("vorwaerts")] } }),
+    ).toContainEqual({
+      path: "start",
+      key: "problem-predict-run",
+      params: { n: 1 },
+    }));
+  it("refuses pictures in the labyrinth and a field without the check", () => {
+    expect(challengeProblems({ ...way, vorhersage: { bilder: [] } })).toContainEqual({
+      path: "vorhersage",
+      key: "problem-predict-field",
+    });
+    expect(challengeProblems({ ...picture, checks: ["bild-gleich"] })).toContainEqual({
+      path: "vorhersage",
+      key: "problem-predict-field",
+    });
+  });
+  it("refuses one wrong picture, and a wrong picture that is the right one", () => {
+    expect(challengeProblems({ ...picture, vorhersage: { bilder: [square(50, "drehe-links-um")] } })).toContainEqual({
+      path: "vorhersage",
+      key: "problem-predict-pictures",
+    });
+    expect(
+      challengeProblems({
+        ...picture,
+        vorhersage: { bilder: [square(50, "drehe-links-um"), square(50, "drehe-rechts-um")] },
+      }),
+    ).toContainEqual({ path: "vorhersage.bilder[1]", key: "problem-predict-same", params: { n: 1 } });
+  });
+});
