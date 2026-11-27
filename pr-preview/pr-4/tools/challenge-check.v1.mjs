@@ -1,4 +1,4 @@
-// source: f3d09e5d0cdac392
+// source: c703dd3da960e0c9
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1578,7 +1578,7 @@ var de_default = {
   "copy-missing": "Kopieren geht hier nicht. Markier den Text und kopier ihn selbst.",
   "problem-solution-block": "Die Musterlösung benutzt den Block „{name}“, der nicht in der Werkzeugkiste ist.",
   "solved-both": "Geschafft! Dein Programm löst beide Rätsel.",
-  "all-done": "Das war die letzte Aufgabe. Du hast alle Aufgaben der Werkstatt geschafft!",
+  "all-done": "Das war die letzte Aufgabe der Werkstatt.",
   "scroll-hint": "Wisch die Reihe der Blöcke zur Seite, dann siehst du alle.",
   "test-ok": "gelöst",
   "test-fail": "nicht gelöst",
@@ -1637,11 +1637,11 @@ var de_default = {
   "help-predict-read":
     "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Es steht auch als Text da: „Das Programm als Text“.",
   "help-predict-way":
-    "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick. Ein Schritt ist ein neues Feld; Drehen ist kein Schritt.",
+    "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick.",
   "help-predict-run":
-    "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, wo sie abweicht.",
+    "„Start“ lässt Kiko das Programm ausführen; der Block, der gerade dran ist, ist markiert. „Ein Befehl“ führt nur den nächsten Befehl aus: einmal gehen oder einmal drehen („wiederhole“ und „solange“ zählen nicht mit). Weicht Kiko von deiner Vorhersage ab, bleibt er dort stehen, und du liest, bei welchem Schritt. Der markierte Block zeigt, wo im Programm das war.",
   "tests-explain-predict":
-    "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
+    "Diese Aufgabe hat {count} Rätsel: verschiedene Karten, dasselbe Programm. Mit den Reitern über der Karte wechselst du; setz in jedem Rätsel den Weg.",
   "solved-predict": "Richtig vorhergesagt! Kiko geht genau die Felder, die du gesetzt hast.",
   "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
   "picture-name": "Bild {letter}",
@@ -1658,13 +1658,17 @@ var de_default = {
   "phase-paused-predict": "Angehalten. Ausgeführte Befehle: {commands}. Der markierte Block war gerade dran.",
   "predict-not-next": "Dieses Feld geht nicht: Kiko geht immer nur auf ein Feld neben dem letzten.",
   "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
-  "help-predict-marks":
-    "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
+  "help-predict-marks": "Kikos Weg ist orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
   "fail-predict-less-none": "Kiko bleibt auf seinem Startfeld ({x}|{y}). Du hast Feld ({px}|{py}) gesetzt.",
   "solved-predict-picture": "Richtig vorhergesagt! Kiko malt genau dieses Bild.",
   "loose-block": "Dieser Block hängt nicht am Programm und läuft nicht. Häng ihn unter den letzten Block.",
   "loose-blocks":
     "Lose Blöcke: {count}. Sie hängen nicht am Programm und laufen nicht. Du erkennst sie am Warnzeichen.",
+  "solved-predict-both": "Richtig vorhergesagt, in beiden Rätseln!",
+  "all-done-more": "Lust auf mehr? Bau eine eigene Aufgabe",
+  "explain-predict-wiederhole":
+    "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Ein Block, der andere Blöcke wiederholt, heißt Schleife.",
+  "explain-predict-gehe": "„gehe … Pixel“: Kiko geht so viele Pixel nach vorn und zeichnet dabei eine Linie.",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1871,7 +1875,7 @@ var en_default = {
   "copy-missing": "Copying does not work here. Select the text and copy it yourself.",
   "problem-solution-block": "The model solution uses the block “{name}”, which is not in the toolbox.",
   "solved-both": "Done! Your program solves both puzzles.",
-  "all-done": "That was the last task. You have done all the tasks of the workshop!",
+  "all-done": "That was the last task of the workshop.",
   "scroll-hint": "Swipe the row of blocks sideways to see them all.",
   "test-ok": "solved",
   "test-fail": "not solved",
@@ -1929,11 +1933,11 @@ var en_default = {
   "help-predict-read":
     "The program is ready. You can read it but not change it. It is also written as text: “The program as text”.",
   "help-predict-way":
-    "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks. A step is a new square; turning is not a step.",
+    "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks.",
   "help-predict-run":
-    "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command. Then you see whether your prediction is right, and if not, where it differs.",
+    "“Run” lets Kiko carry out the program; the block that is running is marked. “One command” carries out only the next command: one move or one turn (“repeat” and “while” do not count). If Kiko leaves your prediction, it stops there and you read at which step. The marked block shows where in the program that was.",
   "tests-explain-predict":
-    "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
+    "This task has {count} puzzles: different maps, the same program. Switch with the tabs above the map; set the way in each puzzle.",
   "solved-predict": "Well predicted! Kiko goes exactly through the squares you set.",
   "solved-predict-all": "Well predicted, in all {count} puzzles!",
   "picture-name": "Picture {letter}",
@@ -1950,13 +1954,17 @@ var en_default = {
   "phase-paused-predict": "Paused. Commands carried out: {commands}. The marked block was the last to run.",
   "predict-not-next": "This square does not work: Kiko only ever goes to a square next to the last one.",
   "predict-not-wall": "This square does not work: there is a wall.",
-  "help-predict-marks":
-    "After the run, Kiko's way is orange. The square where your prediction differs has a red frame.",
+  "help-predict-marks": "Kiko's way is orange. The square where your prediction differs has a red frame.",
   "fail-predict-less-none": "Kiko stays on its start square ({x}, {y}). You set square ({px}, {py}).",
   "solved-predict-picture": "Well predicted! Kiko draws exactly this picture.",
   "loose-block": "This block does not hang on the program and does not run. Hang it under the last block.",
   "loose-blocks":
     "Loose blocks: {count}. They do not hang on the program and do not run. You can tell them by the warning sign.",
+  "solved-predict-both": "Well predicted, in both puzzles!",
+  "all-done-more": "Want more? Build your own task",
+  "explain-predict-wiederhole":
+    "“repeat … times”: the blocks inside run as often as the number says. A block that repeats other blocks is called a loop.",
+  "explain-predict-gehe": "“move … pixels”: Kiko moves forward that many pixels and draws a line.",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";
@@ -2044,4 +2052,3 @@ function main(argv) {
   return ok ? 0 : 1;
 }
 process.exitCode = main(process.argv.slice(2));
-export {};
