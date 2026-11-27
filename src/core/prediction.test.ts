@@ -1,11 +1,14 @@
 // Predictions: the core takes a way or a picture, compares it with the run and names the first step where they part;
 // the validator refuses a prediction challenge it cannot judge.
 import { describe, expect, it } from "vite-plus/test";
-import { challengeProblems, type Challenge } from "./challenge.ts";
+import { BUILT_IN, PREDICTIONS } from "../data/index.ts";
+import de from "../messages/de.json";
+import en from "../messages/en.json";
+import { challengeProblems, configAt, testCount, type Challenge } from "./challenge.ts";
 import { start, step, type State } from "./index.ts";
 import type { Program, Stmt } from "./ir.ts";
 import type { Json } from "./json.ts";
-import { orderOf, picturesOf, runOf } from "./prediction.ts";
+import { isPrediction, judgePrediction, orderOf, picturesOf, runOf, withField, type Prediction } from "./prediction.ts";
 
 const cmd = (name: string, ...args: number[]): Stmt => ({
   s: "cmd",
@@ -187,4 +190,60 @@ describe("validator of predictions", () => {
       }),
     ).toContainEqual({ path: "vorhersage.bilder[1]", key: "problem-predict-same", params: { n: 1 } });
   });
+});
+
+describe("every wrong prediction of the built-in tasks gets its own feedback", () => {
+  // Wrong ways: every prefix, the way one field longer, and every way that leaves the right one at some step. Wrong
+  // pictures: each of them. Each must fail with a prediction feedback whose placeholders are all filled.
+  const texts = { de, en } as Record<string, Record<string, string>>;
+  const filled = (key: string, params: Record<string, unknown>): void => {
+    for (const lang of ["de", "en"]) {
+      const text = texts[lang]?.[key];
+      expect(text, `${lang}: ${key}`).toBeDefined();
+      for (const [, name] of (text ?? "").matchAll(/\{(\w+)\}/g))
+        expect(params, `${key} needs ${name}`).toHaveProperty(name ?? "");
+    }
+  };
+  const neighbours = (c: Challenge, n: number, way: string[]): string[] =>
+    ["1,0", "-1,0", "0,1", "0,-1"]
+      .map((d) => {
+        const last = (way.at(-1) ?? startKey(c, n)).split(",").map(Number);
+        const [dx, dy] = d.split(",").map(Number);
+        return `${(last[0] ?? 0) + (dx ?? 0)},${(last[1] ?? 0) + (dy ?? 0)}`;
+      })
+      .filter((k) => withField(c, n, way, k) !== null);
+  const startKey = (c: Challenge, n: number): string => {
+    const map = (configAt(c, n) as { map: string[] }).map;
+    const y = map.findIndex((r) => r.includes("S"));
+    return `${map[y]?.indexOf("S") ?? 0},${y}`;
+  };
+  for (const [id, c] of Object.entries(BUILT_IN).filter(([, c]) => isPrediction(c)))
+    it(id, () => {
+      let tried = 0;
+      for (let n = 1; n <= testCount(c); n++) {
+        const run = runOf(c, n);
+        expect(run?.status).toBe("done");
+        if (run === null) continue;
+        const wrong: Prediction[] = [];
+        if (c.world.type === "labyrinth") {
+          const right = (PREDICTIONS[id]?.[n - 1] ?? []) as string[];
+          for (let k = 1; k < right.length; k++) wrong.push(right.slice(0, k));
+          for (const extra of neighbours(c, n, right)) wrong.push([...right, extra]);
+          for (let k = 0; k < right.length; k++)
+            for (const other of neighbours(c, n, right.slice(0, k)))
+              if (other !== right[k]) wrong.push([...right.slice(0, k), other]);
+        } else
+          picturesOf(c, n, 1).forEach((_, i) => {
+            if (i !== PREDICTIONS[id]?.[n - 1]) wrong.push(i);
+          });
+        for (const p of wrong) {
+          const verdict = judgePrediction(c, n, run, p, 1);
+          expect(verdict.ok, JSON.stringify(p)).toBe(false);
+          expect(verdict.why?.key).toMatch(/^fail-predict-/);
+          filled(verdict.why?.key ?? "", verdict.why?.params ?? {});
+          tried++;
+        }
+      }
+      expect(tried).toBeGreaterThan(2);
+    });
 });

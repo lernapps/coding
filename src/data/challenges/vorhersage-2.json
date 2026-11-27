@@ -6,8 +6,8 @@
     "en": "Where does the rule lead?"
   },
   "task": {
-    "de": "Lies das Programm. Es gilt für zwei Rätsel mit verschiedenen Karten. Setz in jedem Rätsel den Weg von Kiko, dann drück „Start“.",
-    "en": "Read the program. It works on two puzzles with different maps. Set Kiko's way in each puzzle, then press “Run”."
+    "de": "Lies das Programm. Es gilt für zwei Rätsel mit verschiedenen Karten. Setz in jedem Rätsel die Felder, durch die Kiko geht. Dreht Kiko sich nur, bleibt er auf seinem Feld: Das ist kein Schritt. Dann drück „Start“.",
+    "en": "Read the program. It works on two puzzles with different maps. In each puzzle, set the squares Kiko goes through. When Kiko only turns, it stays on its square: that is not a step. Then press “Run”."
   },
   "world": {
     "type": "labyrinth",

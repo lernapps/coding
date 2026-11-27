@@ -6,8 +6,8 @@
     "en": "Where does Kiko go?"
   },
   "task": {
-    "de": "Das Programm ist fertig. Lies es und setz die Felder, durch die Kiko geht, der Reihe nach. Dann drück „Start“ und vergleich.",
-    "en": "The program is ready. Read it and set the squares Kiko goes through, one after the other. Then press “Run” and compare."
+    "de": "Das Programm ist fertig. Lies es und setz die Felder, durch die Kiko geht, der Reihe nach. Dreht Kiko sich nur, bleibt er auf seinem Feld: Das ist kein Schritt. Dann drück „Start“ und vergleich.",
+    "en": "The program is ready. Read it and set the squares Kiko goes through, one after the other. When Kiko only turns, it stays on its square: that is not a step. Then press “Run” and compare."
   },
   "world": {
     "type": "labyrinth",
