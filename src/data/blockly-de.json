@@ -5,6 +5,7 @@
   "ANNOUNCE_MOVE_BEFORE": "%1 wird vor %2 verschoben.",
   "ANNOUNCE_MOVE_CANCELED": "Verschieben abgebrochen.",
   "ANNOUNCE_MOVE_INSIDE": "%1 wird in %2 verschoben.",
+  "ANNOUNCE_MOVE_OF": "%1 von %2",
   "ANNOUNCE_MOVE_TO": "%1 wird zu %2 verschoben.",
   "ANNOUNCE_MOVE_WORKSPACE": "%1 wird auf der Arbeitsfläche verschoben.",
   "ANNOUNCE_SCROLLED_DOWN": "Nach unten gerollt.",
@@ -42,6 +43,7 @@
   "INPUT_LABEL_CONDITION_A": "erste Bedingung",
   "INPUT_LABEL_CONDITION_B": "zweite Bedingung",
   "INPUT_LABEL_EMPTY": "leer",
+  "INPUT_LABEL_END_STATEMENT": "Ende %1",
   "INPUT_LABEL_INDEX": "Eingang %1",
   "INPUT_LABEL_LOOP_TIMES": "Anzahl der Wiederholungen",
   "INPUT_LABEL_NUMBER": "Zahl",
@@ -57,6 +59,10 @@
   "MOVE_BLOCK": "Block verschieben",
   "OPEN_TRASH": "Papierkorb öffnen",
   "PASTE_SHORTCUT": "Einfügen",
+  "RESET_ZOOM": "Normale Größe",
+  "SCREENREADER_HINT": "Bewege dich mit den Pfeiltasten. Mit %1 schaltest du den Modus für Screenreader an oder aus.",
+  "SCREENREADER_MODE_DISABLED": "Der Modus für Screenreader ist aus. Mit %1 schaltest du ihn an.",
+  "SCREENREADER_MODE_ENABLED": "Der Modus für Screenreader ist an. Mit %1 schaltest du ihn aus.",
   "SHORTCUTS_ABORT_MOVE": "Verschieben abbrechen",
   "SHORTCUTS_CLEANUP": "Arbeitsfläche aufräumen",
   "SHORTCUTS_CODE_NAVIGATION": "Im Programm bewegen",
@@ -107,10 +113,5 @@
   "WORKSPACE_ROLEDESCRIPTION": "Arbeitsfläche",
   "ZOOM_IN": "Größer",
   "ZOOM_OUT": "Kleiner",
-  "ZOOM_TO_FIT_ARIA_LABEL": "Alles zeigen",
-  "ANNOUNCE_MOVE_OF": "%1 von %2",
-  "INPUT_LABEL_END_STATEMENT": "Ende %1",
-  "SCREENREADER_HINT": "Bewege dich mit den Pfeiltasten. Mit %1 schaltest du den Modus für Screenreader an oder aus.",
-  "SCREENREADER_MODE_DISABLED": "Der Modus für Screenreader ist aus. Mit %1 schaltest du ihn an.",
-  "SCREENREADER_MODE_ENABLED": "Der Modus für Screenreader ist an. Mit %1 schaltest du ihn aus."
+  "ZOOM_TO_FIT_ARIA_LABEL": "Alles zeigen"
 }

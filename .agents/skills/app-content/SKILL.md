@@ -143,6 +143,10 @@ als Link von anderen Apps (`?c=`). Auftrag: lernapps/apps#869, Epic lernapps/app
 
 - Der Kern ändert sich → `npm run build:check-script`, sonst schlägt der Test des Prüfskripts fehl (auch bei geänderten
   Message-Dateien).
+- Lernende bauen von oben nach unten und legen Blöcke unter das Programm (#495): Der Editor hängt einen Block, der
+  unter dem Programm (oder per Tastatur ohne Platz) abgelegt wird, ans Ende; lose Blöcke tragen ein Warnzeichen und
+  stehen gezählt unter der Arbeitsfläche. Die Arbeitsfläche fasst mindestens 10 Blöcke.
+- Die Zeile für die Lehrkraft nennt den Titel, nicht die interne id.
 - Ein Abschnitt der Startseite verlinkt keine Route (`app/#…`): Der Test der Runtime erwartet genau einen Link je Route.
 
 - Testfälle zählen ab 1; Testfall 1 ist `world.config` selbst, Testfall n ≥ 2 ist `tests[n-2]` (`configAt`). Ein Versatz um eins ließ Testfall 1 die Karte von Testfall 2 zeigen.

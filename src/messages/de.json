@@ -26,8 +26,8 @@
   "hint-show": "Hinweis zeigen ({n} von {count})",
   "hints": "Hinweise",
   "back-result": "Für deine Lehrkraft (oder einen KI-Tutor, wenn ihr einen benutzt)",
-  "result-solved": "Aufgabe „{title}“ ({id}): gelöst im {attempts}. Versuch",
-  "result-open": "Aufgabe „{title}“ ({id}): noch nicht gelöst, Versuche: {attempts}",
+  "result-solved": "Aufgabe „{title}“: gelöst im {attempts}. Versuch",
+  "result-open": "Aufgabe „{title}“: noch nicht gelöst, Versuche: {attempts}",
   "copy": "Kopieren",
   "copied": "Kopiert.",
   "problems-title": "Diese Aufgabe kann die Werkstatt nicht öffnen.",
@@ -99,10 +99,10 @@
   "solved-all": "Geschafft! Dein Programm löst alle {count} Rätsel.",
   "tests-explain": "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes. Dein Programm muss alle lösen. „Start“ probiert es in allen nacheinander aus. Mit den Reitern über dem Bild schaust du dir jedes Rätsel an.",
   "help": "So funktioniert die Werkstatt",
-  "help-blocks": "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Lose Blöcke sind blass (ein Screenreader sagt „ausgeschaltet“).",
+  "help-blocks": "Zieh Blöcke aus der Liste und häng sie unter den braunen Block „Programm“. Nur Blöcke, die dort hängen, laufen. Legst du einen Block unter das Programm, hängt er sich unten an. Lose Blöcke sind blass und haben ein Warnzeichen (ein Screenreader sagt „ausgeschaltet“).",
   "help-robot": "Kiko ist ein Roboter. Das Dreieck an seinem Kreis zeigt, wohin er schaut. „links“ und „rechts“ gelten aus seiner Sicht, also vom Dreieck aus.",
   "help-run": "„Start“ führt dein Programm aus. „Ein Schritt“ führt nur einen Block aus. In der Arbeitsfläche ist der Block markiert, der gerade dran war.",
-  "help-keys": "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Mit den Pfeiltasten gehst du durch die Liste (in einer Reihe mit Pfeil nach rechts). Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz; ein Screenreader sagt dir, wohin er kommt. Enter legt ihn ab. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
+  "help-keys": "Mit der Tastatur: Drück Tab, bis du in der Liste der Blöcke bist. Mit den Pfeiltasten gehst du durch die Liste (in einer Reihe mit Pfeil nach rechts). Enter nimmt einen Block. Mit den Pfeiltasten wählst du seinen Platz; ein Screenreader sagt dir, wohin er kommt. Enter legt ihn ab; ohne gewählten Platz kommt er ans Ende des Programms. Mit T kommst du zurück zur Liste. Eine Zahl in einem Block änderst du so: Pfeil nach rechts bis zur Zahl, Enter, Zahl tippen, Enter.",
   "new-blocks": "Blöcke in dieser Aufgabe",
   "explain-wiederhole": "„wiederhole … mal“: Die Blöcke darin laufen so oft, wie die Zahl sagt. Ein Block, der andere Blöcke wiederholt, heißt Schleife. Die Zahl änderst du mit einem Klick darauf oder mit der Tastatur.",
   "explain-solange": "„solange … tue“: Die Blöcke darin laufen immer wieder, solange die Antwort auf die Frage „ja“ ist.",
@@ -249,5 +249,7 @@
   "predict-not-wall": "Dieses Feld geht nicht: Da ist eine Wand.",
   "help-predict-marks": "Nach dem Lauf ist Kikos Weg orange. Das Feld, an dem deine Vorhersage abweicht, ist rot umrandet.",
   "fail-predict-less-none": "Kiko bleibt auf seinem Startfeld ({x}|{y}). Du hast Feld ({px}|{py}) gesetzt.",
-  "solved-predict-picture": "Richtig vorhergesagt! Kiko malt genau dieses Bild."
+  "solved-predict-picture": "Richtig vorhergesagt! Kiko malt genau dieses Bild.",
+  "loose-block": "Dieser Block hängt nicht am Programm und läuft nicht. Häng ihn unter den letzten Block.",
+  "loose-blocks": "Lose Blöcke: {count}. Sie hängen nicht am Programm und laufen nicht. Du erkennst sie am Warnzeichen."
 }

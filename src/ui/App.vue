@@ -60,6 +60,19 @@ onMounted(() => {
   if (navigator.clipboard !== undefined) copyText = (value) => navigator.clipboard.writeText(value);
   memory = progress();
   remember();
+  // A challenge of the address is no route of the list, but the runtime marks the first route as current (no hash):
+  // take the mark off, so that "Labyrinth 1" does not look open. Reported to the platform (lernapps/apps#509).
+  const unmarkRoutes = (): void => {
+    if (props.state.source !== "address") return;
+    for (const link of document.querySelectorAll(".interactive-routes a[aria-current]"))
+      link.removeAttribute("aria-current");
+  };
+  unmarkRoutes();
+  // The runtime marks again when a route starts the core again (a new challenge object).
+  watch(
+    () => props.state.challenge,
+    () => void nextTick(unmarkRoutes),
+  );
   // The parameters of the address (?c=) hold for the whole visit (runtime contract). A learner who clicks a route of the
   // list leaves the challenge of the address: a new visit of that route, without `c`.
   document.addEventListener("click", (event) => {
