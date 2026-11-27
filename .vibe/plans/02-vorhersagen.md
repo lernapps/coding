@@ -199,20 +199,22 @@ Interpreter der App.
 
 - [x] Load skill `lernapps-github`. Push the branch, open the preview pull request and see its checks to green, as it
       says.
-- [ ] **Checkpoint:** publish. Show what the increment adds and the preview link. Ask whether it may go online. Stop
+- [x] **Checkpoint:** publish. Show what the increment adds and the preview link. Ask whether it may go online. Stop
       and wait for the yes.
-- [ ] Load skill `lernapps-commit`. Publish as skill `lernapps-github` says: the pull request squash-merged into
+      Creator: Orchestrator: Der Mensch hat #4 schon freigegeben; sobald CI grün und Prüfer-Funde behoben, melde Veröffentlichen, dann merge ich.
+- [x] Load skill `lernapps-commit`. Publish as skill `lernapps-github` says: the pull request squash-merged into
       `main`, the run of `Pages` watched to its end.
-- [ ] Open the address the job `deploy` printed and confirm the new content. Never use a derived address.
-- [ ] The app is listed and its entry changes (school years, summary): load skill `lernapps-listing` and write the
+- [x] Open the address the job `deploy` printed and confirm the new content. Never use a derived address.
+- [x] (skipped: Eintrag pflegt der Orchestrator (Band 9-10 nach dem Merge, Update-PR von lernapps/apps automatisch)) The app is listed and its entry changes (school years, summary): load skill `lernapps-listing` and write the
       changed entry. Else skip this task.
-- [ ] Fill the retrospective.
-- [ ] Commit this plan on `main` and push it. A push of only `.vibe/` publishes nothing.
-- [ ] The entry changed: open the pull request to the catalog as skill `lernapps-listing` says, without asking first,
+- [x] Fill the retrospective.
+- [x] Commit this plan on `main` and push it. A push of only `.vibe/` publishes nothing.
+- [x] (skipped: Eintrag unverändert von mir; der Orchestrator passt ihn an) The entry changed: open the pull request to the catalog as skill `lernapps-listing` says, without asking first,
       and see it to "bestanden". Else skip this task: `npx --no -- lernapps plan skip "entry unchanged"`.
-- [ ] **Checkpoint:** list. Tell the creator the result: the pull request and its result, or, when the entry did not
+- [x] **Checkpoint:** list. Tell the creator the result: the pull request and its result, or, when the entry did not
       change, that the catalog takes over the app by itself. Tick it with their reply.
-- [ ] If the plan changed since its last push, commit it on `main` and push again.
+      Creator: Orchestrator: Den Katalogeintrag macht lernapps/apps automatisch (Update-PR); Band 9-10 passe ich nach dem Merge an.
+- [x] (skipped: Kein direkter Push auf main (Regel des Orchestrators); der Plan kommt mit dem nächsten PR (increment/spike-html) nach main) If the plan changed since its last push, commit it on `main` and push again.
 
 ## Retrospective
 
@@ -220,12 +222,25 @@ Interpreter der App.
 
 ### Phases reached
 
-<!-- Last phase completed, checkpoints passed. E.g. "commit; confirmed, published". -->
+commit; Checkpoints Recherche, Plan (beide vom Orchestrator bestätigt), Musterseite, Veröffentlichen erreicht; PR #4
+squash-gemergt (85501af), Pages-Lauf grün, live unter http://lernapps.net/coding/ bestätigt.
 
 ### Creator turns after the plan
 
-<!-- Number of creator messages after the confirmation, topic of each. Target: at most 3. -->
+Keine Nachricht der Person; 6 Nachrichten des Orchestrators: Zusätze zum Plan bestätigt (Drehen ist kein Schritt);
+Nachtrag 5 (falsche Vorhersagen per Skript, geteilte Komponenten bei 3 Breiten, Checkpoints per send_message);
+dringende Fixes aus #495 vorziehen (eigener PR #5); Musterseite bestätigt mit Auflage Tastatur und 360 px; zwei Prüfer
+über alle drei Aufgaben; Freigabe zum Veröffentlichen.
 
 ### Where I had to guess
 
-<!-- Each gap in plan, skills, content guide, messages or answers, and your choice. "None" if none. -->
+- Umfang drei Aufgaben und ihre Reihenfolge nach labyrinth-5 (guess, dann bestätigt).
+- Nur Nachbarfelder; ein Lauf, der an die Wand stößt, ist nicht vorhersagbar (guess, bestätigt; „Wo stößt Kiko an?“
+  später).
+- Rückmeldung nennt Feld bzw. Linie, nicht den Block; stattdessen hält der Lauf an der Abweichung und markiert den Block
+  (guess nach den Lernenden-Checks).
+- Zustandsfragen (Blickrichtung, Schleifenzähler) nicht geprüft: Vorschlag der fachlichen Prüfung für später.
+- Lücke im Plan: Die Musterseite-Checkpoint-Aufgabe stand nach allen Slices; ich habe den Lernenden-Check nach dem
+  ersten Slice gemacht, wie `early-preview` verlangt.
+- Lücke in der Plattform: `arc42 diff` meldet beim Update den generischen Teil (06-runtime-view) und Prosa des
+  Wurzel-Bausteins im Editor-Abschnitt; beide mit ARC42_CONSISTENT angenommen (Notiz unter Key decisions).
