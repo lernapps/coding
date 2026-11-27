@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "id": "vorhersage-1",
+  "title": {
+    "de": "Wohin geht Kiko?",
+    "en": "Where does Kiko go?"
+  },
+  "task": {
+    "de": "Das Programm ist fertig. Lies es und setz die Felder, durch die Kiko geht, der Reihe nach. Dann drück „Start“ und vergleich.",
+    "en": "The program is ready. Read it and set the squares Kiko goes through, one after the other. Then press “Run” and compare."
+  },
+  "world": {
+    "type": "labyrinth",
+    "version": 1,
+    "config": {
+      "map": ["########", "#S.....#", "#.###..#", "#..Z...#", "########"],
+      "facing": "east"
+    }
+  },
+  "toolbox": ["vorwaerts", "links", "rechts", "wiederhole"],
+  "start": {
+    "main": [
+      {
+        "s": "repeat",
+        "times": {
+          "e": "num",
+          "value": 4
+        },
+        "body": [
+          {
+            "s": "cmd",
+            "name": "vorwaerts",
+            "args": []
+          }
+        ]
+      },
+      {
+        "s": "cmd",
+        "name": "rechts",
+        "args": []
+      },
+      {
+        "s": "repeat",
+        "times": {
+          "e": "num",
+          "value": 2
+        },
+        "body": [
+          {
+            "s": "cmd",
+            "name": "vorwaerts",
+            "args": []
+          }
+        ]
+      },
+      {
+        "s": "cmd",
+        "name": "rechts",
+        "args": []
+      },
+      {
+        "s": "repeat",
+        "times": {
+          "e": "num",
+          "value": 2
+        },
+        "body": [
+          {
+            "s": "cmd",
+            "name": "vorwaerts",
+            "args": []
+          }
+        ]
+      }
+    ]
+  },
+  "limits": {},
+  "tests": [],
+  "checks": ["vorhersage"],
+  "hints": [
+    {
+      "de": "Geh das Programm Block für Block durch. „wiederhole 4 mal“ mit „gehe vorwärts“ heißt: 4 Felder, nicht bis zur Wand.",
+      "en": "Go through the program block by block. “repeat 4 times” with “move forward” means 4 squares, not up to the wall."
+    },
+    {
+      "de": "„rechts“ gilt aus Kikos Sicht. Schaut Kiko nach unten, dann ist sein Rechts auf der Karte links.",
+      "en": "“right” is from Kiko's point of view. When Kiko looks down, its right is left on the map."
+    }
+  ],
+  "view": "bloecke"
+}

@@ -974,7 +974,7 @@ protocol: Vue props and events
 
 Blockly, loaded on demand (`dec-editor-on-demand`): the blocks with German and English texts, the toolbox of a challenge (a row above the work area on narrow screens, categories when there are many blocks) and the generator blocks → IR. Only the input; it highlights the block that ran last.
 
-The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed):
+The parts of the workshop's UI; the root component (`App.vue`, with `texts.ts` and `address.ts`) shows the challenge, the controls and the feedback, and on the route `autoren` the authoring page (`Authoring.vue`: a draft checked as typed, tried out, and its link packed). With a prediction it adds `PredictWay.vue` (the predicted way as a list, buttons for the next field up, right, down or left: the keyboard way) and `ProgramText.vue` (the program as text, in the words of the blocks):
 
 ```arc42
 :::diagram
@@ -997,7 +997,7 @@ flowchart LR
 id: bb-editor
 title: Block editor
 parent: bb-interactive-ui
-technology: Vue, Blockly 13.4
+technology: Vue, Blockly 13.4 (read-only for a prediction)
 path: src/ui/editor
 requires: if-program
 implements: concept-workshop-ir
@@ -1006,12 +1006,12 @@ implements: concept-workshop-ir
 
 #### Block editor interface
 
-The root component mounts it per challenge and sends each program it emits to the core.
+The root component mounts it per challenge and sends each program it emits to the core; with a prediction only to read, without a toolbox.
 
 ```arc42
 :::interface
 id: if-editor
-title: Editor component (lang, toolbox, start, highlight; emits program)
+title: Editor component (lang, toolbox, start, highlight, readOnly; emits program)
 provider: bb-editor
 protocol: Vue props and events
 path: src/ui/editor/Editor.vue
@@ -1034,12 +1034,12 @@ path: src/ui/worlds
 
 #### World views interface
 
-The root component picks the view by the world's type; the label is the world's text for screen readers.
+The root component picks the view by the world's type; the label is the world's text for screen readers. The labyrinth shows a predicted way and takes a click on a field.
 
 ```arc42
 :::interface
 id: if-world-view
-title: World view component (config, state, crashed, label, still)
+title: World view component (config, state, crashed, label, still, predicted; emits field)
 provider: bb-world-views
 protocol: Vue props
 path: src/ui/worlds/index.ts
@@ -1123,7 +1123,7 @@ path: src/data/challenges
 
 ### Model solutions
 
-The IR of a solution per built-in challenge, for the playthroughs and the unit tests; never sent to a learner.
+The IR of a solution per built-in challenge, for the playthroughs and the unit tests; never sent to a learner. A prediction challenge has a model prediction per test case instead (`PREDICTIONS`).
 
 ```arc42
 :::building-block
@@ -1137,12 +1137,12 @@ path: src/data/solutions
 
 #### Model solutions interface
 
-The unit tests run each on every test case of its challenge.
+The unit tests run each on every test case of its challenge, or judge each model prediction against the run.
 
 ```arc42
 :::interface
 id: if-solutions
-title: SOLUTIONS (src/data/index.ts)
+title: SOLUTIONS and PREDICTIONS (src/data/index.ts)
 provider: bb-solutions
 protocol: JSON module import
 path: src/data/solutions

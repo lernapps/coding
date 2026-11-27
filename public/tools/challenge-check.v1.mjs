@@ -1,4 +1,4 @@
-// source: f1e9a990916c90b2
+// source: 2cd2f1a59b69bece
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
 // node_modules/@lernapps/tooling/dist/i18n.mjs
@@ -1614,6 +1614,36 @@ var de_default = {
   "problem-predict-run":
     "Rätsel {n}: Das Startprogramm läuft nicht bis zum Ende. Eine Vorhersage braucht einen Lauf ohne Fehler.",
   "problem-predict-same": "Rätsel {n}: Dieses falsche Bild ist dasselbe wie das richtige.",
+  "field-name": "Feld ({x}|{y})",
+  "predict-title": "Deine Vorhersage",
+  "predict-from-start": "Kiko startet in {field}. Auf welches Feld geht er zuerst?",
+  "predict-from": "Zuletzt gesetzt: {field}. Auf welches Feld geht Kiko danach?",
+  "predict-next": "Nächstes Feld, auf der Karte gesehen",
+  "predict-dir-up": "nach oben",
+  "predict-dir-right": "nach rechts",
+  "predict-dir-down": "nach unten",
+  "predict-dir-left": "nach links",
+  "predict-wall": "Da ist eine Wand.",
+  "predict-empty": "Noch kein Feld gesetzt.",
+  "predict-undo": "Letztes Feld weg",
+  "predict-clear": "Alles löschen",
+  "predict-set": "Schritt {n}: {field}",
+  "predict-back": "Letztes Feld weg. Noch {n} Felder.",
+  "predict-cleared": "Vorhersage gelöscht.",
+  "program-text": "Das Programm als Text",
+  "phase-predict":
+    "Lies das Programm und setz den Weg von Kiko. Dann drück „Start“: Kiko geht los, und du siehst, ob es stimmt.",
+  "phase-predict-picture": "Lies das Programm und wähl das Bild, das Kiko malt. Dann drück „Start“.",
+  "help-predict-read":
+    "Das Programm ist fertig. Du kannst es lesen, aber nicht ändern. Unter den Blöcken steht es auch als Text.",
+  "help-predict-way":
+    "Setz die Felder, durch die Kiko geht, der Reihe nach: Klick auf ein Feld neben dem letzten, oder nimm die Pfeil-Knöpfe. Die Pfeile gelten für die Karte (oben ist oben), nicht für Kikos Blick. Ein Schritt ist ein neues Feld; Drehen ist kein Schritt.",
+  "help-predict-run":
+    "„Start“ lässt Kiko das Programm ausführen. Danach siehst du, ob deine Vorhersage stimmt, und wenn nicht, bei welchem Schritt sie abweicht. Dann änderst du sie und probierst es noch einmal.",
+  "tests-explain-predict":
+    "Diese Aufgabe hat {count} Rätsel: Varianten des Labyrinths oder Bildes, mit demselben Programm. Sag für jedes Rätsel voraus, was Kiko tut. „Start“ vergleicht alle nacheinander.",
+  "solved-predict": "Richtig vorhergesagt! Kiko macht genau, was du gesagt hast.",
+  "solved-predict-all": "Richtig vorhergesagt, in allen {count} Rätseln!",
 };
 var en_default = {
   app: "Coding workshop",
@@ -1855,6 +1885,36 @@ var en_default = {
   "problem-predict-run":
     "Puzzle {n}: the start program does not run to its end. A prediction needs a run without errors.",
   "problem-predict-same": "Puzzle {n}: this wrong picture is the same as the right one.",
+  "field-name": "square ({x}, {y})",
+  "predict-title": "Your prediction",
+  "predict-from-start": "Kiko starts at {field}. Which square does it go to first?",
+  "predict-from": "Last set: {field}. Which square does Kiko go to next?",
+  "predict-next": "Next square, as seen on the map",
+  "predict-dir-up": "up",
+  "predict-dir-right": "right",
+  "predict-dir-down": "down",
+  "predict-dir-left": "left",
+  "predict-wall": "There is a wall.",
+  "predict-empty": "No square set yet.",
+  "predict-undo": "Remove last square",
+  "predict-clear": "Clear all",
+  "predict-set": "Step {n}: {field}",
+  "predict-back": "Last square removed. {n} squares left.",
+  "predict-cleared": "Prediction cleared.",
+  "program-text": "The program as text",
+  "phase-predict":
+    "Read the program and set Kiko's way. Then press “Run”: Kiko sets off, and you see whether you were right.",
+  "phase-predict-picture": "Read the program and choose the picture Kiko draws. Then press “Run”.",
+  "help-predict-read":
+    "The program is ready. You can read it but not change it. Below the blocks it is written as text, too.",
+  "help-predict-way":
+    "Set the squares Kiko goes through, one after the other: click a square next to the last one, or use the arrow buttons. The arrows are for the map (up is up), not for where Kiko looks. A step is a new square; turning is not a step.",
+  "help-predict-run":
+    "“Run” lets Kiko carry out the program. Then you see whether your prediction is right, and if not, at which step it differs. Then you change it and try again.",
+  "tests-explain-predict":
+    "This task has {count} puzzles: versions of the maze or picture, with the same program. Predict for each puzzle what Kiko does. “Run” compares them all, one after the other.",
+  "solved-predict": "Well predicted! Kiko does exactly what you said.",
+  "solved-predict-all": "Well predicted, in all {count} puzzles!",
 };
 // src/tools/challenge-check.ts
 var BASE = "https://lernapps.net/coding/";

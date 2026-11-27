@@ -10,6 +10,8 @@ import type { State } from "../core/index.ts";
 import { currentBlock } from "../core/interpreter.ts";
 import type { Program } from "../core/ir.ts";
 import type { Msg } from "../core/json.ts";
+import { isPrediction } from "../core/prediction.ts";
+import type { LabyrinthConfig } from "../core/worlds/labyrinth.ts";
 import { worldOf } from "../core/worlds/index.ts";
 import { BUILT_IN, ROUTES } from "../data/index.ts";
 import { progress, type Progress } from "./progress.ts";
@@ -17,6 +19,8 @@ import { texts, type Key } from "./texts.ts";
 import de from "../messages/de.json";
 import { VIEWS } from "./worlds/index.ts";
 import Authoring from "./Authoring.vue";
+import PredictWay from "./PredictWay.vue";
+import ProgramText from "./ProgramText.vue";
 
 const props = defineProps<{ state: State; lang: string }>();
 const emit = defineEmits<{ input: [input: Input] }>();
@@ -73,6 +77,13 @@ const worldState = computed(() => {
   if (props.state.run !== null) return props.state.run.world;
   return world.value !== undefined && config.value !== null ? world.value.start(config.value) : null;
 });
+/** The program is given; the learner predicts the run (check "vorhersage"). */
+const predicting = computed(() => isPrediction(c.value));
+/** The way predicted on the puzzle shown (labyrinth). */
+const predictedWay = computed(() => {
+  const p = props.state.predictions[props.state.test - 1];
+  return Array.isArray(p) ? p : [];
+});
 const view = computed(() => (c.value === null ? undefined : VIEWS[c.value.world.type]));
 const tests = computed(() => (c.value === null ? 0 : testCount(c.value)));
 const description = computed(() => {
@@ -113,6 +124,8 @@ const highlight = computed(() =>
 const verdictText = computed(() => {
   const v = props.state.verdict;
   if (v === null) return "";
+  if (v.ok && predicting.value)
+    return tests.value > 1 ? t("solved-predict-all", { count: tests.value }) : t("solved-predict");
   if (v.ok)
     return tests.value === 2
       ? t("solved-both")
@@ -150,7 +163,9 @@ const statusText = computed(() => {
   if (s.phase === "running")
     return tests.value > 1 ? t("running-test", { n: s.test, count: tests.value }) : t("phase-running");
   if (s.phase === "paused") return t("phase-paused", { commands: s.run?.commands ?? 0 });
-  return s.phase === "edit" ? t("phase-edit") : "";
+  if (s.phase !== "edit") return "";
+  if (predicting.value) return t(c.value?.world.type === "turtle" ? "phase-predict-picture" : "phase-predict");
+  return t("phase-edit");
 });
 // Every new verdict is announced, also the same text again (a second press of Start with the same mistake).
 watch(
@@ -237,7 +252,7 @@ watch(
 );
 /** The program the editor starts with: the one saved for this task, else the challenge's own. */
 const editorStart = computed(() =>
-  saved.value !== null && saved.value.key === taskKey.value && saved.value.program !== undefined
+  !predicting.value && saved.value !== null && saved.value.key === taskKey.value && saved.value.program !== undefined
     ? saved.value.program
     : (c.value?.start ?? null),
 );
@@ -269,7 +284,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           {{ text(c.title) }} <span v-if="solvedBefore" class="solved-before">✓ {{ t("solved-before") }}</span>
         </h2>
         <p>{{ text(c.task) }}</p>
-        <p class="meta">
+        <p v-if="!predicting" class="meta">
           <span>{{
             c.limits.blocks === undefined
               ? t("blocks-count-free", { used: state.blocks })
@@ -277,10 +292,17 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
           }}</span>
           <span v-if="tests > 1"> · {{ t("test-shown", { count: tests }) }}</span>
         </p>
-        <p v-if="tests > 1">{{ t("tests-explain", { count: tests }) }}</p>
+        <p v-if="tests > 1">{{ t(predicting ? "tests-explain-predict" : "tests-explain", { count: tests }) }}</p>
         <details class="help" :open="firstOfWorld">
           <summary>{{ t("help") }}</summary>
-          <ul>
+          <ul v-if="predicting">
+            <li>{{ t("help-predict-read") }}</li>
+            <li>{{ t("help-robot") }}</li>
+            <li>{{ t(`help-map-${c.world.type}` as Key) }}</li>
+            <li v-if="c.world.type === 'labyrinth'">{{ t("help-predict-way") }}</li>
+            <li>{{ t("help-predict-run") }}</li>
+          </ul>
+          <ul v-else>
             <li>{{ t("help-blocks") }}</li>
             <li>{{ t("help-robot") }}</li>
             <li>{{ t(`help-map-${c.world.type}` as Key) }}</li>
@@ -334,8 +356,18 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
               :crashed="state.run?.status === 'crashed'"
               :label="description"
               :still="still"
+              :predicted="predicting && c.world.type === 'labyrinth' ? predictedWay : undefined"
+              @field="(key: string) => act('feld', key)"
             />
           </div>
+          <PredictWay
+            v-if="predicting && c.world.type === 'labyrinth' && config !== null"
+            :config="config as unknown as LabyrinthConfig"
+            :predicted="predictedWay"
+            :lang="lang"
+            :busy="state.phase === 'running'"
+            @act="(name: string, value?: string) => act(name, value)"
+          />
           <div class="controls">
             <button type="button" class="primary" :aria-disabled="state.phase === 'running'" @click="act('start')">
               {{ state.phase === "paused" ? t("continue") : t("run") }}
@@ -388,7 +420,7 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             </button>
           </div>
         </div>
-        <p class="scroll-hint">{{ t("scroll-hint") }}</p>
+        <p v-if="!predicting" class="scroll-hint">{{ t("scroll-hint") }}</p>
         <div class="workbench">
           <Editor
             :key="`${state.source}:${c.id}:${saved?.key ?? ''}`"
@@ -397,8 +429,10 @@ const solvedBefore = computed(() => saved.value !== null && saved.value.key === 
             :start="editorStart"
             :restored="editorStart !== c.start"
             :highlight="highlight"
+            :read-only="predicting"
             @program="onProgram"
           />
+          <ProgramText v-if="predicting && c.start !== null" :program="c.start" :lang="lang" />
         </div>
       </div>
       <footer v-if="backHref !== null || state.verdict !== null" class="back">

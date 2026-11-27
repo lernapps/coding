@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // The view of the world "labyrinth": the map as SVG, with column and row numbers (the feedback names fields by them),
-// the trail of the robot and Kiko. A text says the same for screen readers.
+// the trail of the robot and Kiko. A text says the same for screen readers. With a prediction it shows the fields the
+// learner set (numbered, joined by a dashed line) and takes a click on a field; the keyboard way is in the panel.
 import { computed } from "vue";
 import type { LabyrinthConfig, LabyrinthState } from "../../../core/worlds/labyrinth.ts";
 import Robot from "../Robot.vue";
@@ -11,7 +12,10 @@ const props = defineProps<{
   crashed: boolean;
   label: string;
   still: boolean;
+  /** The predicted way, as "x,y" from 0; undefined without a prediction. */
+  predicted?: readonly string[] | undefined;
 }>();
+const emit = defineEmits<{ field: [key: string] }>();
 const CELL = 40;
 const ANGLE = { north: -90, east: 0, south: 90, west: 180 } as const;
 const PAD = 22;
@@ -23,6 +27,21 @@ const cells = computed(() =>
   ),
 );
 const trail = computed(() => new Set(props.state.trail));
+const centre = (key: string): [number, number] => {
+  const [x, y] = key.split(",").map(Number);
+  return [PAD + (x ?? 0) * CELL + CELL / 2, PAD + (y ?? 0) * CELL + CELL / 2];
+};
+/** The numbers of the steps on each field ("2, 5" when the way comes back). */
+const numbers = computed(() => {
+  const out = new Map<string, number[]>();
+  (props.predicted ?? []).forEach((key, i) => out.set(key, [...(out.get(key) ?? []), i + 1]));
+  return [...out].map(([key, steps]) => ({ key, at: centre(key), text: steps.join(", ") }));
+});
+const path = computed(() => {
+  const way = props.predicted ?? [];
+  const startKey = props.config.map.flatMap((row, y) => (row.includes("S") ? [`${row.indexOf("S")},${y}`] : []))[0];
+  return way.length === 0 || startKey === undefined ? "" : [startKey, ...way].map((k) => centre(k).join(",")).join(" ");
+});
 </script>
 
 <template>
@@ -39,13 +58,22 @@ const trail = computed(() => new Set(props.state.trail));
         :y="c.y"
         :width="CELL"
         :height="CELL"
-        :class="c.ch === '#' ? 'wall' : c.ch === 'Z' ? 'goal' : 'floor'"
+        :class="[
+          c.ch === '#' ? 'wall' : c.ch === 'Z' ? 'goal' : 'floor',
+          { pick: predicted !== undefined && c.ch !== '#' },
+        ]"
+        @click="predicted !== undefined && c.ch !== '#' && emit('field', c.key)"
       />
       <circle v-if="c.ch !== '#' && trail.has(c.key)" :cx="c.x + CELL / 2" :cy="c.y + CELL / 2" r="4" class="trail" />
       <g v-if="c.ch === 'Z'" :transform="`translate(${c.x + 12}, ${c.y + 8})`">
         <line x1="2" y1="0" x2="2" y2="25" class="pole" />
         <path d="M 2 1 L 18 6 L 2 11 Z" class="flag" />
       </g>
+    </g>
+    <polyline v-if="path !== ''" :points="path" class="way" />
+    <g v-for="n in numbers" :key="`n${n.key}`" class="step">
+      <circle :cx="n.at[0]" :cy="n.at[1]" r="11" />
+      <text :x="n.at[0]" :y="n.at[1] + 4">{{ n.text }}</text>
     </g>
     <g
       class="robot"
@@ -90,7 +118,30 @@ const trail = computed(() => new Set(props.state.trail));
 .trail {
   fill: #b8460a;
 }
+.pick {
+  cursor: pointer;
+}
+.way {
+  fill: none;
+  stroke: #1f5fbf;
+  stroke-width: 3;
+  stroke-dasharray: 6 4;
+  pointer-events: none;
+}
+.step {
+  pointer-events: none;
+}
+.step circle {
+  fill: #1f5fbf;
+}
+.step text {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+}
 .robot {
+  pointer-events: none;
   transition: transform 0.15s linear;
 }
 .robot.still {

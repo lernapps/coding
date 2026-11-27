@@ -8,7 +8,7 @@ phase: code
 # prePushFailures: failed pre-push runs of this increment, written by the hook.
 prePushFailures: 0
 # failedChecks: failed rules and runs, written by lernapps check and the hooks.
-failedChecks: { checks-pass: 2 }
+failedChecks: { checks-pass: 3 }
 ---
 
 # Increment: vorhersagen
@@ -167,7 +167,7 @@ Interpreter der App.
       findings before any content. The update replaces the `lernapps-*` skills: read again those you use.
 - [x] Load skill `lernapps-interactive` and the content guide.
 - [x] Kern und Schema: Prüfung vorhersage, Feld vorhersage (Turtle: bilder), Aktionen zum Setzen und Vergleichen, erster abweichender Schritt, Rückmeldungen de/en, Tests, Prüfskript neu bauen (allein, kein Sub-Agent)
-- [ ] Labyrinth-Vorhersage in der Oberfläche (Felder setzen mit Maus und Tastatur, Weg als Liste) und Aufgabe vorhersage-1 mit Musterlösung und zwei Playthroughs (allein)
+- [x] Labyrinth-Vorhersage in der Oberfläche (Felder setzen mit Maus und Tastatur, Weg als Liste) und Aufgabe vorhersage-1 mit Musterlösung und zwei Playthroughs (allein)
 - [ ] Aufgabe vorhersage-2 (Labyrinth, solange und wenn, zwei Rätsel) mit Playthroughs (allein)
 - [ ] Turtle-Bildwahl in der Oberfläche und Aufgabe vorhersage-3 (vier Bilder) mit Playthroughs (allein)
 <!-- tasks: slices (4 added): one per competency, as written in Plan -->
