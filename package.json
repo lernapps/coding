@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@doctc/arc42": "0.38.0",
-    "@lernapps/app-templates": "^0.24.0",
-    "@lernapps/tooling": "^0.20.2",
+    "@lernapps/app-templates": "^0.27.0",
+    "@lernapps/tooling": "^0.20.5",
     "@types/node": "22.19.1",
     "ajv": "8.17.1",
     "typescript": "6.0.3",
